@@ -6989,6 +6989,7 @@ public function get_seat_category_main()
 		$this->db->select('stadium_name,s_id');
 		$this->db->from('stadium');
 		$this->db->where('category='.$catgory);
+		$this->db->order_by('stadium.stadium_name', 'ASC');
 		$query = $this->db->get();
 		return $query;
 	}
