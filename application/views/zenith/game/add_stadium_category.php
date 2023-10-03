@@ -1,5 +1,20 @@
 <?php $this->load->view(THEME.'common/header'); ?>
-    
+        <style type="text/css">
+            .myjscolor, .pandi_color {
+    padding: 0;
+    margin: 0;
+    border: none;
+    box-shadow: unset;
+    background: none;
+    width: 30px !important;
+    height: 33px !important;
+}
+.pandi{
+        position: absolute;
+    right: 2px;
+    top: 3px;
+}
+        </style>
      <div class="main-content">
          <!-- content -->
          <div class="page-content">
@@ -44,16 +59,24 @@
                                   </div>
                             </div>
 
-                                           
+                                         
                   
 
                             <div class="col-lg-3">
 
-                                   <input type="hidden" name="category_color" class="category_color  form-control" id="category_color" value="<?php echo $category_details->category_color ? $category_details->category_color : ""; ?>">
+                              
+
+
+                              
 
                                   <div class="form-group">
                                    <label for="seat_position">Color Code</label>
-                                  <input type="color" name="category_color_input" id="category_color_input" class="form-control pandi_color " placeholder="Enter Color Code" value="" required>
+                                      <div class="input-group">
+                                     <input type="text" name="category_color" class="category_color  form-control" id="category_color" value="<?php echo $category_details->category_color ? $category_details->category_color : ""; ?>">
+                                      <div class="input-group-append pandi">
+                                       <input type="color" name="category_color_input" id="category_color_input" class=" pandi_color " placeholder="Enter Color Code" value="" required>
+                                      </div>
+                                </div>
                                   </div>
                             </div>
 
@@ -111,6 +134,12 @@
 
 <script type="text/javascript">
 
+    $("body").on("keyup","#category_color",function(){
+        var a = $(this).val();
+        $(".pandi_color").val(rgb2hex(a));
+    });
+
+
     var elements = document.getElementsByClassName("pandi_color");
      for (var i = 0; i < elements.length; i++) {
          elements[i].addEventListener('input', call_color, false);
@@ -125,10 +154,8 @@
         $("#category_color").val(input_rgba);
    }
    if($("#category_color").val().length > 0){
-
         var cc = $("#category_color").val();
         $(".pandi_color").val(rgb2hex(cc))
-
    }
 
 
