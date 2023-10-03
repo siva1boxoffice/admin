@@ -1,0 +1,493 @@
+/* media query */
+
+@media only screen and (min-width: 1200px) and (max-width: 1400px) { 
+ .split_type  .radio-toolbar label{height: 110px !important;}
+ .split_type  .project-grid-item h3{font-size: 12px;}
+ .sticky{max-width: 330px !important;}
+ .choose_ticket .project-grid-item h3{font-size: 12px;}
+}
+
+
+@media only screen and (min-width: 992px) and (max-width: 1200px) { 
+
+    .split_type  .radio-toolbar label{height: 110px;}
+    .sticky{max-width: 330px !important;}
+    .split_type  .project-grid-item h3{font-size: 12px;}
+    .choose_ticket .project-grid-item h3{font-size: 12px;}
+    .choose_ticket .project-grid-item p{font-size: 11px;}
+    .split_type .project-grid-item p{font-size: 11px;}
+    .head_title .webapp-navbar-inner .left {width: 20% !important;}
+    
+}
+
+@media only screen and (min-width: 768px) and (max-width: 992px) { 
+
+    .list_add{width: 100% !important;float: left;} 
+    .onebox-order-info .account-wrapper .columns{display: block;}
+    .mob_hide {display: none;}
+    h3.mob_show{display: block !important;}
+    .onebox-order-heading {float: left;width: 100%;}
+
+
+    .head_title .webapp-navbar-inner .right {width: 25% !important;}
+    .head_title .title.is-5 {display: none;}
+    .number_ticket .column.is-2{float: left;width: 20% !important;}
+    .search_btn h3{font-size: 26px !important;}
+    .seat_detail .select:not(.is-multiple):not(.is-loading)::after {right: 18px;top: 44px !important;}
+    .search-details .centDivsearch {margin: auto;width: 100% !important;}
+    .full_widd_50 {width: 50% !important;float: left;}
+    .full_widd_100{width: 100% !important;}
+    .details {float: left;width: 100%;/*margin: 10px 0;*/}
+    .sticky {position: relative !important;top: 0px !important;}
+    .toptable td:before {content: attr(data-label);text-align: right;font-weight: bold;text-transform: uppercase;float: left;}
+    .toptable td, .toptable th {display: block;text-align: right !important;padding: 15px 15px;border-bottom: 1px solid #ddd;font-weight: 500;color: #000;}
+    .toptable tr th{border: none;clip: rect(0 0 0 0);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}
+
+    .nested td, .nested th {display: block !important;text-align: right !important;padding: 10px 15px;border-bottom: 1px solid #ddd;font-weight: 500;color: #000;}
+    .toptable .nest_tab {border: 2px solid #f8f1f1;width: 100%;}
+    .toptable .select {display: table-cell;width: auto !important;height: auto;}
+    .ticket_quantity{float: none;height: auto;}
+    .select:not(.is-multiple):not(.is-loading)::after{top: 23px !important;}
+    .fontuser .form-control{max-width: 100% !important;padding: 6px 25px;}
+    /*.fontuser i {position: absolute;left: 24px;top: 43px;}*/
+    .nested .icons {padding: 20px 0 15px 0 !important;}
+    .form-control1{max-width: 100% !important;}
+
+    .mobile-subsidebar .inner {width: calc(100% - 0px);margin-left: 0px;}
+    .mobile-subsidebar .inner .submenu li a {padding: 6px 10px;text-transform: capitalize;color: #000 !important;}
+    .mobile-navbar .navbar-brand .is-brand img {height: 60px !important;max-height: 60px !important;}
+
+    .mobile-subsidebar .inner .submenu li.has-children .collapse-wrap{height: auto;min-height: auto;}
+
+    .onebox-order-info .status_item:after{display: none;}
+    /*.onebox-order-info .account-wrapper {float: left;width: 100%;}*/
+
+    .head_title .webapp-navbar-inner .center .centered-links .centered-link{padding: 0px;}
+    .class_mob{display: none !important;}
+    .res_table_new  .fa-angle-double-right {display: none;}
+    .btn_mobile {display: inline-flex;background: #b00505;color: #fff;outline: none;border: 1px solid #ccc;font-size: 14px;padding: 5px 10px;}
+    .price_form_ctrl i {left: 26px;top: 37px;font-weight: 800;}
+    .head_title .webapp-navbar-inner .left {width: 20% !important;}
+    .mobile_device_widd{display: block !important;}
+     .mobile_device_widd .right {margin-right: 10px;}
+     .mobile_device_widd .center {margin-right: 40px;}
+     .upload_button {float: left;width: 100%;margin: 20px 0 30px;}
+
+     .listing_filter .order_inf a{padding: 10px 30px;}
+
+     /*.toptable  tr{display: flex;flex-wrap: wrap;}*/
+    .toptable  td{width: 100%;}
+    .view-wrapper.is-webapp .page-content-inner {margin-top: 20px;}
+    /*.sub_heading {float: left;width: 100%;}*/
+}
+
+@media only screen and (min-width: 650px) and (max-width: 768px) { 
+
+    .head_title .title.is-5 {display: none;}
+    /*.mobile-navbar{display: block !important;float: right !important;}*/
+    .search_btn h3{font-size: 24px;}
+    .number_ticket .column.is-2{float: left;width: 20% !important;}
+
+    .search-details .centDivsearch {margin: auto;width: 100% !important;}
+    .full_widd_50 {width: 50% !important;float: left;}
+    .full_widd_100{width: 100% !important;}
+    .details {float: left;width: 100%;/*margin: 10px 0;*/}
+    .sticky {position: relative !important;top: 0px !important;}
+
+    .tab_sec {overflow-x: auto;width: 100%;}
+    .toptable td:before {content: attr(data-label);text-align: right;font-weight: bold;text-transform: uppercase;float: left;}
+    .toptable td, .toptable th {display: block;text-align: right !important;padding: 15px 15px;border-bottom: 1px solid #ddd;font-weight: 500;color: #000;}
+    .toptable tr th{border: none;clip: rect(0 0 0 0);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}
+
+    .nested td, .nested th {display: block !important;text-align: right !important;padding: 10px 15px;border-bottom: 1px solid #ddd;font-weight: 500;color: #000;}
+    .toptable .nest_tab {border: 2px solid #f8f1f1;width: 100%;}
+    .toptable .select {display: table-cell;width: auto !important;height: auto;}
+    .ticket_quantity{float: none;height: auto;}
+    .select:not(.is-multiple):not(.is-loading)::after{top: 50px !important;}
+    .fontuser .form-control{max-width: 100% !important;padding: 6px 25px;}
+    /*.fontuser i {position: absolute;left: 23px;top: 43px;}*/
+    .nested .icons {padding: 10px 0 15px 0 !important;}
+    .form-control1{max-width: 100% !important;}
+
+    .mobile-subsidebar .inner {width: calc(100% - 0px);margin-left: 0px;}
+    .mobile-subsidebar .inner .submenu li a {padding: 6px 10px;text-transform: capitalize;color: #000 !important;}
+    .mobile-navbar .navbar-brand .is-brand img {height: 60px !important;max-height: 60px !important;}
+    .sticky {position: relative !important;top: 0px !important;}
+     .onebox-order-info .status_item:after{display: none;}
+
+     .mobile-subsidebar .inner .submenu li.has-children .collapse-wrap{height: auto;min-height: auto;}
+
+     .hide_content{display: none;}
+
+    .listing_filter{margin-top: 30px !important;}
+
+    .modern-login .is-form {padding-top: 0px;}
+    .mob_device .hero.is-fullheight {min-height: 100%;}
+    .main_logo .hero-image {max-width: 40% !important;margin: 0 auto !important;}
+    .class_mob{display: none !important;}
+    .res_table_new  .fa-angle-double-right {display: none;}
+    .btn_mobile {display: inline-flex;background: #b00505;color: #fff;outline: none;border: 1px solid #ccc;font-size: 14px;padding: 5px 10px;}
+
+    .price_form_ctrl i {left: 26px;top: 37px;font-weight: 800;}
+    .mobile_device_widd{display: block !important;}
+     .mobile_device_widd .right {margin-right: 10px;}
+     .mobile_device_widd .center {margin-right: 40px;}
+     .compare_btn .dropdown-content{right: unset;}
+     .upload_button {float: left;width: 100%;margin: 20px 0 30px;}
+     .listing_filter .order_inf a{padding: 10px 20px;}
+
+     /*.toptable  tr{display: flex;flex-wrap: wrap;}*/
+    .toptable  td{width: 100%;}
+    .onebox-order-info h3{margin: 25px 0 10px 0 !important;}
+    .mob_hide {display: none;}
+    .mob_show {display: block !important;}
+    .view-wrapper.is-webapp .page-content-inner {margin-top: 70px;}
+    .sub_heading {float: left;width: 100%;}
+    .onebox-order-heading {float: left;width: 100%;}
+
+    .center_mob {float: left;width: 80%;}
+.center_mob .dropdown.is-spaced .dropdown-menu{margin-top: 20px;}
+.center_mob .dropdown-content .dropdown-block {display: flex;align-items: center;padding: 16px;}
+.center_mob .dropdown-content .dropdown-block .meta{margin-left: 12px;}
+.navbar-brand .brand-start {width: 60px;}
+    
+
+}
+
+@media only screen and (min-width: 550px) and (max-width: 650px) {
+
+    .head_title .title.is-5 {display: none;}
+    /*.mobile-navbar{display: block !important;float: right !important;}*/
+    .search_btn h3{font-size: 24px;}
+    .number_ticket .column.is-2{float: left;width: 20% !important;}
+    .search-details .centDivsearch {margin: auto;width: 100% !important;}
+    .full_widd_50 {width: 50% !important;float: left;}
+    .full_widd_100{width: 100% !important;}
+    /*.details {float: left;width: 100%;margin: 10px 0;}*/
+    .sticky {position: relative !important;top: 0px !important;}
+    .toptable td:before {content: attr(data-label);text-align: right;font-weight: bold;text-transform: uppercase;float: left;}
+    .toptable td, .toptable th {display: block;text-align: right !important;padding: 15px 15px;border-bottom: 1px solid #ddd;font-weight: 500;color: #000;}
+    .toptable tr th{border: none;clip: rect(0 0 0 0);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}
+    .nested td, .nested th {display: block !important;text-align: right !important;padding: 10px 15px;border-bottom: 1px solid #ddd;font-weight: 500;color: #000;}
+    .toptable .nest_tab {border: 2px solid #f8f1f1;width: 100%;}
+    .toptable .select {display: table-cell;width: auto !important;height: auto;}
+    .ticket_quantity{float: none;height: auto;}
+    .navbar-link:not(.is-arrowless)::after, .select:not(.is-multiple):not(.is-loading)::after{top: 50px !important;}
+    .fontuser .form-control{max-width: 100% !important;padding: 6px 25px;}
+    /*.fontuser i {position: absolute;left: 23px;top: 43px;}*/
+    .nested .icons {padding: 10px 0 15px 0 !important;}
+    .form-control1{max-width: 100% !important;}
+
+    .mobile-subsidebar .inner {width: calc(100% - 0px)!important;margin-left: 0px !important;}
+    .mobile-subsidebar .inner .submenu li a {padding: 6px 10px;text-transform: capitalize;color: #000 !important;}
+    .mobile-navbar .navbar-brand .is-brand img {height: 50px !important;max-height: 50px !important;}
+
+    .sticky {position: relative !important;top: 0px !important;max-width: 100% !important;}
+     .onebox-order-info .status_item:after{display: none;}
+
+     .mobile-subsidebar .inner .submenu li.has-children .collapse-wrap{height: auto;min-height: auto;}
+
+     .hide_content{display: none !important;}
+     .compare_btn .dropdown{display: block;}
+
+     .mobile_device_widd{display: block !important;}
+     .mobile_device_widd .right {margin-right: 10px;}
+     .mobile_device_widd .center {margin-right: 40px;}
+
+
+    .listing_filter{margin-top: 30px !important;}
+
+    .modern-login .is-form {padding-top: 0px !important;}
+    .mob_device .hero.is-fullheight {min-height: 100%;}
+    .main_logo .hero-image {max-width: 40% !important;margin: 0 auto !important;}
+    .class_mob{display: none !important;}
+    .res_table_new  .fa-angle-double-right {display: none;}
+    .btn_mobile {display: inline-flex;background: #b00505;color: #fff;outline: none;border: 1px solid #ccc;font-size: 14px;padding: 5px 10px;}
+
+    .price_form_ctrl i {left: 26px;top: 37px;font-weight: 800;}
+    .compare_btn .dropdown-content{right: unset;}
+    .upload_button {float: left;width: 100%;margin: 20px 0 30px;}
+    .listing_filter .order_inf a{padding: 10px 10px;}
+    .toptable_new  tr{display: flex;flex-wrap: wrap;}
+    .toptable_new  td{width: 100%;}
+    img.arrow_click{display: none;}
+    .onebox-order-info h3{margin: 25px 0 10px 0 !important;}
+    .mob_hide {display: none;}
+    .mob_show {display: block !important;}
+    .view-wrapper.is-webapp .page-content-inner {margin-top: 60px;}
+    .sub_heading {float: left;width: 100%;}
+    .onebox-order-heading {float: left;width: 100%;}
+
+    .center_mob {float: left;width: 80%;}
+.center_mob .dropdown.is-spaced .dropdown-menu{margin-top: 20px;}
+.center_mob .dropdown-content .dropdown-block {display: flex;align-items: center;padding: 16px;}
+.center_mob .dropdown-content .dropdown-block .meta{margin-left: 12px;}
+.navbar-brand .brand-start {width: 60px;}
+
+
+
+}
+
+@media (max-width: 767px){
+    .page-title.is-webapp.hide_content {
+        display: -webkit-box !important;
+        display: -ms-flexbox !important;
+        display: none !important;
+
+    }
+    .column_mobile {display: flex;flex-direction: column-reverse;}
+    .mobile_order_view {margin-top: 30px !important;}
+
+
+}
+
+@media only screen and (min-width: 420px) and (max-width: 550px) {
+
+    .head_title .title.is-5 {display: none;}
+    /*.mobile-navbar{display: block !important;float: right !important;}*/
+
+    .search_btn h3{font-size: 20px !important;}
+    .number_ticket .column.is-2{float: left;width: 50% !important;}
+    .search-details .centDivsearch {margin: auto;width: 100% !important;}
+    .full_widd_50 {width: 100% !important;float: left;}
+    .full_widd_100{width: 100% !important;}
+    .details {float: left;width: 100%;margin: 0px 0 !important;}
+    .sticky {position: relative !important;top: 0px !important;max-width: 100% !important;}
+    .seat_detail .select:not(.is-multiple){height: auto !important;margin: 0px !important;}
+    .select_resti {margin: 0 0px !important;}
+    .toptable td:before {content: attr(data-label);text-align: right;font-weight: bold;text-transform: uppercase;float: left;}
+    .toptable td, .toptable th {display: block;text-align: right !important;padding: 15px 15px;border-bottom: 1px solid #ddd;font-weight: 500;color: #000;}
+    .toptable tr th{border: none;clip: rect(0 0 0 0);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}
+    .nested td, .nested th {display: block !important;text-align: right !important;padding: 10px 15px;border-bottom: 1px solid #ddd;font-weight: 500;color: #000;}
+    .toptable .nest_tab {border: 2px solid #f8f1f1;width: 100%;}
+    .toptable .select {display: table-cell;width: auto !important;height: auto;}
+    .ticket_quantity{float: none;height: auto;}
+    .navbar-link:not(.is-arrowless)::after, .select:not(.is-multiple):not(.is-loading)::after{top: 50px !important;}
+    .fontuser .form-control{max-width: 100% !important;padding: 6px 25px;}
+    /*.tab_sec .fontuser i {position: absolute;left: 20px !important;top: 47px !important;}*/
+    /*.price .fontuser i {left: 14px !important;top: 14px !important;}*/
+    .nested .icons {padding: 10px 0 15px 0 !important;}
+    .form-control1{max-width: 100% !important;}
+    .select_value .select:not(.is-multiple):not(.is-loading)::after {right: 16px;top: 16px !important;}
+    .seat_detail .details input[type="text"]{padding: 0 10px !important;}
+    .choices .choices__inner .choices__list .choices__item{font-size: 13px !important;text-overflow: ellipsis !important;overflow: hidden !important;white-space: nowrap !important;}
+
+
+    .mobile-subsidebar .inner {width: calc(100% - 0px)!important;margin-left: 0px !important;}
+    .mobile-subsidebar .inner .submenu li a {padding: 6px 10px;text-transform: capitalize;color: #000 !important;}
+    .mobile-navbar .navbar-brand .is-brand img {height: 50px !important;max-height: 50px !important;}
+    .mobile-subsidebar .inner .submenu li.has-children .collapse-wrap{height: auto;min-height: auto;}
+
+     .onebox-order-info .status_item:after{display: none;}
+     /*.list-view-toolbar.is-reversed .control{margin-top: 70px !important;}*/
+     .listing_filter{margin-top: 30px !important;}
+
+     .modal-card-body{overflow-x: auto !important;height: 300px !important;}
+     .all-projects .checkbox {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 10px 5px !important;
+            float: left !important;
+            text-align: left !important;
+        }
+     .detail_sec_left .select:not(.is-multiple):not(.is-loading)::after {top: 20px !important;}
+     .onebox-order-info .details{min-height: 100% !important;}
+
+     .hide_content{display: none !important;}
+     .compare_btn .dropdown{display: block;}
+
+     .mobile_device_widd{display: block !important;}
+     .mobile_device_widd .right {margin-right: 10px;}
+     .mobile_device_widd .center {margin-right: 40px;}
+
+     .column_mobile {display: flex;flex-direction: column-reverse;}
+
+
+    .modern-login .is-form {padding-top: 0px !important;}
+    .mob_device .hero.is-fullheight {min-height: 100%;}
+    .main_logo .hero-image {max-width: 40% !important;margin: 0 auto !important;}
+    .class_mob{display: none !important;}
+    .res_table_new  .fa-angle-double-right {display: none;}
+    .btn_mobile {display: inline-flex;background: #b00505;color: #fff;outline: none;border: 1px solid #ccc;font-size: 14px;padding: 5px 10px;}
+
+    .price_form_ctrl i {left: 26px;top: 37px;font-weight: 800;}
+    .compare_btn {margin: 10px 0;}
+    .mobile_order_view {float: left !important;width: 100% !important;}
+    .compare_btn .dropdown-content{right: unset;}
+    .upload_button {float: left;width: 100%;margin: 20px 0 30px;}
+    .upload_button a {width: 100%;max-width: 190px;float: left;}
+    .upload_button .button{float: left;width: 100%;max-width: 182px;}
+    .Personal_info .form_submit input[type="submit"] {margin: 0px 0 !important;display: block !important;width: 100% !important;
+    max-width: 100% !important;padding: 15px 0px !important;}
+
+    .listing_filter .order_inf a {padding: 10px 10px;width: 100%;max-width: 100%;float: left;margin: 5px 5px;text-align: center;}
+    /*.search_btn .choices__list--dropdown{top: 0px !important;}*/
+    .list_ticket_type .fontuser i {left: 14px;top: 16px;font-size: 12px;}
+    /*.search_btn .choices__list--dropdown{top: 45px !important;z-index: 10000000;}*/
+
+    .search_btn .choices__list--dropdown .choices__list{max-height: 130px;}
+
+    .toptable_new  tr{display: flex;flex-wrap: wrap;}
+    .toptable_new  td{width: 100%;}
+    .srch_btn button {width: 100%;}
+    .border-tick-info .details{margin: 0 0px;}
+    .tick_info_head .details{margin: 0 0px;}
+    .status_item .details{margin: 0 0px;}
+    .welcome_txt {margin: 20px 0;}
+    .sell_tick_btn .button {width: 100%;margin: 0px auto;padding: 10px;max-width: 230px;}
+    .dashboard-header .end {width: 100%;display: block !important;}
+    img.arrow_click{display: none;}
+    .onebox-order-info h3{margin: 25px 0 10px 0 !important;}
+    .mob_hide {display: none;}
+    .mob_show {display: block !important;}
+    .view-wrapper.is-webapp .page-content-inner {margin-top: 60px;}
+    .onebox-order-heading {float: left;width: 100%;}
+
+
+
+.center_mob {float: left;width: 70%;}
+.center_mob .dropdown.is-spaced .dropdown-menu{margin-top: 20px;}
+.center_mob .dropdown-content .dropdown-block {display: flex;align-items: center;padding: 16px;}
+.center_mob .dropdown-content .dropdown-block .meta{margin-left: 12px;}
+.navbar-brand .brand-start {width: 60px;}
+
+
+
+}
+
+
+@media only screen and (min-width: 320px) and (max-width: 420px) {
+
+    .head_title .title.is-5 {display: none;}
+    /*.mobile-navbar{display: block !important;float: right !important;}*/
+    .seat_detail .select:not(.is-multiple){height: auto !important;margin: 0px !important;}
+
+     .search-details .centDivsearch {margin: auto;width: 100% !important;}
+     .number_ticket .column.is-2{float: left;width: 50% !important;}
+     .search_btn h3{font-size: 20px !important;}
+     .ticket_details h2, .seat_detail h2, .price h2, .split_type h2, .number_ticket h2, .choose_ticket h2{font-size: 16px !important;}
+     .choices .choices__inner .choices__list .choices__item{font-size: 13px !important;text-overflow: ellipsis !important;overflow: hidden !important;white-space: nowrap !important;}
+    .radio-toolbar label{height: auto;}
+    .full_widd_50 {width: 100%;float: left;}
+    .full_widd_100{width: 100%;}
+    /*.details {float: left;width: 100%;margin: 10px 0;}*/
+    .border-tick-info .details{margin: 0 0px;}
+    .tick_info_head .details{margin: 0 0px;}
+    .status_item .details{margin: 0 0px;}
+    .sticky {position: relative !important;top: 0px !important;max-width: 100% !important;}
+    .toptable td:before {content: attr(data-label);text-align: right;font-weight: bold;text-transform: uppercase;float: left;}
+    .toptable td, .toptable th {display: block;text-align: right !important;padding: 15px 15px;border-bottom: 1px solid #ddd;font-weight: 500;color: #000;}
+    .toptable tr th{border: none;clip: rect(0 0 0 0);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}
+
+    .select_resti {margin: 0 0px !important;}
+    .nested td, .nested th {display: block !important;text-align: right !important;padding: 10px 15px;border-bottom: 1px solid #ddd;font-weight: 500;color: #000;}
+    .toptable .nest_tab {border: 2px solid #f8f1f1;width: 100%;}
+    .toptable .select {display: table-cell;width: auto !important;height: auto;}
+    .ticket_quantity{float: none;height: auto;}
+    .navbar-link:not(.is-arrowless)::after, .select:not(.is-multiple):not(.is-loading)::after{top: 50px !important;}
+    .fontuser .form-control{max-width: 100% !important;padding: 6px 25px;}
+    /*.tab_sec .fontuser i {position: absolute;left: 20px !important;top: 47px !important;}*/
+    /*.price .fontuser i {left: 14px !important;top: 14px !important;}*/
+    .nested .icons {padding: 10px 0 15px 0 !important;}
+    .form-control1{max-width: 100% !important;}
+    .select_value .select:not(.is-multiple):not(.is-loading)::after {right: 16px;top: 16px !important;}
+    .select_detail_chk h5 {font-size: 12px !important;margin: 5px 0px !important;overflow: hidden !important;text-overflow: ellipsis !important;white-space: nowrap !important;width: 144px !important;}
+    .seat_detail .details input[type="text"]{padding: 0 10px !important;}
+
+    /*.order_inf a {padding: 10px 15px;width: 100%;float: left;margin: 5px 5px;text-align: left;}*/
+
+    .mobile-subsidebar .inner {width: calc(100% - 0px)!important;margin-left: 0px !important;}
+    .mobile-subsidebar .inner .submenu li a {padding: 6px 10px;text-transform: capitalize;color: #000 !important;}
+    .mobile-navbar .navbar-brand .is-brand img {height: 50px !important;max-height: 50px !important;}
+
+    .onebox-order-info .status_item:after{display: none;}
+    /*.onebox-order-info .account-wrapper {float: left;width: 100%;}*/
+    /*.view-wrapper{margin-top: 30px !important;}*/
+    .sub_head a{padding: 10px 16px !important;font-size: 13px !important;}
+    .sub_head{float: left !important;}
+    .list-view-toolbar.is-reversed .control{margin-top: 30px !important;width: 100%;}
+    .filter_button_list .button.h-button{width: 49%;margin: 0 0 10px;}
+    /*.nested .icons a {width: 48%;text-align: center;margin: 2px 0;}*/
+    .notes_copy {text-align: left;}
+    .tabs-wrapper.is-slider.is-inverted .tabs, .tabs-wrapper-alt.is-slider.is-inverted .tabs{margin-top: 60px;}
+    .view-wrapper.is-webapp .page-content-inner {margin-top: 60px;}
+    .modal-card-body{overflow-x: auto !important;height: 300px !important;}
+    .all-projects .checkbox {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 10px 5px !important;
+        float: left !important;
+        text-align: left !important;
+    }
+    .detail_sec_left .select:not(.is-multiple):not(.is-loading)::after {top: 20px !important;}
+    .onebox-order-info .details{min-height: 100% !important;}
+
+    .selec_head{margin-top: 10px;}
+    .selec_img img {height: 40px !important;width: 50px !important;}
+
+    .mobile-subsidebar .inner .submenu li.has-children .collapse-wrap{height: auto;min-height: auto;}
+
+    .hide_content{display: none !important;}
+
+    .compare_btn .dropdown{display: block;}
+
+    .mobile_device_widd{display: block !important;}
+    .mobile_device_widd .right {margin-right: 10px;}
+    .mobile_device_widd .center {margin-right: 40px;}
+
+    
+    .column_mobile {display: flex;flex-direction: column-reverse;}
+    .class_mob{display: none !important;}
+    .modern-login .is-form {padding-top: 0px !important;}
+
+    .mob_device .hero.is-fullheight {min-height: 100%;}
+    .main_logo .hero-image {max-width: 40% !important;margin: 0 auto !important;}
+    .res_table_new  .fa-angle-double-right {display: none;}
+    .btn_mobile {display: inline-flex;background: #b00505;color: #fff;outline: none;border: 1px solid #ccc;font-size: 14px;padding: 5px 10px;}
+
+    .price_form_ctrl i {left: 26px;top: 37px;font-weight: 800;}
+    .compare_btn {margin: 10px 0;}
+    .mobile_order_view {float: left !important;width: 100% !important;}
+    .compare_btn .dropdown-content{right: unset;}
+
+    .border-left-line .upload_button {float: left;width: 100%;margin: 20px 0 30px;}
+    .border-left-line .upload_button a {width: 100%;max-width: 100%;float: left;}
+    .border-left-line .upload_button .button{float: left;width: 100%;max-width: 100%; margin: 5px 0;}
+
+    .Personal_info .form_submit button {margin: 0px 0 !important;display: block !important;width: 100% !important;
+    max-width: 100% !important;padding: 15px 0px !important;}
+
+    .listing_filter .order_inf a {padding: 10px 10px;width: 100%;max-width: 100%;float: left;margin: 5px 5px;text-align: center;}
+
+    /*.search_btn .choices__list--dropdown{top: 45px !important;z-index: 10000000;}*/
+    .search_btn .choices__list--dropdown .choices__list{max-height: 130px;}
+    .list_ticket_type .fontuser i {left: 14px;top: 16px;font-size: 12px;}
+
+    .toptable_new  tr{display: flex;flex-wrap: wrap;}
+    .toptable_new  td{width: 100%;}
+
+    .srch_btn button {width: 100%;}
+    .welcome_txt {margin: 20px 0;}
+    .dashboard-header .end {width: 100%;display: block !important;}
+    .sell_tick_btn .button {width: 100%;margin: 0px auto;padding: 10px;max-width: 230px;}
+    img.arrow_click{display: none;}
+    .onebox-order-info h3{margin: 25px 0 10px 0 !important;}
+    .tab_head{margin: 25px 0 20px 0;}
+    .mob_hide {display: none;}
+    .mob_show {display: block !important;}
+    .onebox-order-heading {float: left;width: 100%;}
+
+
+.center_mob {float: left;width: 70%;}
+.center_mob .dropdown.is-spaced .dropdown-menu{margin-top: 20px;}
+.center_mob .dropdown-content .dropdown-block {display: flex;align-items: center;padding: 16px;}
+.center_mob .dropdown-content .dropdown-block .meta{margin-left: 12px;}
+.navbar-brand .brand-start {width: 60px;}
+
+
+ }
+
+ @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape){
+.mobile-main-sidebar, .mobile-subsidebar {
+     display: block !important; 
+}

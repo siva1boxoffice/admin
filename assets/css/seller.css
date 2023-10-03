@@ -1,0 +1,58 @@
+@font-face {
+  font-family: Gilroy-Regular;
+  src: url(../fonts/Gilroy-Regular.woff);
+}
+
+body{
+    font-family: 'Gilroy-Regular' !important;
+}
+
+.head_title .webapp-navbar-inner .center{width: 100%;justify-content: left !important;}
+.head_title .webapp-navbar-inner .center .centered-links{max-width: 40%;}
+
+.head_title .webapp-navbar-inner .left{width: 10%;}
+
+/*.search-details .centDivsearch {
+    margin: auto;
+    width: 50%;
+}*/
+
+
+.onebox-order-info .details {
+    background: #fff;
+    padding: 20px;
+    border-radius: 0px;
+    float: left;
+    width: 100%;
+    /*min-height: 332px !important;*/
+}
+
+@media (max-width: 991px){
+.mobile-subsidebar .inner .submenu li.has-children .collapse-wrap>a svg{display: none;}
+}
+
+/*.webapp-navbar {
+   
+    height: 65px;
+        
+}
+
+.account-wrapper {
+    padding-bottom: 30px;
+    padding-top: 30px;
+}
+
+@media only screen and (min-width: 320px) and (max-width: 420px)
+{
+.mobile-navbar .navbar-brand .is-brand img {
+    height: 35px !important;
+    max-height: 35px !important;
+}
+}
+
+.button.h-button {
+    height: 42px;
+    border-radius: 0px;
+    padding: 8px 30px 8px 30px;
+    font-weight: 700;
+}*/

@@ -1,0 +1,198 @@
+        <?php $this->load->view('common/header');?>
+
+        <!-- Content Wrapper -->
+         <div id="app-onboarding" class="view-wrapper is-webapp" data-page-title="Currency List" data-naver-offset="214" data-menu-item="#layouts-navbar-menu" data-mobile-item="#home-sidebar-menu-mobile">
+
+            <div class="page-content-wrapper">
+                <div class="page-content is-relative business-dashboard course-dashboard">
+
+                    <div class="dashboard-title is-main">
+                            <div class="left">
+                                <h2 class="dark-inverted">Coupon List</h2>
+                            </div>
+                            <div class="right">
+                                <div class="list-flex-toolbar is-reversed ">
+                                    <a class="button is-circle is-primary" href="<?php echo base_url();?>settings/discount_coupons/add_discount_coupon">
+                                    <span class="icon is-small">
+                                    <i data-feather="plus"></i>
+                                    </span>
+                                    </a>
+                                    &nbsp;
+                                     <div class="control has-icon">
+
+                                        <input class="input custom-text-filter" placeholder="Search..." data-filter-target=".flex-table-item">
+                                        <div class="form-icon">
+                                            <i data-feather="search"></i>
+                                        </div>
+                                        
+                                    </div>
+
+
+                                       <div class="switch-block no-padding-all">
+                                            <label class="form-switch is-primary">
+                                                <input type="checkbox" class="is-switch" name="is_active" value="1" <?php echo $coupon_status->site_value ?  "checked" : "" ;?>
+        >
+                                                <i></i>
+                                            </label>
+                                            <div class="text">
+                                                <span>Coupon Enable / Disable </span>
+                                            </div>
+                                        </div>
+                                
+
+                                </div>
+                        </div>
+                        </div>
+
+                    <div class="page-content-inner">
+
+                     
+                        <div class="flex-list-wrapper">
+
+
+                                <div class="flex-table">
+
+                                    <!--Table header-->
+                                    <div class="flex-table-header" data-filter-hide>
+                                    <span class="">Coupon Code</span>
+                                    <span>Coupon Type</span>
+                                    <span>Coupon Value</span>
+                                    <span class="">Expiry Date</span>
+                                    <span class="">Status</span>
+                                    <span class="cell-end">Actions</span>
+                                    </div>
+
+                                    <div class="flex-list-inner">
+                                        <?php foreach($coupons as $coupon){
+                                           // echo "<pre>";print_r($match);
+                                         ?>
+                                        <!--Table item-->
+                                        <div class="flex-table-item">
+                                            <div class="flex-table-cell is-media " data-th="Name">
+                                               
+                                                <div>
+                                                    <span class="item-name dark-inverted" data-filter-match><?php echo $coupon->coupon_code;?></span>
+                                                </div>
+                                            </div>
+                                            <div class="flex-table-cell " data-th="Verified">
+                                            <?php if($coupon->coupon_type == '1'){ ?>
+                                            <span class="tag is-success is-rounded">Amount</span>
+                                            <?php }else if($coupon->coupon_type == '2'){ ?>
+                                            <span class="tag is-info is-rounded">Percentage</span>
+                                            <?php } ?>
+                                        </div>
+
+                                              <div class="flex-table-cell is-media " data-th="Mobile No.">
+                                               
+                                                <div>
+                                                    <span class="light-text" data-filter-match><?php echo $coupon->coupon_value;?></span>
+                                                </div>
+                                            </div>
+
+                                            
+
+                                            <div class="flex-table-cell " data-th="User Type">
+                                                <span class="light-text" data-filter-match><?= $coupon->create_date; ?> To <?= $coupon->expiry_date; ?></span>
+                                            </div>
+
+                                            
+
+                                          <div class="flex-table-cell" data-th="Status">
+                                             <?php if($coupon->status == '1'){ ?>
+                                            <span class="tag is-success is-rounded">Active</span>
+                                            <?php }else if($coupon->status != '1'){ ?>
+                                            <span class="tag is-danger is-rounded">InActive</span>
+                                            <?php } ?>
+                                        </div>
+
+                                         <div class="flex-table-cell cell-end" data-th="Actions">
+                                            <div class="dropdown is-spaced is-dots is-right dropdown-trigger is-pushed-mobile">
+                                                <div class="is-trigger" aria-haspopup="true">
+                                                    <i data-feather="more-vertical"></i>
+                                                </div>
+                                                <div class="dropdown-menu" role="menu">
+                                                    <div class="dropdown-content">
+                                                        <a href="<?php echo base_url();?>settings/discount_coupons/add_discount_coupon/<?php echo base64_encode(json_encode($coupon->c_id));?>" class="dropdown-item is-media">
+                                                            <div class="icon">
+                                                                <i class='fa fa-edit'></i>
+                                                            </div>
+                                                            <div class="meta">
+                                                                <span>Edit</span>
+                                                                <span>Edit Coupon Details</span>
+                                                            </div>
+                                                        </a>
+                                                        
+                                                        <hr class="dropdown-divider">
+                                                        <a id="branch_<?php echo $coupon->c_id;?>" href="javascript:void(0);" data-href="<?php echo base_url();?>settings/discount_coupons/delete_coupon/<?php echo $coupon->c_id;?>" class="dropdown-item is-media delete_action" onClick="delete_data('<?php echo $coupon->c_id;?>');">
+                                                            <div class="icon">
+                                                                <i class="lnil lnil-trash-can-alt"></i>
+                                                            </div>
+                                                            <div class="meta">
+                                                                <span>Remove</span>
+                                                                <span>Remove from list</span>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>                                        </div>
+
+                                         <?php } ?>
+
+                                          <!-- Paginate -->
+                                <div class="pagination datatable-pagination pagination-datatables flex-column">
+                                        <?php echo $pagination; ?>
+                                </div>
+
+                                    </div>
+
+                                </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+                <?php $this->load->view('common/footer');?>
+
+                <script type="text/javascript">
+
+                    $(".is-switch").on("change",function(){
+                        
+                     
+                       var status_switch =  $('.is-switch').is(':checked');
+                       if(status_switch){
+                            var status = 1;
+                       }
+                       else{
+                            var status = 0;
+                       }
+                       discount_stauus(status)
+                    });
+
+                    
+                    function discount_stauus(status){
+                        $.ajax({
+                          type: "POST",
+                          dataType: "json",
+                          url: "<?php echo base_url()?>settings/discount_coupons/update_coupon_status/" +  status ,
+                          success: function(data) {
+                                 if(data.status == 1) {
+
+                                    notyf.success(data.msg, "Success", {
+                                    timeOut: "1800"
+                                    });
+                                }else if(data.status == 0) {
+                                    notyf.error(data.msg, "Failed", "Oops!", {
+                                    timeOut: "1800"
+                                });
+                                }
+                          }
+                        });  
+                    }
+                </script>
+                <?php exit;?>
