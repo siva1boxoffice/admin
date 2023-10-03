@@ -370,7 +370,7 @@
                                                          <?php } endif; ?>
                                                       </select></td>
                                               <td>
-                                                  <div class="clr_select"><input  name="regions[{{main_category}}][fill]" type="color" class="myjscolor mapsvg-region-color"  value="" id="aa-{{id}}"></div>
+                                                  <div class="clr_select"><input  name="regions[{{main_category}}][fill]" type="color" class="myjscolor mapsvg-region-color"  value="" id="aa-{{id}}" data-color-id="{{id}}"></div>
                                               </td>
                                           </tr>
                                           
@@ -537,9 +537,9 @@ if($stadium_details){
             
          
           $('input[name="regions[' + rid + '][fill]"]').val( rgb2hex(datacolor));
-          $('#aa-' + rid).css("background",datacolor);
+          $('[data-color-id="'+rid +'"]').css("background",datacolor);
           $("[data-section='"+region_name+"'] .block").css("fill" , rgb2hex(datacolor ));
-          $('path#'+ rid).addClass("map-"+$(this).val()).removeClass("map-"+old_category);
+          //$('path#'+ rid).addClass("map-"+$(this).val()).removeClass("map-"+old_category);
           $('#mapsvg-region-'+ rid).addClass("cc-"+$(this).val()).removeClass("cc-"+old_category).attr('data-category',$(this).val());;
          //var color_id = $('input[name="regions[' + rid + '][fill]"]').val();
        
@@ -579,25 +579,31 @@ if($stadium_details){
                $('.region_block_id:checked').each(function() {
                   var sel_val = $(this).val();
                   var old_category  = $(this).parents("tr").attr('data-category');
-                  $("#mapsvg-region-" + sel_val).attr("data-category",selected_val ) ; 
+
+                  
+                  $('[data-region-id="'+ sel_val +'"]').attr("data-category",selected_val );
+
+                  //$("#mapsvg-region-" + sel_val).attr("data-category",selected_val ) ; 
                   var region_name = $(this).parents("tr").attr('data-region-name');
 
                   $(this).parents("tr.cc-"+ old_category ).addClass("cc-"+ selected_val).removeClass("cc-"+ old_category); 
 
-                  $("#category_name_"+ sel_val).html(dataname);
+                  //$("#category_name_"+ sel_val).html(dataname);
+
+
                   $('input[name="regions[' + sel_val + '][fill]"]').val( rgb2hex(datacolor));
-                  $('#picker_' + sel_val).css("background",datacolor);
+                  //$('#picker_' + sel_val).css("background",datacolor);
 
                   $("[data-section='"+region_name+"'] .block").css("fill" , rgb2hex(datacolor));
                    $("[data-section='"+ region_name+"']  .block").css({"stroke": "#000", "stroke-width": "1" });
 
                    console.log(sel_val);
-                  $('#' + sel_val).css("background",datacolor);
-                  $('#' + sel_val).addClass("map-" + selected_val ).removeClass("map-"+ old_category);;
+                  //$('#' + sel_val).css("background",datacolor);
+                  //$('#' + sel_val).addClass("map-" + selected_val ).removeClass("map-"+ old_category);;
                   block_ids.push(sel_val);
-                  $("#"+sel_val).css("fill" , datacolor);
+                  // $("#"+sel_val).css("fill" , datacolor);
                   $('select[name="regions[' + sel_val + '][href]"]').val(selected_val);
-                   $("#"+ sel_val).css("opacity","1");
+                   //$("#"+ sel_val).css("opacity","1");
                });
               // console.log(block_ids);
    
@@ -662,14 +668,14 @@ if($stadium_details){
 
 
    $("#content_1").mCustomScrollbar({
-      mouseWheelPixels: 1000 ,
+      mouseWheelPixels: 100 ,
       scrollButtons:{
         enable:true
       }
 
     });
    $("#content_2").mCustomScrollbar({
-        mouseWheelPixels: 1000 ,
+        mouseWheelPixels: 100 ,
       scrollButtons:{
         enable:true
       }
