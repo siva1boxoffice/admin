@@ -25,7 +25,7 @@ class Webhooksres extends CI_Controller {
    
     if($yourHash == @$signature_value){
 
-        // Your stuf
+        // Your stuf here
 
         echo json_encode(array('status' => 'accepted','status_code' => 200));exit;
     }
