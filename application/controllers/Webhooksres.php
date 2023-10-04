@@ -15,11 +15,31 @@ class Webhooksres extends CI_Controller {
 
    public function index() {
 
-$$token = 'Authorization: Bearer 30911337928580013';
-$client_secret = get_option("client_secret"); 
-curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-'X-Signature: signature='.$client_secret.',algorithm=HMAC-SHA256',
-'Content-Type: application/x-www-form-urlencoded', $token ));
+
+    $secret_hmacKey           = "05b82d846749cf7f6b24c576b9";
+    $payload                  = file_get_contents("php://input");
+    $signature                = $_SERVER['HTTP_X_SIGNATURE'];
+    $signature_data           = explode(',',$signature);
+    $signature_value          = explode('=',$signature_data[0]);
+   
+
+    $yourHash                 = hash_hmac('sha256', $payload, $secret_hmacKey);
+   
+    if($yourHash == @$signature_value[1]){
+
+
+      /*  echo "<pre>";print_r($payload);
+        echo "<pre>";print_r($_SERVER);*/
+
+        echo json_encode(array('status' => 'accepted','status_code' => 200));exit;
+    }
+    else{
+        echo json_encode(array('status' => 'refused','status_code' => 401));exit;
+    }
+
+
+
+
 }
 
 }
