@@ -158,8 +158,8 @@ z-index: 9999;
                                        <select class="custom-select" id="venue" name="venue" required>
                                           <option value="">Select Venue</option>
                                           <?php foreach ($stadiums as $stadium) {
-                                             $stadium_name = $stadium->stadium_name;                                     if($stadium->stadium_variant != ''){
-                                               $stadium_name = $stadium->stadium_name.'-'.$stadium->stadium_variant;
+                                             $stadium_name = $stadium->stadium_name.' - '.$stadium->s_id;                                     if($stadium->stadium_variant != ''){
+                                               $stadium_name = $stadium->stadium_name.' - '.$stadium->s_id.' - '.$stadium->stadium_variant;
                                                                                               }
                                              ?>
                                           <option <?php if ($event->venue == $stadium->s_id) { ?> selected <?php } ?> value="<?php echo $stadium->s_id; ?>"><?php echo $stadium_name; ?></option>

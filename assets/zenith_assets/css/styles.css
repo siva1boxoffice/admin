@@ -7177,7 +7177,7 @@ span.align {
 
 a.tooltip_texts {
     color: #000;
-    font-size: 20px;
+    font-size: 30px;
 }
 .tooltip-inner {
             background-color: #000 !important;
@@ -9094,4 +9094,7 @@ span.compare_price {
 }
 .approve_btn a {
     color: #fff !important;
+}
+.tooltip_texts .fa-comment-dots {
+  font-size: 20px;
 }

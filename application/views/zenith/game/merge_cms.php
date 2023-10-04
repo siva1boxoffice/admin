@@ -389,7 +389,7 @@
                           $.each(response.bx_stadiums,function(key, value)
                 { 
                     
-                    $("#stadium").append('<option value=' + value.s_id + '>' + value.stadium_name+'</option>');
+                    $("#stadium").append('<option value=' + value.s_id + '>' + value.stadium_name+' - '+value.s_id+'</option>');
                 });
 
 
