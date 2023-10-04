@@ -45,6 +45,15 @@
           removeButtons: 'PasteFromWord'
         });
     }
+    if($("#editor-6").length > 0 ){
+      var editor5 = CKEDITOR.replace('editor-6', {
+       extraAllowedContent: 'div;h1;h2;h3;h4;h5;h6;p;span;ul;li;table;td;style;*[id];*(*);*{*}',
+       disallowedContent : 'span;code;big',
+       height: 460,
+       startupMode: 'source',
+       removeButtons: 'PasteFromWord'
+     });
+ }
    /* CKEDITOR.replace("editor-4"),
         e("#editor-5").length &&
             ClassicEditor.create(document.querySelector("#editor-5"))

@@ -34,7 +34,7 @@
 
 	<script src="<?php echo base_url(); ?>assets/zenith_assets/libs/ckeditor4/ckeditor.js"></script>
   <script src="<?php echo base_url(); ?>assets/zenith_assets/libs/ckeditor/js/ckeditor.min.js"></script>
-  <script src="<?php echo base_url(); ?>assets/zenith_assets/js/pages/form-ckeditors.init.js?v=2.1.2.1.1"></script>
+  <script src="<?php echo base_url(); ?>assets/zenith_assets/js/pages/form-ckeditors.init.js?v=2.1.2.1.3"></script>
 	
     <!-- ================== END PAGE JS ================== -->
 </body>
