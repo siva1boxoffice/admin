@@ -368,7 +368,7 @@
                     if(merge_status == 1){
                         merged = "Sync";
                     }
-                    $("#api_stadium").append('<option value=' + value.stadium_id + '>' + value.stadium_name+' - '+value.stadium_id+' - '+merged + '</option>');
+                    $("#api_stadium").append('<option value=' + value.stadium_id + '>' + value.stadium_name+' - '+merged + '</option>');
                 });
 
 
