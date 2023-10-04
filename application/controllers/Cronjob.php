@@ -17,6 +17,38 @@ class Cronjob extends CI_Controller {
 
         }
 
+public function seller_webhooks(){
+
+  
+    $bookings = $this->General_Model->getAllItemTable_Array('booking_global', array('booking_status' => 1,'seller_id' => 232))->result();
+    foreach($bookings as $booking){
+
+        $booking_no = md5($booking->booking_no);
+        $orderData =  $this->General_Model->getOrderData($booking_no);
+        if(!empty($orderData)){
+            
+
+            $service_url         = "https://api2.listmyticket.com/storefront/webhooks";
+            $post_data = array('bg_id' => $orderData->bg_id);
+                    
+                    //echo "<pre>";print_r($post_data);exit;
+                    $handle = curl_init();
+                    curl_setopt($handle, CURLOPT_HTTPHEADER, array(
+                    'domainkey: https://www.1boxoffice.com/en/'
+                    ));
+                    curl_setopt($handle, CURLOPT_URL, $service_url);
+                    curl_setopt($handle, CURLOPT_POST, 1);
+                    curl_setopt($handle, CURLOPT_POSTFIELDS,$post_data);
+                    curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+                    $output = curl_exec($handle);
+                    curl_close($handle);
+
+        }
+
+    }
+    
+}
+
 public function sellerTickets_delete($match_id,$listing_ids=""){
 
         if($match_id != "" && !empty($listing_ids)){
