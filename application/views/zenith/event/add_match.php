@@ -726,12 +726,12 @@
                                                  <textarea id="editor-5" name="long_description" placeholder="Enter Long Description"><?php echo isset($matches_lang->long_description) ? $matches_lang->long_description : ''; ?></textarea>
                                                </div>
                                           </div>    
-                                          <div class="col-lg-12">
+                                          <!-- <div class="col-lg-12">
                                              <div class="form-group">
                                                  <label for="example-textarea">Short Description</label>
                                                  <textarea id="editor-6" name="short_description" placeholder="Enter Short Description"><?php echo isset($matches_lang->short_description) ? $matches_lang->short_description : ''; ?></textarea>
                                                </div>
-                                          </div> 
+                                          </div>  -->
                                           <div class="col-lg-12">
                                              <div class="form-group">
                                                  <label for="simpleinput">Seo Keywords</label>

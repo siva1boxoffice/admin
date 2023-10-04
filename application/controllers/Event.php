@@ -860,7 +860,7 @@ class Event extends CI_Controller
 						$updateData_lang['meta_description'] = $this->input->post('metadescription');
 						$updateData_lang['description'] = trim($this->input->post('description'));
 						$updateData_lang['long_description'] = trim($this->input->post('long_description'));
-						$updateData_lang['short_description'] = trim($this->input->post('short_description'));
+						//$updateData_lang['short_description'] = trim($this->input->post('short_description'));
 						//echo "<pre>";print_r($updateData_lang);exit;	
 
 
