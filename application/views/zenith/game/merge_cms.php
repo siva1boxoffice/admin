@@ -368,7 +368,7 @@
                     if(merge_status == 1){
                         merged = "Sync";
                     }
-                    $("#api_stadium").append('<option value=' + value.stadium_id + '>' + value.stadium_name+' - '+merged + '</option>');
+                    $("#api_stadium").append('<option value=' + value.stadium_id + '>' + value.stadium_name+' - '+value.stadium_id+' - '+merged + '</option>');
                 });
 
 
@@ -389,7 +389,7 @@
                           $.each(response.bx_stadiums,function(key, value)
                 { 
                     
-                    $("#stadium").append('<option value=' + value.s_id + '>' + value.stadium_name+'</option>');
+                    $("#stadium").append('<option value=' + value.s_id + '>' + value.stadium_name+' - '+value.s_id+'</option>');
                 });
 
 
