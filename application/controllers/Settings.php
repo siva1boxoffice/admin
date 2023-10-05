@@ -3684,7 +3684,6 @@ public function get_country_name(){
 			// $this->form_validation->set_rules('max_price', 'Max Price Range', 'required');
 			$this->form_validation->set_rules('create_date', 'Start Date', 'required');
 			$this->form_validation->set_rules('expiry_date', 'Expiry Date', 'required');
-
 			if ($this->form_validation->run() !== false) {
 				$insert_data = array(
 					'coupon_code' => $_POST['coupon_code'],
@@ -3700,6 +3699,10 @@ public function get_country_name(){
 					'expiry_date' => date('Y-m-d', strtotime($_POST['expiry_date'])),
 					'create_date' => date('Y-m-d', strtotime($_POST['create_date'])),
 				);
+				$insert_data['credit_note'] = 0;
+				if($_POST['credit_note'] == 1){
+					$insert_data['credit_note'] = 1;
+				}
 				if ($_POST['id'] == '') {
 
 					$inserted_id = $this->General_Model->insert_data('coupon_code', $insert_data);
@@ -3821,6 +3824,7 @@ public function get_country_name(){
 			$this->form_validation->set_rules('max_price', 'Max Price Range', 'required');
 			$this->form_validation->set_rules('create_date', 'Start Date', 'required');
 			$this->form_validation->set_rules('expiry_date', 'Expiry Date', 'required');
+			$this->form_validation->set_rules('credit_note', 'Credit Note', 'required');
 
 			if ($this->form_validation->run() !== false) {
 				$insert_data = array(
@@ -3836,6 +3840,9 @@ public function get_country_name(){
 					'expiry_date' => date('Y-m-d', strtotime($_POST['expiry_date'])),
 					'create_date' => date('Y-m-d', strtotime($_POST['create_date'])),
 				);
+				if($_POST['credit_note'] == 1){
+					$insert_data['credit_note'] = 1;
+				}
 				if ($_POST['id'] == '') {
 
 					$inserted_id = $this->General_Model->insert_data('coupon_code', $insert_data);
