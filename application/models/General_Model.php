@@ -5709,7 +5709,7 @@ public function getOrderData_v2()
 		$this->db->where_in('booking_global.booking_status', [0,1,2,3]);
 
 		if($this->store_id){
-			$this->db->where('booking_global.store_id', $this->store_id);
+			//$this->db->where('booking_global.store_id', $this->store_id);
 		}
 
 		if(!empty($seller_id))
