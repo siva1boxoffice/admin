@@ -2806,6 +2806,7 @@ public function get_order_status(){
 			$this->load->view('game/my_sales_details', $this->data);
 		} else if ($segment == 'update_booking_status') {
 
+
 			$order = $this->General_Model->getAllItemTable_Array('booking_global', array('md5(bg_id)' => $_POST['bg_id']))->row();
 			if ($_POST['bg_id'] != "" && $_POST['status'] != "" && $order->bg_id != "") {
 
@@ -3032,6 +3033,7 @@ public function get_order_status(){
 			}
 			echo json_encode($response);
 			exit;
+			
 		
 		
 		/*
@@ -3463,7 +3465,128 @@ public function get_order_status(){
 		echo json_encode($response);
 				exit;
 		}
+		else if($segment =='ajax_update_pending_orders')
+		{	
+			$status=$_POST['status'];
+			$cancel_reason=@$_POST['reason'];
+		
+			foreach ($_POST['org_order_id'] as $key => $value) {
+				$order = $this->General_Model->getAllItemTable_Array('booking_global', array('bg_id' => $value))->row();
+				
+				// Confirmed 
+				if ($status == 1) {
+					if (strtolower(trim($order->source_type)) == 'tixstock') {
+						$url = base_url() . 'tixstock/orderConfirm';
+						$post_data = array("bg_id" => $order->bg_id, "tixstock_status" => 'Approved');
 
+					$tixresponse = $this->sendCurlRequest($url, $post_data);
+					
+						if ($tixresponse['tixstock_status'] == "Approved" && $order->booking_status == 2) {
+							$this->updateSellTickets($order->bg_id);
+
+							$booking_confirmation_no = "TK" . str_pad($order->bg_id, 7, '0', STR_PAD_LEFT);
+							$updateData = array('booking_status' => $status, 'booking_confirmation_no' => $booking_confirmation_no, 'updated_at' => date("Y-m-d h:i:s"));
+
+							$cond = array('bg_id' => $order->bg_id);
+							$this->General_Model->update('booking_global', $cond, $updateData);
+
+							$sendMail = $this->sendCurlMail($order->bg_id);
+
+							$response = array('status' => 0, 'msg' => "Booking status successfully changed.");
+							echo json_encode($response);
+							exit;
+
+						} else {
+							$response = array('status' => 1, 'msg' => "Oops. Unable to change the booking status.");
+							echo json_encode($response);
+							exit;
+						}
+					} else if (strtolower(trim($order->source_type)) == '1boxoffice' && $order->booking_status == 2) {
+						$this->updateSellTickets($order->bg_id);
+
+						$booking_confirmation_no = "TK" . str_pad($order->bg_id, 7, '0', STR_PAD_LEFT);
+						$updateData = array('booking_status' => $status, 'booking_confirmation_no' => $booking_confirmation_no, 'updated_at' => date("Y-m-d h:i:s"));
+						
+						$cond = array('bg_id' => $order->bg_id);
+						$this->General_Model->update('booking_global', $cond, $updateData);
+						$sendMail = $this->sendCurlMail($order->bg_id);
+
+						$response = array('status' => 0, 'msg' => "Booking status successfully changed.");
+						echo json_encode($response);
+						exit;
+					} else {
+
+						$response = array('status' => 1, 'msg' => "Oops. Unable to change the booking status.");
+						echo json_encode($response);
+						exit;
+					}
+				}
+				// Cancelled 
+				else if ($status == 3) {
+					if (strtolower(trim($order->source_type)) == 'tixstock') {
+						$url = base_url() . 'tixstock/orderConfirm';
+						$post_data = array("bg_id" => $order->bg_id, "tixstock_status" => 'Approved');
+
+						$tixresponse = $this->sendCurlRequest($url, $post_data);
+					//	$tixresponse['tixstock_status']="";
+						if ($tixresponse['tixstock_status'] == "Cancelled" ) {
+							//$this->updateSellTickets($order->bg_id);
+
+							$booking_tickets = $this->General_Model->getAllItemTable_Array('booking_tickets', array('booking_id' => $order->bg_id))->row();
+
+								$this->db->set('sold', "sold - $booking_tickets->quantity", false);
+								$this->db->where('s_no', $booking_tickets->ticket_id);
+								$this->db->update('sell_tickets', $data);
+
+
+							$booking_confirmation_no = "TK" . str_pad($order->bg_id, 7, '0', STR_PAD_LEFT);
+							$updateData = array('cancel_reason'		=> $cancel_reason,'booking_status' => $status, 'booking_confirmation_no' => $booking_confirmation_no, 'updated_at' => date("Y-m-d h:i:s"));
+
+														
+							$cond = array('bg_id' => $order->bg_id);
+							$this->General_Model->update('booking_global', $cond, $updateData);
+
+							$response = array('status' => 0, 'msg' => "Success.Your Booking Cancelled Successfully.");
+							echo json_encode($response);
+							exit;
+
+						} else {
+							$response = array('status' => 1, 'msg' => "Oops. Unable to change the booking status.");
+							echo json_encode($response);
+							exit;
+						}
+					} else if (strtolower(trim($order->source_type)) == '1boxoffice') {
+
+						$booking_tickets = $this->General_Model->getAllItemTable_Array('booking_tickets', array('booking_id' => $order->bg_id))->row();
+
+						$this->db->set('sold', "sold - $booking_tickets->quantity", false);
+						$this->db->where('s_no', $booking_tickets->ticket_id);
+						$this->db->update('sell_tickets', $data);
+
+
+						$booking_confirmation_no = "TK" . str_pad($order->bg_id, 7, '0', STR_PAD_LEFT);
+						$updateData = array('cancel_reason'		=> $cancel_reason,'booking_status' => $status, 'booking_confirmation_no' => $booking_confirmation_no, 'updated_at' => date("Y-m-d h:i:s"));
+
+						
+						$cond = array('bg_id' => $order->bg_id);
+						$this->General_Model->update('booking_global', $cond, $updateData);
+
+						$response = array('status' => 1, 'msg' => "Success.Your Booking Cancelled Successfully.");
+						echo json_encode($response);
+						exit;
+					} else {
+
+						$response = array('status' => 1, 'msg' => "Oops. Unable to change the booking status.");
+						echo json_encode($response);
+						exit;
+					}
+				} else {
+					$response = array('status' => 1, 'msg' => "Oops. Unable to change the booking status.");
+					echo json_encode($response);
+					exit;
+				}
+			}
+		}
 		else if ($segment == 'send_mail_ticket_status') {
 
 				$ticket_type = $_POST['ticket_type'];
@@ -6803,5 +6926,343 @@ function process_curl_request_tixstock($service,$method,$service_url,$post_data=
 
     }
 	
+	public function pending_orders()
+	{
+		$this->data['pending_orders'] = $this->General_Model->getOrders('','pending')->result();
+
+		$records = $this->General_Model->get_seller_name()->result();
+            foreach($records as $record ){
+
+               $seller_name = $record->seller_first_name." ".$record->seller_last_name;
+
+                $html .=   ' <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input seller_select_box" id="customCheck'.$record->seller_id.'">
+                <label class="custom-control-label" for="customCheck'.$record->seller_id.'">'.$seller_name.'</label>
+              </div>';
+
+            }
+
+         $this->data['html'] = $html;
+		 $seats= $this->mydatas['seat_category'] = $this->General_Model->get_ticket_category()->result();
+			$seat_category="";
+		   
+			foreach($seats as $seat ){
+   
+			  // $seat_category = $record->seller_first_name.$record->seller_last_name;
+   
+				$seat_category .=   ' <div class="custom-control custom-checkbox">
+				<input type="checkbox" class="custom-control-input" id="seatCheck'.$seat->stadium_seat_id.'">
+				<label class="custom-control-label" for="seatCheck'.$seat->stadium_seat_id.'">'.$seat->seat_category.'</label>
+			  </div>';
+   
+			}
+   
+		 $this->data['seat_category'] = $seat_category;
+
+		$this->load->view(THEME.'game/pending_orders_list',$this->data);
+	}
+
+	public function get_pending_items()
+  {
+		$row_per_page = 50;	
+		$draw = intval($this->input->get("draw"));
 		
+		$rowno = $_POST['start'];
+		//$rowno =$this->uri->segment(3);
+		
+		if ($rowno != '' && $rowno != 0) {
+		$rowno = ($rowno - 1) ;
+		}
+		else{
+			$rowno = 0;			
+		}
+
+
+		if(!empty($_POST['booking_no']) || !empty($_POST['event_name']) || !empty($_POST['status_type']) || !empty($_POST['event_start_date']) || !empty($_POST['event_end_date']) || !empty($_POST['seat']) || !empty($_POST['seller_name']))
+		{
+			$search['booking_no'] = $_POST['booking_no'];
+			$search['event_name'] = $_POST['event_name'];
+
+			$search['status_type'] = $_POST['status_type'];
+			$search['event_start_date'] = $_POST['event_start_date'];
+			$search['event_end_date'] = $_POST['event_end_date'];
+			$search['seller_name'] = $_POST['seller_name'];
+			$search['seat'] = $_POST['seat'];
+
+			$records = $this->General_Model->getPendingOrdersFilter('','pending','',$rowno, $row_per_page,'',$search)->result();
+			$allcount = $this->General_Model->getPendingOrdersFilter('','pending','','', '','',$search)->num_rows();
+		} else {  
+								
+				$records = $this->General_Model->getOrders('','pending','',$rowno, $row_per_page)->result();
+				$allcount = $this->General_Model->getOrders('','pending')->num_rows();				
+			}
+
+			$data = [];
+			$this->data['sellers'] = $this->General_Model->get_sellers();
+			// echo '<pre/>';
+			// print_r($records);
+			// exit;
+			foreach($records as $record ){
+
+				$seller_notes_input="";
+				$seller_notes="";
+				$listing_note=$this->General_Model->get_seller_notes($record->listing_note);
+			
+				if(!empty($listing_note))
+				{				
+					foreach ($listing_note as $notes)
+					{
+						$seller_notes_input.=$notes->ticket_name."<br/>";
+						
+					}
+
+					$seller_notes='<a class="tooltip_texts" data-toggle="tooltip" data-placement="right" title="" data-original-title="'.$seller_notes_input.'" aria-describedby="tooltip173041" data-html="true"><i class="fas fa-comment-dots"></i></a>';
+				}
+
+				$payment_status="";
+				 if ($record->payment_status == 1) {
+					$payment_status='<div class="bttns">
+										<span class="badge badge-success">Completed</span>
+									</div>';
+				 } 
+				 else if ($record->payment_status == 2) { 
+					$payment_status='<div class="bttns">
+										<span class="badge badge-warning">Pending</span>
+									</div>';
+				 } 
+				 else if ($record->payment_status == 0) { 
+					$payment_status='<div class="bttns">
+										<span class="badge badge-danger">Failed</span>
+									</div>';
+				 } 	
+				 else if ($record->payment_status != 0 && $record->payment_status != 1 && $record->payment_status != 2) { 
+					$payment_status="Not Initiated";
+				 } 	
+
+				 //Shipping Status
+
+				 $delivery_status="";
+				 if ($record->delivery_status == 0) {
+					$delivery_status='<div class="bttns">
+										<span class="badge badge-warning">Tickets Not Uploaded</span>
+									</div>';
+				 } 
+				 else if ($record->delivery_status == 1) { 
+					$delivery_status='<div class="bttns">
+										<span class="badge badge-warning">Tickets In-Review</span>
+									</div>';
+				 } 
+				 else if ($record->delivery_status == 2) { 
+					$delivery_status='<div class="bttns">
+										<span class="badge badge-success">Tickets Approved</span>
+									</div>';
+				 } 	
+				 else if ($record->delivery_status == 3) { 
+					$delivery_status='<div class="bttns">
+										<span class="badge badge-danger">Tickets Rejected</span>
+									</div>';
+				 } 
+				 else if ($record->delivery_status == 4) { 
+					$delivery_status='<div class="bttns">
+										<span class="badge badge-success">Tickets Downloaded</span>
+									</div>';
+				 } 
+				 else if ($record->delivery_status == 5) { 
+					$delivery_status='<div class="bttns">
+										<span class="badge badge-success">Tickets Shipped</span>
+									</div>';
+				 } 
+				 else if ($record->delivery_status == 6) { 
+					$delivery_status='<div class="bttns">
+										<span class="badge badge-success">Tickets Delivered</span>
+									</div>';
+				 } 
+
+				 // End of Shipping Status
+				
+
+				 $admin_status="";				
+				  if ($record->booking_status == 0) {
+					$admin_status='<div class="bttns">
+									<span class="badge badge-danger">Failed</span>
+								  </div>';
+				 }
+				 else if ($record->booking_status == 1) {
+					$admin_status='<div class="bttns">
+									<span class="badge badge-success">Confirmed</span>
+								  </div>';
+				 }
+				 else if ($record->booking_status == 2) {
+					$admin_status='<div class="bttns">
+									<span class="badge badge-primary">Pending</span>
+								  </div>';
+				 }
+				else if ($record->booking_status == 3) {
+					$admin_status='<div class="bttns">
+									<span class="badge badge-danger">Cancelled</span>
+								  </div>';
+				 }
+				 else if ($record->booking_status == 4) {
+					$admin_status='<div class="bttns">
+									<span class="badge badge-warning">Shipped</span>
+								  </div>';
+				 }
+				 else if ($record->booking_status == 5) {
+					$admin_status='<div class="bttns">
+									<span class="badge badge-warning ">Delivered</span>
+								  </div>';
+				 }
+				 else if ($record->booking_status == 6) {
+					$admin_status='<div class="bttns">
+									<span class="badge badge-warning ">Downloaded</span>
+								  </div>';
+				 }
+
+				if($record->ticket_block != 0){
+					$category= $record->seat_category;
+				}
+				else{
+					$category= "Any";
+				}
+
+				if($record->ticket_type == 1) $ticket_type = "Season cards";
+				else if($record->ticket_type == 2) $ticket_type = "E-Tickets";
+				else if($record->ticket_type == 3) $ticket_type = "Paper";
+				else if($record->ticket_type == 4) $ticket_type = "Mobile";
+				else $ticket_type = "";
+					
+				$price= number_format($record->price,2)." ".strtoupper($record->currency_type); 
+				$total= number_format($record->total_amount,2)." ".strtoupper($record->currency_type); 
+				
+				$date = new DateTime($record->match_date);
+				$time = new DateTime($record->match_time);
+
+				$formattedDate = $date->format('d M Y');
+				$formattedTime = $time->format('H:i');
+
+				$match_time = " <br> <span class='tr_date'>".$formattedDate.' - '.$formattedTime."</span>";
+
+				$input = $record->match_name;
+                $vsPosition = stripos($input, "vs"); // Find the position of "vs" case-insensitive
+                if ($vsPosition === false) {
+                    $vsPosition = stripos($input, "Vs"); // Find the position of "Vs" case-insensitive
+                }
+                if ($vsPosition !== false) {
+                    $team1 = trim(substr($input, 0, $vsPosition));
+                    $team2 = trim(substr($input, $vsPosition + 2));
+                    $match_name = $team1 . " Vs <br/>". $team2;
+                } else {
+                    $match_name = $input;
+                }
+
+				$str = $category;
+				$words = explode(" ", $str); // split the string into an array of words
+				$words[1] .= "<br/>"; // add the <br/> tag after the second word
+				$seat_category = implode(" ", $words); // join the array of words back into a string
+				
+				$booking_no='<a href="'.base_url()."game/orders/details/". md5($record->booking_no).'">#'.$record->booking_no.'</a> <br><span class="tr_src_type">'.$record->source_type.'</span>';
+
+				$delivery_date="";
+							
+								$delivery_date = date('D j F Y', strtotime($record->match_date . ' -2 days')) . "<br/>" . date('H:i', strtotime($record->match_time));
+								$download_id="";
+								//echo "<pre>";print_r($record);exit;
+								$encode_id = base64_encode(json_encode($record->match_id));							
+if($record->delivery_status != 0)
+{
+	$download_id=$record->bg_id;
+}					
+				$premium_price= number_format($record->premium_price,2)." ".strtoupper($record->currency_type);
+
+$approve_or_reject = ' <div class="reject_btn">
+										<button type="button" class="btn btn-info waves-effect waves-light" data-effect="wave">
+										<a class="button is-danger" href="javascript:void(0);" onclick="ajax_update_pending_orders(\''.$record->booking_id.'\',3)">
+										Reject
+										</a>
+										</button>
+									</div>
+									<div class="approve_btn">
+										<button type="button" class="btn btn-info waves-effect waves-light" data-effect="wave"><a class="button is-success" href="javascript:void(0);" onclick="ajax_update_pending_orders(\''.$record->booking_id.'\',1)">
+										Approve
+										</a>
+										</button>
+									</div>';
+
+												
+				
+				$data[] = array( 
+					"checkbox_inpt"				    => '<div class="form-check custom-checkbox"><input type="checkbox" class="form-check-input dt-checkboxes" data-order-id="'.md5($record->booking_no).'" data-org-order-id="'.$record->booking_id.'"><label class="form-check-label">&nbsp;</label></div>',
+					"booking_no"			=> $booking_no,
+					"payment_status"		=> $payment_status,
+					"event_name"			=> '<a href="'.base_url().'event/matches/add_match/'.$encode_id.'" >'.$match_name.'</a>'.$match_time,
+					"buyer"					=> $record->customer_first_name." ".$record->customer_last_name,
+					"ticket_type"			=> $ticket_type,
+					"qty"					=> $record->quantity,
+					"category"				=> $seat_category,
+					"total"					=> $total,
+					"purchase_date"			=> date('d F Y',strtotime($record->payment_date))."<br/>".date('H:i',strtotime($record->payment_date)),
+					"seller"				=> $record->seller_first_name."<br/>".$record->seller_last_name,
+					"delivery_date"			=> $delivery_date,
+					"shipping_status"		=> $delivery_status,
+					"admin_status"			=> $admin_status,
+					"approve_or_reject"		=> $approve_or_reject,
+					"notes"					=> $seller_notes,
+					"source_type"			=> $record->source_type,
+					"customer_country_name"	=> $record->customer_country_name,
+					
+				); 
+				
+			}
+
+	 $result = array(
+			  "draw" => $draw,
+				"recordsTotal" => $allcount,
+				"recordsFiltered" => $allcount,
+				"data" => $data
+		   );
+
+
+	 echo json_encode($result);
+	 exit();
+  }
+
+  function sendCurlRequest($url, $post_data) {
+    $handle = curl_init();
+    curl_setopt($handle, CURLOPT_URL, $url);
+    curl_setopt($handle, CURLOPT_POST, 1);
+    curl_setopt($handle, CURLOPT_POSTFIELDS, $post_data);
+    curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+    $output = curl_exec($handle);
+    curl_close($handle);
+    return json_decode($output, 1);
+}
+  function sendCurlMail($order_id) {
+
+		$handle = curl_init();
+		$url = API_MAIL_URL . $order_id;
+		curl_setopt($handle, CURLOPT_HTTPHEADER, array(
+			'domainkey: https://www.1boxoffice.com/en/'
+		)
+		);
+		curl_setopt($handle, CURLOPT_URL, $url);
+		curl_setopt($handle, CURLOPT_POST, 1);
+		curl_setopt(
+			$handle,
+			CURLOPT_POSTFIELDS,
+			"email_notify=notify"
+		);
+		curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+		$output = curl_exec($handle);
+		curl_close($handle);
+
+}
+
+function updateSellTickets($bg_id) {
+    $booking_tickets = $this->General_Model->getAllItemTable_Array('booking_tickets', array('booking_id' => $bg_id))->row();
+    $data = array(); // Define your data here
+    $this->db->set('sold', "sold + $booking_tickets->quantity", false);
+    $this->db->where('s_no', $booking_tickets->ticket_id);
+    $this->db->update('sell_tickets', $data);
+}
+
 }
