@@ -745,7 +745,7 @@ class Event extends CI_Controller
 		
 		else if ($match_segment == "get_venue") {
 			$id = $_POST['venue'];
-				$stadium_id = $this->General_Model->get_venue_based_country($id);
+				$stadium_id = $this->General_Model->get_venue_based_country_v1($id);
 				echo json_encode(
 					array(
 						'selected_country' =>$stadium_id->country,
