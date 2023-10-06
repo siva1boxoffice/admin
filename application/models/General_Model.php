@@ -1337,6 +1337,23 @@ class General_Model extends CI_Model
 		return $query;
 	}
 
+	public function check_match_exists($tournament,$team_1,$team_2,$venue) {
+        
+
+			$this->db->select("match_info.*");
+			$this->db->from('match_info');
+			$this->db->where('match_info.match_date >', date("Y-m-d H:i:s"));
+			$this->db->where('match_info.status', '1');
+			$this->db->where('match_info.tournament', $tournament);
+			$this->db->where('match_info.team_1', $team_1);
+			$this->db->where('match_info.team_2', $team_2);
+			$this->db->where('match_info.venue', $venue);
+			$this->db->order_by('match_info.match_date', 'ASC');
+			$this->db->group_by('match_info.m_id');
+			$result = $this->db->get();
+			return $result;
+    }
+
 
 	public function get_match_tournments() {
         
@@ -6405,7 +6422,7 @@ public function getOrderData_v2()
 			->join('merge_api_stadium_category', 'merge_api_stadium_category.stadium_id = merge_api_content.api_content_id', 'left');
 		$this->db->where('merge_api_content.content_type', 'stadium');
 		if($stadium_id != ""){
-		$this->db->where('merge_api_stadium_category.onebox_stadium_id', $stadium_id);
+		//$this->db->where('merge_api_stadium_category.onebox_stadium_id', $stadium_id);
         $this->db->where('merge_api_content.content_id', $stadium_id);
 		}
 		$this->db->where('merge_api_content.source_type', 'tixstock');
@@ -6443,7 +6460,7 @@ public function getOrderData_v2()
 			->join('merge_api_content', 'merge_api_content.content_id = stadium_details.stadium_id', 'left')
 			->join('merge_api_stadium_category', 'merge_api_stadium_category.category = stadium_details.category', 'left');
 		$this->db->where('merge_api_content.content_type', 'stadium');
-		$this->db->where('merge_api_stadium_category.onebox_stadium_id', $stadium_id);
+		//$this->db->where('merge_api_stadium_category.onebox_stadium_id', $stadium_id);
 		$this->db->where('merge_api_content.content_id', $stadium_id);
 		$this->db->where('stadium_seats_lang.language', 'en');
 		if($stadium_id != ""){

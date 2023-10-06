@@ -331,15 +331,24 @@ label.error{
                               </div>
                            </div>                                               
                         </div>
-                        <div class="row">
+                       <!--  <div class="row">
                            <div class="col-md-6">
                               <div class="form-group">
                                  <label for="simpleinput">Mark as to use in Credit Note</label>
                                  <input type="checkbox" id="credit_note" name="credit_note" class="form-control check_credit_note" placeholder="Credit Note" value="1" autocomplete="off">
                               </div>
                            </div>                                               
+                        </div> -->
+                        <div class="row">
+                           <div class="col-md-6">
+                        <div class="form-check">
+                                      
+                                                  <input class="form-check-input check_credit_note" type="checkbox" id="credit_note" name="credit_note" value="1">
+                                         <label class="form-check-label" for="credit_note">
+                                          Mark as to use in Credit Note
+                                         </label></div>
+                          </div>
                         </div>
-
 
                            <div class="coupon_btn_save">
                            <button type="button" class="btn btn-cancel" data-dismiss="modal" >Cancel</button>
@@ -775,7 +784,7 @@ var Dtable = $('#coupon-datatable').DataTable(
                   $(".coupon_form #min_price").val(data.min_price);
                   $(".coupon_form #max_price").val(data.max_price);
                  
-                  if(data.credit_note == 1){
+                  if(data.credit_note == 1){ 
                      $(".coupon_form #credit_note").attr('checked','checked');
                   }
                    event.preventDefault();

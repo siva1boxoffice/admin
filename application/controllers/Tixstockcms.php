@@ -564,11 +564,18 @@ public function updateFeedsEvents($proceed = false)
             }*/
              //$end_point_url = TIXSTOCK_ENDPOINT_URL.'feed?category_name=Premier League Football&per_page=50&page='.$page;
             $end_point_url = TIXSTOCK_ENDPOINT_URL.'feed?per_page=10&page='.$page.'&category_name='.$tournament;
+
+            try
+            { 
+
             $feed_response = $this->process_curl_request("feeds","GET",$end_point_url);
             $match_data = array();
             $next = explode('=',$feed_response['links']['next']);
             $next_page       = ($next[1] != "") ? ($next[1]) : 1;
+            //echo "feed_response <pre>";print_r($feed_response['links']['next']);exit;
            // echo "feed_response <pre>";print_r($feed_response['links']['next']);exit;
+            
+
             if(!empty($feed_response['data'])){
                         foreach ($feed_response['data'] as $datakey => $data) {
                            //echo "<pre>";print_r($data['listings']);exit;
@@ -841,10 +848,40 @@ public function updateFeedsEvents($proceed = false)
                         $response['matches'] = $list_matches;
                          echo json_encode($response);exit;
             }
-           
+           }
+            catch(BP\InsureHubApiNotFoundException $validationException){
+            $error = $validationException->errorMessage();
+            $this->custom_error_log($error);
+            }
+            catch(BP\InsureHubApiValidationException $validationException){
+            $error = $validationException->errorMessage();
+            $this->custom_error_log($error);
+            }
+            catch(BP\InsureHubApiAuthorisationException $authorisationException){
+            $error = $authorisationException->errorMessage();
+            $this->custom_error_log($error);
+            }
+            catch(BP\InsureHubApiAuthenticationException $authenticationException){
+            $error = $authenticationException->errorMessage();
+            $this->custom_error_log($error);
+            }
+            catch(BP\InsureHubException $insureHubException){
+            $error =  $insureHubException->errorMessage();
+            $this->custom_error_log($error);
+            }
+            catch(Exception $exception){
+            $error = $exception->getMessage();
+            $this->custom_error_log($error);
+            }
             
          }
         
+    }
+
+    public function custom_error_log($error){
+            $response['status'] = 0;
+            $response['msg'] = $error;
+            echo json_encode($response);exit;
     }
 
     public function updateApiEvents($data,$tournament_id,$team_1_id,$team_2_id,$stadium_id,$matchtype='',$flag="")
@@ -892,6 +929,10 @@ error_reporting(E_ALL);*/
             $page = 1;
            // $tixstock_id = "01h2z77qpk6wtqqgfjf2ytbq2m";
             $end_point_url = TIXSTOCK_ENDPOINT_URL.'tickets/feed?event_id='.$tixstock_id.'&per_page='.$per_page.'&page='.$page;
+
+            try
+            { 
+
             $feed_response = $this->process_curl_request("tickets","GET",$end_point_url);
             
             if(!empty($feed_response['data'])){ 
@@ -976,6 +1017,31 @@ error_reporting(E_ALL);*/
                                  }
             
             } 
+            }
+            catch(BP\InsureHubApiNotFoundException $validationException){
+            $error = $validationException->errorMessage();
+            $this->custom_error_log($error);
+            }
+            catch(BP\InsureHubApiValidationException $validationException){
+            $error = $validationException->errorMessage();
+            $this->custom_error_log($error);
+            }
+            catch(BP\InsureHubApiAuthorisationException $authorisationException){
+            $error = $authorisationException->errorMessage();
+            $this->custom_error_log($error);
+            }
+            catch(BP\InsureHubApiAuthenticationException $authenticationException){
+            $error = $authenticationException->errorMessage();
+            $this->custom_error_log($error);
+            }
+            catch(BP\InsureHubException $insureHubException){
+            $error =  $insureHubException->errorMessage();
+            $this->custom_error_log($error);
+            }
+            catch(Exception $exception){
+            $error = $exception->getMessage();
+            $this->custom_error_log($error);
+            }
             }
             }
 
@@ -1078,11 +1144,15 @@ error_reporting(E_ALL);*/
 
                      }
 
-                     $match_exists = $this->General_Model->getAllItemTable_Array('match_info', array('tournament' => $boxoffice_tournament_id,'team_1' => $boxoffice_team_a,'team_2' => $boxoffice_team_b,'venue' => $boxoffice_stadium_id))->row();
+                    // $match_exists = $this->General_Model->getAllItemTable_Array('match_info', array('tournament' => $boxoffice_tournament_id,'team_1' => $boxoffice_team_a,'team_2' => $boxoffice_team_b,'venue' => $boxoffice_stadium_id))->row();
+                      $match_exists = $this->General_Model->check_match_exists($boxoffice_tournament_id,$boxoffice_team_a,$boxoffice_team_b,$boxoffice_stadium_id)->row();
+
 
                      if($boxoffice_tournament_id != "" && $boxoffice_team_a != "" && $boxoffice_team_b != "" && $boxoffice_stadium_id != ""){ 
-
+//echo "<pre>";print_r($match_exists);exit;
                         if(empty($match_exists)){
+
+
 
                         $stadium_details = $this->General_Model->getAllItemTable_Array('stadium', array('s_id' => $boxoffice_stadium_id))->row();
 
@@ -1294,6 +1364,9 @@ error_reporting(E_ALL);*/
             $tournament = $_POST['category_name'];
 
             $end_point_url = TIXSTOCK_ENDPOINT_URL.'feed?per_page=10&page='.$page.'&category_name='.$tournament;
+            try
+            { 
+
             $feed_response = $this->process_curl_request("feeds","GET",$end_point_url);
         
             $match_data = array();
@@ -1357,7 +1430,31 @@ error_reporting(E_ALL);*/
                          echo json_encode($response);exit;
             }
            
-            
+            }
+            catch(BP\InsureHubApiNotFoundException $validationException){
+            $error = $validationException->errorMessage();
+            $this->custom_error_log($error);
+            }
+            catch(BP\InsureHubApiValidationException $validationException){
+            $error = $validationException->errorMessage();
+            $this->custom_error_log($error);
+            }
+            catch(BP\InsureHubApiAuthorisationException $authorisationException){
+            $error = $authorisationException->errorMessage();
+            $this->custom_error_log($error);
+            }
+            catch(BP\InsureHubApiAuthenticationException $authenticationException){
+            $error = $authenticationException->errorMessage();
+            $this->custom_error_log($error);
+            }
+            catch(BP\InsureHubException $insureHubException){
+            $error =  $insureHubException->errorMessage();
+            $this->custom_error_log($error);
+            }
+            catch(Exception $exception){
+            $error = $exception->getMessage();
+            $this->custom_error_log($error);
+            }
          }
         
     }
