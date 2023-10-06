@@ -870,6 +870,79 @@ function update_booking_status(bg_id, status) {
     });
 
 }
+function ajax_update_pending_orders(bg_id, status) {
+
+    // var sendmail = $('#sendmail').is(":checked");
+    // var mail_enable = 0;
+    // if (sendmail == true) {
+    //     mail_enable = 1;
+    // }
+
+    const org_order_id = [];
+    org_order_id.push(bg_id);
+    var title = "";
+    if (status == 1) {
+        title = "Are you sure want to Confirm this Booking ?";
+    } else if (status == 3) {
+        title = "Are you sure want to Cancel this Booking ?";
+    } 
+
+    swal({
+        title: title,
+        text: "Email will go to user if status change !",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#0CC27E',
+        cancelButtonColor: '#FF586B',
+        confirmButtonText: 'Yes, Change it!',
+        cancelButtonText: 'No, cancel!',
+        confirmButtonClass: 'is-primary btn btn-primary',
+        cancelButtonClass: 'is-danger btn btn-danger',
+        buttonsStyling: false
+    }).then(function(res) {
+
+
+        if (res.value == true) {
+            var reason = "";
+            if (status == 3) {
+                reason = prompt("Please Enter the reason for Cancel ", "");
+            }
+            $.ajax({
+                url: base_url + 'game/orders/ajax_update_pending_orders',
+                method: "POST",
+                data: {
+                    "org_order_id": org_order_id,
+                    "status": status,
+                    "reason": reason
+                },
+                dataType: 'json',
+                success: function(result) {
+
+                    if (result) {
+
+                        swal('Updated !', result.msg, 'success');
+
+                    } else {
+                        swal('Updation Failed !', result.msg, 'error');
+
+                    }
+
+                     setTimeout(function() {
+                         window.location.reload();
+                     }, 2000);
+                }
+            });
+        } else {
+
+        }
+
+
+
+    }, function(dismiss) {
+
+    });
+
+}
 
 function delete_data(id) {
 

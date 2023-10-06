@@ -7123,4 +7123,147 @@ public function get_seat_category_main()
 		return $query;
 	}
 
+	function getPendingOrdersFilter($match_id = "",$flag='',$seller_id='',$row_no='', $row_per_page='',$seller_or_user='seller_id',$search="")
+	{ 
+
+		$this->db->select('booking_global.*,booking_tickets.*,booking_billing_address.*,booking_payments.*,stadium_details.*,stadium.*,countries.name as country_name,states.name as city_name,register.first_name as customer_first_name,register.last_name as customer_last_name,admin_details.admin_id,admin_details.admin_name as seller_first_name,admin_details.admin_last_name as seller_last_name,sell_tickets.s_no,countries.name as customer_country_name,partner.admin_name as partner_first_name,partner.admin_last_name as partner_last_name,
+			affiliate.admin_name as affiliate_first_name,affiliate.admin_last_name as affiliate_last_name,booking_tickets.match_id as match_id,booking_billing_address.first_name as billing_first_name, booking_billing_address.last_name as billing_last_name, booking_billing_address.postal_code as billing_postal_code,
+			booking_billing_address.address as billing_address,booking_billing_address.country_id as billing_country_name,booking_billing_address.state_id as billing_cit_name,booking_tickets.ticket_type as ticket_type_new , (CASE 
+			WHEN booking_tickets.match_date >= curdate() THEN 1
+			WHEN booking_tickets.match_date <= curdate() THEN 2
+		 END) as match_date_new');
+		$this->db->from('booking_global');
+		$this->db->join('booking_tickets', 'booking_tickets.booking_id = booking_global.bg_id');
+		$this->db->join('booking_billing_address', 'booking_billing_address.booking_id = booking_global.bg_id');
+		$this->db->join('booking_payments', 'booking_payments.booking_id = booking_global.bg_id');
+		$this->db->join('stadium', 'stadium.s_id = booking_tickets.stadium_id', 'LEFT');
+		$this->db->join('stadium_details', 'stadium_details.id = booking_tickets.ticket_block', 'LEFT');
+		$this->db->join('register', 'register.id=booking_global.user_id', 'LEFT');
+		$this->db->join('admin_details', 'admin_details.admin_id=booking_global.seller_id', 'LEFT');
+		$this->db->join('countries', 'countries.id=booking_billing_address.country_id', 'LEFT');
+		$this->db->join('states', 'states.id=booking_billing_address.state_id', 'LEFT');
+		$this->db->join('sell_tickets', 'sell_tickets.s_no = booking_tickets.ticket_id', 'LEFT');
+
+		$this->db->join('admin_details as partner', 'partner.admin_id=booking_global.partner_id', 'LEFT');
+		$this->db->join('admin_details as affiliate', 'affiliate.admin_id=booking_global.affiliate_id', 'LEFT');
+
+		// if($this->store_id){
+		// 	$this->db->where('booking_global.store_id', $this->store_id);
+		// }
+		if ($seller_id != "") {
+			 $sel_user='booking_global.'.$seller_or_user;
+		
+			$this->db->where($sel_user, $seller_id);
+		}
+		if($flag == 'api'){ 
+			$this->db->group_start();
+			$this->db->where('booking_global.partner_id is NOT NULL', NULL, FALSE);
+			$this->db->where('booking_global.partner_id !=', 0);
+			$this->db->group_end();
+
+		}
+
+		if($flag == 'affiliate'){ 
+
+			$this->db->group_start();
+			$this->db->where('booking_global.affiliate_id is NOT NULL', NULL, FALSE);
+			$this->db->where('booking_global.affiliate_id !=', 0);
+			$this->db->group_end();
+		}
+
+		//$this->db->where('md5(booking_global.booking_no)', $booking_no);
+		if ($this->session->userdata('role') == 1) {
+			$this->db->where('sell_tickets.add_by', $this->session->userdata('admin_id'));
+		}
+		if ($match_id != "") {
+			$this->db->where('booking_tickets.match_id', $match_id);
+		}
+		if ($seller_id != "") {
+			$this->db->where('booking_global.seller_id', $seller_id);
+		}
+
+		if(!empty($search['booking_no']) )
+		{
+			$this->db->where('booking_global.booking_no', $search['booking_no']);
+		}
+
+		if(!empty($search['event_name']) )
+		{
+			$this->db->like('booking_tickets.match_name', $search['event_name']);
+		}
+
+		if(!empty($search['event_start_date']) ) {
+			$this->db->where('booking_tickets.match_date >= ', date("Y-m-d", strtotime($search['event_start_date'])));
+		}
+		if(!empty($search['event_end_date']) ) {
+			$this->db->where('booking_tickets.match_date <= ', date("Y-m-d", strtotime($search['event_end_date'])));
+		}
+
+		if(!empty($search['seller_name']))	{
+			$comma_separated = implode(",", $search['seller_name']);				
+			$this->db->where_in('admin_details.admin_id',$comma_separated,FALSE);
+		}		
+		
+		if(!empty($search['seat'])){
+
+			$comma_separated = implode(",", $search['seat']);
+			//$comma_separated = implode("', '", $array);
+			$this->db->where_in('booking_tickets.ticket_category',$search['seat'],FALSE);
+		}
+		
+	//	$this->db->order_by('booking_global.bg_id', 'DESC');		
+		//$this->db->order_by('booking_tickets.match_date', 'ASC');
+		if($flag == 'confirmed'){
+			$this->db->where('booking_global.booking_status', 1);
+		}
+		if($flag == 'confirmed_all'){
+			$this->db->where_in('booking_global.booking_status', [1,4,5,6]);
+		}
+		if($flag == 'pending'){
+			$this->db->where('booking_global.booking_status', 2);
+		}
+		if($flag == 'shipped'){
+			//$this->db->where('booking_global.booking_status', 4);
+			//$this->db->or_where('booking_global.delivery_status', 2,4,5,6);
+			$this->db->where_in('booking_global.delivery_status', [2,4,5]);
+		}
+		if($flag == 'delivered'){
+			$this->db->where_in('booking_global.booking_status', [4,5,6]);
+		}
+		if($flag == 'downloaded'){
+			$this->db->where('booking_global.booking_status', 6);
+		}
+		if($flag == 'all'){
+			$this->db->where_in('booking_global.booking_status', [0,1,2,3,4,5,6]);
+		}
+		if($flag == 'protect'){
+			$this->db->where('booking_global.premium_subscription', 1);
+			$this->db->where_in('booking_global.booking_status', [1,2,3,4,5,6]);
+		}
+		if($flag == ''){
+			$this->db->where_in('booking_global.booking_status', [1,2,4,5,6]);
+		}
+		if (@$_GET['only'] == 'tixstock') {
+			$this->db->where('booking_global.source_type', 'tixstock');
+		}
+		else if (@$_GET['only'] == 'oneclicket') {
+			$this->db->where('booking_global.source_type', 'oneclicket');
+		}
+		else{
+			//$this->db->where('booking_global.source_type', '1boxoffice');
+		}
+		if ($row_per_page != '') {
+			$this->db->limit($row_per_page, $row_no);
+		}
+		$this->db->order_by("match_date_new ASC ,booking_tickets.match_date ASC");
+		$qry = $this->db->get();
+		//echo $this->db->last_query();exit;
+		return $qry;
+		/*if ($qry->num_rows() > 0) {
+			return $qry->result();
+		} else {
+			return array();
+		}*/
+	}
+
 }

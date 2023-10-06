@@ -27,7 +27,7 @@
  <script src="<?php echo base_url(); ?>assets/js/select2.min.js" async></script>
  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.all.min.js"></script> -->
  <script src="<?php echo base_url();?>assets/js/validate_v1/jquery.validate.js"></script>
- <script src="<?php echo base_url(); ?>assets/js/validate/custom.js?ver=2.4.9.333" async></script>
+ <script src="<?php echo base_url(); ?>assets/js/validate/custom.js?ver=2.4.9.336" async></script>
  <script src="<?php echo base_url(); ?>assets/js/ticket.js?v=12.3.1"></script>
  <script>
  	var map_url = "<?php echo UPLOAD_PATH; ?>uploads/stadium";
