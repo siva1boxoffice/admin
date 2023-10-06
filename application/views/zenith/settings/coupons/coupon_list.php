@@ -108,7 +108,7 @@ label.error{
                                                    </button>
                                                    <div class="dropdown-menu dropdown-menu-custom" aria-labelledby="dropdownMenuButton">
                                                       <div id="view_project_list_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-                                                      <div id="view_project_list_filter" class="dataTables_filter"><label class="search-box d-inline-flex position-relative">Search:<input type="search" class="form-control form-control-sm" placeholder="Search in Filters..." aria-controls="view_project_list" id="coupon_type"></label></div>
+                                                      <div id="view_project_list_filter" class="dataTables_filter"><label class="search-box d-inline-flex position-relative">Search:<input type="search" class="form-control form-control-sm" placeholder="Search in Filters..." aria-controls="view_project_list" id="coupon_types"></label></div>
                                                    </div>
                                                       <!-- <a class="dropdown-item" href="#">Supercopa De Italia</a>
                                                       <a class="dropdown-item" href="#">Super Lig</a>
@@ -274,7 +274,7 @@ label.error{
                               <div class="form-group">
                                  <label for="simpleinput">Coupon Type * </label>
                                  
-                                 <select class="custom-select" name="coupon_type" id="coupon_type" required >
+                                 <select class="custom-select check_credit_note" name="coupon_type" id="coupon_type" required >
                                  <option value="" >Choose</option>
                                     <option value="1" <?php if('1' == $coupons->coupon_type){?> selected <?php } ?>>Amount</option>
                                  <option value="2" <?php if('2' == $coupons->coupon_type){?> selected <?php } ?>>Percentage</option>
@@ -331,11 +331,19 @@ label.error{
                               </div>
                            </div>                                               
                         </div>
+                        <div class="row">
+                           <div class="col-md-6">
+                              <div class="form-group">
+                                 <label for="simpleinput">Mark as to use in Credit Note</label>
+                                 <input type="checkbox" id="credit_note" name="credit_note" class="form-control check_credit_note" placeholder="Credit Note" value="1" autocomplete="off">
+                              </div>
+                           </div>                                               
+                        </div>
 
 
                            <div class="coupon_btn_save">
                            <button type="button" class="btn btn-cancel" data-dismiss="modal" >Cancel</button>
-                           <button type="submit" class="btn btn-primary">Submit</button>
+                           <button type="submit" id="coupon_submit" class="btn btn-primary">Submit</button>
 
                      </form>
                      
@@ -348,6 +356,25 @@ label.error{
         <?php $this->load->view(THEME.'common/footer');?>
 <script>
      $(document).ready(function () {
+
+      
+
+      $(document).on('change', '.check_credit_note', function() {
+        if ($('#credit_note').prop('checked')==true){ 
+          var coupon_type = $("#coupon_type").val();
+          if(coupon_type != 1){
+            alert("Coupon type percentage not applicable for credit note.You can Choose only Fixed amount.");
+            $("#coupon_submit").attr('disabled', 'disabled');
+          }
+          else{
+            $("#coupon_submit").removeAttr('disabled');
+          }
+          
+      }
+      else{
+         $("#coupon_submit").removeAttr('disabled');
+      }
+      });
 
       $(document).on('change', '#coupon_type', function() {
          var selectedVal = $(this).val();
@@ -462,11 +489,11 @@ var Dtable = $('#coupon-datatable').DataTable(
          $('.coupon_type_btn').text("Coupon Type");  
          $("#coupon_type").val('');
          $('.check_box input:checked').removeAttr('checked');
-         $('#coupon_type').trigger('keyup');
+         $('#coupon_types').trigger('keyup');
      // 
     });
 
-    $("#coupon_type").keyup(function() { // Bind to the keyup event of the textbox
+    $("#coupon_types").keyup(function() { // Bind to the keyup event of the textbox
       var searchText = $(this).val(); // Get the text entered in the textbox
       $.ajax({
         url: base_url + 'settings/get_coupon_type',
@@ -747,6 +774,10 @@ var Dtable = $('#coupon-datatable').DataTable(
                   $(".coupon_form #expiry_date").val(data.expiry_date);
                   $(".coupon_form #min_price").val(data.min_price);
                   $(".coupon_form #max_price").val(data.max_price);
+                 
+                  if(data.credit_note == 1){
+                     $(".coupon_form #credit_note").attr('checked','checked');
+                  }
                    event.preventDefault();
                    $("#centermodal").modal('show');
               }
