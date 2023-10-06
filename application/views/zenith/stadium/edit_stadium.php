@@ -540,7 +540,7 @@ if($stadium_details){
           $('[data-color-id="'+rid +'"]').css("background",datacolor);
           $('[data-section="'+region_name+'"] .block').css("fill" , rgb2hex(datacolor ));
           //$('path#'+ rid).addClass("map-"+$(this).val()).removeClass("map-"+old_category);
-          $('#mapsvg-region-'+ rid).addClass("cc-"+$(this).val()).removeClass("cc-"+old_category).attr('data-category',$(this).val());;
+          $('[data-section="'+region_name+'"]').addClass("cc-"+$(this).val()).removeClass("cc-"+old_category).attr('data-category',$(this).val());;
          //var color_id = $('input[name="regions[' + rid + '][fill]"]').val();
        
          $.ajax({
