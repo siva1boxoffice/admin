@@ -3469,7 +3469,7 @@ public function get_order_status(){
 		{	
 			$status=$_POST['status'];
 			$cancel_reason=@$_POST['reason'];
-		
+			
 			foreach ($_POST['org_order_id'] as $key => $value) {
 				$order = $this->General_Model->getAllItemTable_Array('booking_global', array('bg_id' => $value))->row();
 				
@@ -3479,7 +3479,7 @@ public function get_order_status(){
 						$url = base_url() . 'tixstock/orderConfirm';
 						$post_data = array("bg_id" => $order->bg_id, "tixstock_status" => 'Approved');
 
-					$tixresponse = $this->sendCurlRequest($url, $post_data);
+						$tixresponse = $this->sendCurlRequest($url, $post_data);
 					
 						if ($tixresponse['tixstock_status'] == "Approved" && $order->booking_status == 2) {
 							$this->updateSellTickets($order->bg_id);
