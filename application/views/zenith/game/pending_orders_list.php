@@ -274,13 +274,13 @@ if(org_order_id.length >0)
 
                      if (result) {
 
-          //  swal('Updated !', result.msg+" <br/>"+result.update_cnt+" <br/>"+result.failed_update_cnt, 'success');
-            swal('Updated !', result.msg, 'success');
+           swal('Updated !', result.msg+" <br/>"+result.update_cnt+" <br/>"+result.failed_update_cnt, 'success');
+          //  swal('Updated !', result.msg, 'success');
 
             }
             else {
-          //  swal('Updation Failed !', result.msg+" <br/>"+result.update_cnt+" <br/>"+result.failed_update_cnt, 'error');
-            swal('Updation Failed !', result.msg, 'error');
+            swal('Updation Failed !', result.msg+" <br/>"+result.update_cnt+" <br/>"+result.failed_update_cnt, 'error');
+          //  swal('Updation Failed !', result.msg, 'error');
 
             }
 

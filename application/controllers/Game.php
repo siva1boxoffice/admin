@@ -3469,7 +3469,9 @@ public function get_order_status(){
 		{	
 			$status=$_POST['status'];
 			$cancel_reason=@$_POST['reason'];
-		
+			$update_cnt=0;
+			$failed_update_cnt=0;
+
 			foreach ($_POST['org_order_id'] as $key => $value) {
 				$order = $this->General_Model->getAllItemTable_Array('booking_global', array('bg_id' => $value))->row();
 				
@@ -3480,7 +3482,7 @@ public function get_order_status(){
 						$post_data = array("bg_id" => $order->bg_id, "tixstock_status" => 'Approved');
 
 					$tixresponse = $this->sendCurlRequest($url, $post_data);
-					
+					//$tixresponse['tixstock_status'] = "Approved" ;
 						if ($tixresponse['tixstock_status'] == "Approved" && $order->booking_status == 2) {
 							$this->updateSellTickets($order->bg_id);
 
@@ -3493,13 +3495,15 @@ public function get_order_status(){
 							$sendMail = $this->sendCurlMail($order->bg_id);
 
 							$response = array('status' => 0, 'msg' => "Booking status successfully changed.");
-							echo json_encode($response);
-							exit;
+							++$update_cnt;
+						//	echo json_encode($response);
+							// exit;
 
 						} else {
 							$response = array('status' => 1, 'msg' => "Oops. Unable to change the booking status.");
-							echo json_encode($response);
-							exit;
+							++$failed_update_cnt;
+							//echo json_encode($response);
+							//exit;
 						}
 					} else if (strtolower(trim($order->source_type)) == '1boxoffice' && $order->booking_status == 2) {
 						$this->updateSellTickets($order->bg_id);
@@ -3512,13 +3516,15 @@ public function get_order_status(){
 						$sendMail = $this->sendCurlMail($order->bg_id);
 
 						$response = array('status' => 0, 'msg' => "Booking status successfully changed.");
-						echo json_encode($response);
-						exit;
+						++$update_cnt;
+						//echo json_encode($response);
+						// exit;
 					} else {
 
 						$response = array('status' => 1, 'msg' => "Oops. Unable to change the booking status.");
-						echo json_encode($response);
-						exit;
+						++$failed_update_cnt;
+						// echo json_encode($response);
+						// exit;
 					}
 				}
 				// Cancelled 
@@ -3528,7 +3534,7 @@ public function get_order_status(){
 						$post_data = array("bg_id" => $order->bg_id, "tixstock_status" => 'Approved');
 
 						$tixresponse = $this->sendCurlRequest($url, $post_data);
-					//	$tixresponse['tixstock_status']="";
+						//$tixresponse['tixstock_status']="Cancelled";
 						if ($tixresponse['tixstock_status'] == "Cancelled" ) {
 							//$this->updateSellTickets($order->bg_id);
 
@@ -3546,14 +3552,16 @@ public function get_order_status(){
 							$cond = array('bg_id' => $order->bg_id);
 							$this->General_Model->update('booking_global', $cond, $updateData);
 
-							$response = array('status' => 0, 'msg' => "Success.Your Booking Cancelled Successfully.");
-							echo json_encode($response);
-							exit;
+							 $response = array('status' => 0, 'msg' => "Success.Your Booking Cancelled Successfully.");
+							 ++$update_cnt;
+							// echo json_encode($response);
+							// exit;
 
 						} else {
 							$response = array('status' => 1, 'msg' => "Oops. Unable to change the booking status.");
-							echo json_encode($response);
-							exit;
+							++$update_cnt;
+						//	echo json_encode($response);
+						//	exit;
 						}
 					} else if (strtolower(trim($order->source_type)) == '1boxoffice') {
 
@@ -3571,21 +3579,28 @@ public function get_order_status(){
 						$cond = array('bg_id' => $order->bg_id);
 						$this->General_Model->update('booking_global', $cond, $updateData);
 
-						$response = array('status' => 1, 'msg' => "Success.Your Booking Cancelled Successfully.");
-						echo json_encode($response);
-						exit;
+						 $response = array('status' => 1, 'msg' => "Success.Your Booking Cancelled Successfully.");
+						 ++$update_cnt;
+						// echo json_encode($response);
+						// exit;
 					} else {
 
 						$response = array('status' => 1, 'msg' => "Oops. Unable to change the booking status.");
-						echo json_encode($response);
-						exit;
+						//echo json_encode($response);
+						//exit;
+						++$failed_update_cnt;
 					}
 				} else {
 					$response = array('status' => 1, 'msg' => "Oops. Unable to change the booking status.");
-					echo json_encode($response);
-					exit;
+					++$failed_update_cnt;
+					// echo json_encode($response);
+					// exit;
 				}
 			}
+			$response['update_cnt']=$update_cnt." Tickets Approved.";
+			$response['failed_update_cnt']=$failed_update_cnt." Ticket Rejected.";
+			echo json_encode($response);
+						exit;
 		}
 		else if ($segment == 'send_mail_ticket_status') {
 
@@ -7179,14 +7194,14 @@ if($record->delivery_status != 0)
 				$premium_price= number_format($record->premium_price,2)." ".strtoupper($record->currency_type);
 
 $approve_or_reject = ' <div class="reject_btn">
-										<button type="button" class="btn btn-info waves-effect waves-light" data-effect="wave">
-										<a class="button is-danger" href="javascript:void(0);" onclick="ajax_update_pending_orders(\''.$record->booking_id.'\',3)">
+										<button type="button" class="btn btn-info waves-effect waves-light" data-effect="wave" onclick="ajax_update_pending_orders(\''.$record->booking_id.'\',3)">
+										<a class="button is-danger" href="javascript:void(0);" >
 										Reject
 										</a>
 										</button>
 									</div>
 									<div class="approve_btn">
-										<button type="button" class="btn btn-info waves-effect waves-light" data-effect="wave"><a class="button is-success" href="javascript:void(0);" onclick="ajax_update_pending_orders(\''.$record->booking_id.'\',1)">
+										<button type="button" class="btn btn-info waves-effect waves-light" data-effect="wave" onclick="ajax_update_pending_orders(\''.$record->booking_id.'\',1)"><a class="button is-success" href="javascript:void(0);" >
 										Approve
 										</a>
 										</button>
