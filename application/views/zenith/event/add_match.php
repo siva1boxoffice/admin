@@ -1202,36 +1202,36 @@ $('#venue').on('change', function(event) {
         }
       })
 
-//   var venue = $(this).val();
-//   if(venue != ''){
+  var venue = $(this).val();
+  if(venue != ''){
     
  
-//     $.ajax({
-//         url: "<?php //echo base_url();?>event/get_venue_basic",
-//         method: "POST",
-//         data : {"venue" : venue},
-//         dataType: 'json',
-//         success: function (result) { 
+    $.ajax({
+        url: "<?php echo base_url();?>event/get_venue_basic",
+        method: "POST",
+        data : {"venue" : venue},
+        dataType: 'json',
+        success: function (result) { 
 
-//          if(result.status == 1) {
+         if(result.status == 1) {
 
-//           var country_id = result.data.country;
-//           var city_id = result.data.city;
-//           $("#country").val(country_id);
-//           get_state_city(country_id,city_id);
+          var country_id = result.data.country;
+          var city_id = result.data.city;
+          $("#country").val(country_id);
+          get_state_city(country_id,city_id);
 
-//          }else if(result.status == 0) {
-//            notyf.error(result.msg, "Failed", "Oops!", {
-//           timeOut: "1800"
-//           });
+         }else if(result.status == 0) {
+           notyf.error(result.msg, "Failed", "Oops!", {
+          timeOut: "1800"
+          });
           
           
-//         }
+        }
         
-//         }
-//       });
+        }
+      });
 
-//   }
+  }
 });
 
     /////////////////////////////////
