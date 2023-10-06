@@ -6416,6 +6416,7 @@ public function merge_stadium_category_v1()
 		if (!empty($this->input->post())) {
 			
 			$stadium_id 		  =	$_POST['stadium_id'];
+			$stadium 		  =	$_POST['stadium'];
 			$api 				  =	$_POST['api'];
 			$api_categories 	  =	$_POST['api_category'];
 			$boxoffice_categories =	$_POST['boxoffice_category'];
@@ -6424,13 +6425,13 @@ public function merge_stadium_category_v1()
 				/*echo "<pre>";print_r($boxoffice_categories[$key]);exit;
 				echo 'key = '.$key;exit;*/
 				if($api_category){ 
-
 							
 					/*echo "<pre>";print_r($api_category);
 					echo "<pre>";print_r($boxoffice_categories[$key]);exit;*/
 
 					$stadium_api_category = $this->General_Model->getAllItemTable_array('merge_api_stadium_category', array(
 							"stadium_id" 	=> $stadium_id,
+							"onebox_stadium_id" 	=> $stadium,
 						//	"category" 		=> $boxoffice_categories[$key],
 							"source_type"   => $api,
 							"api_category" 	=> $api_category
@@ -6440,6 +6441,7 @@ public function merge_stadium_category_v1()
 						if(empty($stadium_api_category)){
 							$data = array(
 									'stadium_id'	=> $stadium_id,
+									"onebox_stadium_id" 	=> $stadium,
 									'category'		=> $boxoffice_categories[$key],
 									"source_type"   => $api,
 									'api_category'	=> $api_category,
@@ -6475,6 +6477,7 @@ public function merge_stadium_category_v1()
 				}
 				else{
 					$this->db->where('stadium_id',$stadium_id);
+					$this->db->where('onebox_stadium_id',$stadium);
 					$this->db->where('category',$api_category);
 					$this->db->delete('merge_api_stadium_category');
 				}
@@ -6482,6 +6485,7 @@ public function merge_stadium_category_v1()
 				if($all_values){
 					
 						$this->db->where('stadium_id',$stadium_id);
+						$this->db->where('onebox_stadium_id',$stadium);
 						$this->db->where('category',$api_category);
 						$this->db->where_not_in('api_category ',$all_values);
 						$this->db->delete('merge_api_stadium_category');
@@ -6524,7 +6528,7 @@ public function get_stadium_details()
 		
 		if($_POST['api'] != "" && $_POST['stadium'] != "" && $_POST['section_type'] != ""){
 		$data['boxoffice_categories'] = $this->General_Model->get_stadium_category_1boxoffice($_POST['stadium'],'1boxoffice')->result();
-
+		
 		$category_count = 0;
 
 		if($_POST['section_type'] == "category"){ 

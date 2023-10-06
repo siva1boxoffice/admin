@@ -938,7 +938,7 @@ error_reporting(E_ALL);*/
                                     $price_type         = $listing['proceed_price']['currency'];
                                     $price              = $listing['proceed_price']['amount'];
 
-                                    $ticket_category_id = $this->stadiumCategory_update_v1($stadium,$ticket_category);
+                                    $ticket_category_id = $this->stadiumCategory_update_v1($stadium,$ticket_category,$match_info->venue);
 
                                     $ticket_block_id    = $this->stadiumBlock_update($match_info->m_id,$match_info->venue,$ticket_category_id,$ticket_section);
                                     $row                = $listing['seat_details']['row'];
@@ -1550,7 +1550,7 @@ public function stadiumCategory_update($category){
 
 }
 
-public function stadiumCategory_update_v1($stadium_id,$category){
+public function stadiumCategory_update_v1($stadium_id,$category,$onebox_stadium_id){
 
     $language_array = $this->language_array;
     $api_stadiums_category = $this->General_Model->getAllItemTable_Array('tixstock_stadium_category', array('stadium_id' => $stadium_id,'category' => $category))->row();
@@ -1559,7 +1559,7 @@ public function stadiumCategory_update_v1($stadium_id,$category){
         $api_stadiums_category_id = $this->Tixstock_Model->insert_data('tixstock_stadium_category',$category_data);
     }
     else{
-        $api_stadiums_category = $this->General_Model->getAllItemTable_Array('merge_api_stadium_category', array('stadium_id' => $stadium_id,'api_category' => $api_stadiums_category->id))->row();
+        $api_stadiums_category = $this->General_Model->getAllItemTable_Array('merge_api_stadium_category', array('stadium_id' => $stadium_id,'api_category' => $api_stadiums_category->id,'onebox_stadium_id' => $onebox_stadium_id))->row();
         if($api_stadiums_category->category != ""){
             return $api_stadiums_category->category;
         }
@@ -2140,10 +2140,24 @@ function get_default_selection(){
         else{
             $wheresv1 = "content_id";
         }
+        if($_POST["content_type"] != "stadium"){
+            $fetch_data = $this->General_Model->getAllItemTable_Array('merge_api_content', array($wheresv1 => $_POST["val"],"content_type" => $_POST["content_type"],'source_type' => $_POST["api"]))->row();
+        }
+        else{
+            $fetch_data = $this->General_Model->getAllItemTable_Array('merge_api_content', array($wheresv1 => $_POST["val"],"content_type" => $_POST["content_type"],'source_type' => $_POST["api"]))->result();
+            $stadium_data = array();
+            if(!empty($fetch_data)){
+                foreach ($fetch_data as $fetch) {
 
-         $fetch_data = $this->General_Model->getAllItemTable_Array('merge_api_content', array($wheresv1 => $_POST["val"],"content_type" => $_POST["content_type"],'source_type' => $_POST["api"]))->row();
-
-         echo json_encode(array("data" => $fetch_data,'flag' => $_POST["flag"],'content_type' => $_POST["content_type"]));exit;
+                    $f_data = $this->General_Model->getAllItemTable_Array('stadium', array('s_id' => $fetch->content_id))->row();
+                    $stadium_data[] = $f_data->s_id;
+                   
+                }
+            }
+        }
+         
+         
+         echo json_encode(array("data" => $fetch_data,'flag' => $_POST["flag"],'content_type' => $_POST["content_type"],'stadium_data' => $stadium_data));exit;
 
     }
 }
@@ -2160,11 +2174,11 @@ function mergecontent(){
     }
     if($_POST['api_stadium'] != "" || $_POST['stadium'] != ""){
         $this->form_validation->set_rules('api_stadium', 'Api Stadium', 'required');
-        $this->form_validation->set_rules('stadium', '1Boxoffice stadium', 'required');
+        $this->form_validation->set_rules('stadium[]', '1Boxoffice stadium', 'required');
     }
-   // echo "<pre>";print_r($_POST);exit;
+    
     if ($this->form_validation->run() !== false) {
-
+       
         if($_POST['api_team'] != "" && $_POST['team'] != ""){
 
         $team_count = $this->General_Model->getAllItemTable_Array('merge_api_content', array('api_content_id' => $_POST['api_team'],'content_type' => 'team','source_type' => $_POST['api']))->num_rows();
@@ -2219,11 +2233,42 @@ function mergecontent(){
             $this->Tixstock_Model->update_table($table, $wheres, $uvalue);
 
         }
+         
+        if($_POST['api_stadium'] != "" && $_POST['stadium'][0] != ""){
 
-        if($_POST['api_stadium'] != "" && $_POST['stadium'] != ""){
-
-        $stadium_count = $this->General_Model->getAllItemTable_Array('merge_api_content', array('api_content_id' => $_POST['api_stadium'],'content_type' => 'stadium','source_type' => $_POST['api']))->num_rows();
+       
         //echo "stadium_count = ".$stadium_count;exit;
+        if(!empty($_POST['stadium'])){
+
+            $this->db->where_not_in('content_id', $_POST['stadium']);
+            $this->db->where('api_content_id',$_POST['api_stadium']);
+            $this->db->where('source_type',$_POST['api']);
+            $this->db->where('content_type','stadium');
+            $this->db->delete('merge_api_content'); 
+
+            foreach ($_POST['stadium'] as $stadium) {
+
+                 $stadium_count = $this->General_Model->getAllItemTable_Array('merge_api_content', array('api_content_id' => $stadium,'content_type' => 'stadium','source_type' => $_POST['api']))->num_rows();
+                  if($stadium_count == 0){
+                     $post_data_stadium = array(
+                        'api_content_id'        => $_POST['api_stadium'],
+                        'content_id'            => $stadium,
+                        'source_type'           => $_POST['api'],
+                        'content_type'          => 'stadium',
+                        'merged_on'             => date("Y-m-d h:i:s")
+                    );
+                    $this->General_Model->insert_data('merge_api_content', $post_data_stadium);
+
+                    $table                     = "api_stadium";
+                    $wheres                    = array('stadium_id' => $_POST['api_stadium']);
+                    $uvalue                    = array('merge_status' => 1);
+                    $this->Tixstock_Model->update_table($table, $wheres, $uvalue);
+
+                  }
+              // echo "<pre>";print_r($stadium);exit;
+            }
+        }
+        /*echo "string";exit;
         if($stadium_count >= 1){
 
         $this->db->where('api_content_id',$_POST['api_stadium']);
@@ -2231,8 +2276,8 @@ function mergecontent(){
         $this->db->where('content_type','stadium');
         $this->db->delete('merge_api_content');
 
-        }
-
+        }*/
+/*
         $post_data_stadium = array(
                         'api_content_id'        => $_POST['api_stadium'],
                         'content_id'            => $_POST['stadium'],
@@ -2245,7 +2290,7 @@ function mergecontent(){
             $table                     = "api_stadium";
             $wheres                    = array('stadium_id' => $_POST['api_stadium']);
             $uvalue                    = array('merge_status' => 1);
-            $this->Tixstock_Model->update_table($table, $wheres, $uvalue);
+            $this->Tixstock_Model->update_table($table, $wheres, $uvalue);*/
 
         }
 

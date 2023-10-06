@@ -18,7 +18,11 @@
       z-index: 9999;
     }
 
-
+.choices__inner {
+    padding: 3px 5px;
+     height: auto !important; 
+    border-radius: 0px;
+}
 </style>
 <?php $this->load->view(THEME . 'common/header'); ?>
 
@@ -143,7 +147,7 @@
                                           <div class="col-lg-4">
                                              <div class="form-group">
                                                  <label for="example-select">Select Stadium Name</label>
-                                                 <select class="custom-select" id="stadium" name="stadium"  onchange="get_default_selection(this.value,'stadium',1);">
+                                                 <select multiple class="custom-select" id="stadium" name="stadium[]"  onchange="get_default_selection(this.value,'stadium',1);">
                                                    <option value="">Select Stadium</option>
                                                    <?php foreach($stadiums as $stadium){?>
                                                     <option value="<?php echo $stadium->s_id;?>"><?php echo $stadium->stadium_name;?></option>
@@ -182,6 +186,7 @@
 <?php $this->load->view(THEME . 'common/footer'); ?>
 <script type="text/javascript">
 
+const choices = new Choices('#stadium', { removeItemButton: !0,   searchFields: ['label', 'value'] ,allowSearch: true});
     function get_default_selection(val,content_type,flag=0){
         var api = $("#api").val();
         var action = "<?php echo base_url();?>tixstockcms/get_default_selection";
@@ -221,9 +226,12 @@
                 else if(data.data.content_type == "team"){
                     $('#team').val(data.data.content_id);
                 }
-                else if(data.data.content_type == "stadium"){
-
-                    $('#stadium').val(data.data.content_id);
+                else if(data.content_type == "stadium"){ 
+                 
+                 choices.removeActiveItems();
+                  if ($('#stadium').length) choices.setChoiceByValue(data.stadium_data);
+                  
+                  //  $('#stadium').val(data.data.content_id);
                 }
                
 
@@ -340,7 +348,7 @@
 
                         $("#tournament").html("<option value=''>Select Tournament</option>");
                         $("#team").html("<option value=''>Select Team</option>");
-                        $("#stadium").html("<option value=''>Select Stadium</option>");
+                      //  $("#stadium").html("<option value=''>Select Stadium</option>");
 
                         $.each(response.tournaments,function(key, value)
                 { 
@@ -385,12 +393,16 @@
                 });
 
                         
-
+                         var bx_stadium_json = [];
                           $.each(response.bx_stadiums,function(key, value)
                 { 
-                    
-                    $("#stadium").append('<option value=' + value.s_id + '>' + value.stadium_name+' - '+value.s_id+'</option>');
+                  var obj = { value: value.s_id, label: value.stadium_name+' - '+value.s_id};
+                    bx_stadium_json.push(obj);
+                  //  $("#stadium").append('<option value=' + value.s_id + '>' + value.stadium_name+' - '+value.s_id+'</option>');
                 });
+                           choices.clearChoices();
+                           choices.setChoices(bx_stadium_json)
+                         //  if ($('#stadium').length) new Choices('#stadium', { removeItemButton: !0,   searchFields: ['label', 'value'] ,allowSearch: true});
 
 
                     }
