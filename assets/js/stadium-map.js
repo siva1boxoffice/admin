@@ -28,7 +28,7 @@ setTimeout(function () {
 
    // console.log(stadium_active);
       $.each(stadium_active, function(i, item) {
-         $("[data-section='"+item.block_name+"'] .block").css("fill" , rgb2hex(item.block_color ));
+         $('[data-section="'+item.block_name+'"] .block').css("fill" , rgb2hex(item.block_color ));
            $('input[name="regions[' + item.block_name + '][fill]"]').val( rgb2hex(item.block_color));
            $('select[name="regions[' + item.block_name + '][href]"]').val(item.category);
       });
