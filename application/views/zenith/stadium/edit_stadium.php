@@ -474,7 +474,7 @@ if($stadium_details){
 <!-- main content End -->
 <?php $this->load->view(THEME.'common/footer'); ?>
 
-<?php $v="1.14";?>
+<?php $v="1.16";?>
 <script type="text/javascript">
       var stadium_active = <?php echo  json_encode($json); ?>;
 </script>
@@ -515,7 +515,7 @@ if($stadium_details){
                   }
               });
           }
-         $("[data-section='"+rid+"'] .block").css("fill" , color_name);
+         $('[data-section="'+rid+'"] .block').css("fill" , color_name);
       }
    }
 
@@ -538,7 +538,7 @@ if($stadium_details){
          
           $('input[name="regions[' + rid + '][fill]"]').val( rgb2hex(datacolor));
           $('[data-color-id="'+rid +'"]').css("background",datacolor);
-          $("[data-section='"+region_name+"'] .block").css("fill" , rgb2hex(datacolor ));
+          $('[data-section="'+region_name+'"] .block').css("fill" , rgb2hex(datacolor ));
           //$('path#'+ rid).addClass("map-"+$(this).val()).removeClass("map-"+old_category);
           $('#mapsvg-region-'+ rid).addClass("cc-"+$(this).val()).removeClass("cc-"+old_category).attr('data-category',$(this).val());;
          //var color_id = $('input[name="regions[' + rid + '][fill]"]').val();
@@ -559,9 +559,9 @@ if($stadium_details){
          var seval = $(this).val();
          //alert("data-section["+ seval+"]");
          if (!$(this).is(':checked')) {
-                 $("[data-section='"+ seval+"']  .block").css({"stroke": "RED", "stroke-width": "1" }); 
+                 $('[data-section="'+ seval+'"]  .block').css({"stroke": "RED", "stroke-width": "1" }); 
          }else{
-           $("[data-section='"+ seval+"']  .block").css({"stroke": "RED", "stroke-width": "3" });
+           $('[data-section="'+ seval+'"]  .block').css({"stroke": "RED", "stroke-width": "3" });
          } 
       });
 
@@ -594,8 +594,8 @@ if($stadium_details){
                   $('input[name="regions[' + sel_val + '][fill]"]').val( rgb2hex(datacolor));
                   //$('#picker_' + sel_val).css("background",datacolor);
 
-                  $("[data-section='"+region_name+"'] .block").css("fill" , rgb2hex(datacolor));
-                   $("[data-section='"+ region_name+"']  .block").css({"stroke": "#000", "stroke-width": "1" });
+                  $('[data-section="'+region_name+'"] .block').css("fill" , rgb2hex(datacolor));
+                   $('[data-section="'+ region_name+'"]  .block').css({"stroke": "#000", "stroke-width": "1" });
 
                    console.log(sel_val);
                   //$('#' + sel_val).css("background",datacolor);
