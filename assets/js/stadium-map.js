@@ -68,7 +68,7 @@ setTimeout(function () {
    $('body').on("click"," #map-stadium g[data-section]",function(){
          var section = $(this).data("section");
          $('a[href="#map-tab"]').tab('show');
-         $("#content_1").mCustomScrollbar("scrollTo","[data-region-name='" + section+"']");
+         $("#content_1").mCustomScrollbar("scrollTo",'[data-region-name="' + section+'"]');
 
 
          // Get current URL parts
@@ -103,8 +103,8 @@ setTimeout(function () {
            if (search_keyword.length >  0) {
         
                $('#blocks_data  tbody tr').hide();
-               $("[data-region-explode*='"+ search_keyword+"']").show();  
-               if($("[data-region-explode*='"+ search_keyword+"']").length == 0)   {
+               $('[data-region-explode*="'+ search_keyword+'"]').show();  
+               if($('[data-region-explode*="'+ search_keyword+'"]').length == 0)   {
                      $('#mapsvg-search-regions-no-matches').show();
                } 
            } else {
