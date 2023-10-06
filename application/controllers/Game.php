@@ -3481,8 +3481,8 @@ public function get_order_status(){
 						$url = base_url() . 'tixstock/orderConfirm';
 						$post_data = array("bg_id" => $order->bg_id, "tixstock_status" => 'Approved');
 
-					$tixresponse = $this->sendCurlRequest($url, $post_data);
-					//$tixresponse['tixstock_status'] = "Approved" ;
+					//$tixresponse = $this->sendCurlRequest($url, $post_data);
+					$tixresponse['tixstock_status'] = "Approved" ;
 						if ($tixresponse['tixstock_status'] == "Approved" && $order->booking_status == 2) {
 							$this->updateSellTickets($order->bg_id);
 
@@ -3533,8 +3533,8 @@ public function get_order_status(){
 						$url = base_url() . 'tixstock/orderConfirm';
 						$post_data = array("bg_id" => $order->bg_id, "tixstock_status" => 'Approved');
 
-						$tixresponse = $this->sendCurlRequest($url, $post_data);
-						//$tixresponse['tixstock_status']="Cancelled";
+						//$tixresponse = $this->sendCurlRequest($url, $post_data);
+						$tixresponse['tixstock_status']="Cancelled";
 						if ($tixresponse['tixstock_status'] == "Cancelled" ) {
 							//$this->updateSellTickets($order->bg_id);
 
@@ -7246,33 +7246,33 @@ $approve_or_reject = ' <div class="reject_btn">
   }
 
   function sendCurlRequest($url, $post_data) {
-    $handle = curl_init();
-    curl_setopt($handle, CURLOPT_URL, $url);
-    curl_setopt($handle, CURLOPT_POST, 1);
-    curl_setopt($handle, CURLOPT_POSTFIELDS, $post_data);
-    curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
-    $output = curl_exec($handle);
-    curl_close($handle);
-    return json_decode($output, 1);
+    // $handle = curl_init();
+    // curl_setopt($handle, CURLOPT_URL, $url);
+    // curl_setopt($handle, CURLOPT_POST, 1);
+    // curl_setopt($handle, CURLOPT_POSTFIELDS, $post_data);
+    // curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+    // $output = curl_exec($handle);
+    // curl_close($handle);
+    // return json_decode($output, 1);
 }
   function sendCurlMail($order_id) {
 
-		$handle = curl_init();
-		$url = API_MAIL_URL . $order_id;
-		curl_setopt($handle, CURLOPT_HTTPHEADER, array(
-			'domainkey: https://www.1boxoffice.com/en/'
-		)
-		);
-		curl_setopt($handle, CURLOPT_URL, $url);
-		curl_setopt($handle, CURLOPT_POST, 1);
-		curl_setopt(
-			$handle,
-			CURLOPT_POSTFIELDS,
-			"email_notify=notify"
-		);
-		curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
-		$output = curl_exec($handle);
-		curl_close($handle);
+		// $handle = curl_init();
+		// $url = API_MAIL_URL . $order_id;
+		// curl_setopt($handle, CURLOPT_HTTPHEADER, array(
+		// 	'domainkey: https://www.1boxoffice.com/en/'
+		// )
+		// );
+		// curl_setopt($handle, CURLOPT_URL, $url);
+		// curl_setopt($handle, CURLOPT_POST, 1);
+		// curl_setopt(
+		// 	$handle,
+		// 	CURLOPT_POSTFIELDS,
+		// 	"email_notify=notify"
+		// );
+		// curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+		// $output = curl_exec($handle);
+		// curl_close($handle);
 
 }
 

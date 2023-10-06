@@ -7108,6 +7108,12 @@ public function get_seat_category_main()
 		$query = $this->db->get();
         return $query->row(); // Return a single row from the result
     }
+	public function get_venue_based_country_v1($id) {
+		$this->db->select('stadium.country,stadium.city')->from('stadium');		
+		$this->db->where('stadium.s_id', $id);
+		$query = $this->db->get();
+        return $query->row(); // Return a single row from the result
+    }
 	
 	public function get_matches_stores($matchId)
 	{		
