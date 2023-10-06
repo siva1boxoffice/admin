@@ -474,7 +474,7 @@ if($stadium_details){
 <!-- main content End -->
 <?php $this->load->view(THEME.'common/footer'); ?>
 
-<?php $v="1.16";?>
+<?php $v="1.17";?>
 <script type="text/javascript">
       var stadium_active = <?php echo  json_encode($json); ?>;
 </script>
