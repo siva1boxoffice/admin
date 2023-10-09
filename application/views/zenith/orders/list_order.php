@@ -940,7 +940,7 @@ order.seller_first_name+' '+order.seller_last_name+
 '<h5>Booking Status</h5>'+
 '<div class="d-flex justify-content-between align-items-center mt-4">'+selectBox+
 '<div class="bo-checkbox">'+
-'<input type="checkbox" class="bo-checkbox-input" checked="checked" id="checkbox-sendmail">'+
+'<input type="checkbox" class="bo-checkbox-input" checked="checked" id="sendmail">'+
 '<label class="bo-checkbox-label" for="checkbox-sendmail">Send Mail</label>'+
 '</div>'+
 '<button type="button" class="btn btn-tbl-card-action">Need to Receive ('+order.quantity+')</button>'+

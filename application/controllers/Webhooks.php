@@ -13,6 +13,8 @@ class Webhooks extends CI_Controller {
 
     $booking_no = md5($booking_no);
     $orderData =  $this->General_Model->getOrderData($booking_no);
+
+     //if(!empty($orderData)){ 
     if($orderData->booking_status == 2 && $orderData->hook_status == 1){
     
     $sell_tickets =       $this->General_Model->getAllItemTable_Array('sell_tickets', array('s_no' => $orderData->ticket_id))->row();
@@ -29,7 +31,11 @@ class Webhooks extends CI_Controller {
 
     if(!empty($orderData)){
 
-  $secret_hmacKey           = "05b82d846749cf7f6b24c576b9";
+$seller_settings =       $this->General_Model->getAllItemTable_Array('api_key_settings', array('partner_id' => $sell_tickets->user_id))->row();
+
+if($seller_settings->webhook_url != "" && $seller_settings->secret_key != "" ){
+
+  $secret_hmacKey           = $seller_settings->secret_key;
 
   $post_data = array(
  
@@ -66,7 +72,7 @@ $post_data["customer"] = array(
 $post_str                = json_encode($post_data);
 $client_secret       = hash_hmac('sha256', $post_str, $secret_hmacKey); 
 $token               = 'Authorization: Bearer '.$secret_hmacKey;
-$service_url         = "http://localhost/admin_main/admin_siva/Webhooksres";
+$service_url         = $seller_settings->webhook_url;
 
             $curl = curl_init();
             curl_setopt_array($curl, array(
@@ -114,11 +120,22 @@ $service_url         = "http://localhost/admin_main/admin_siva/Webhooksres";
                     $res['msg'] = "Webhooks not accepted.";
                     echo json_encode($res);exit;
             }
+          }
+          else{
+                    $res['status'] = 0;
+                    $res['msg'] = "Webhooks configuartion not initialised.Please do the configuration.";
+                    echo json_encode($res);exit;
+          }
 
 //echo "<pre>";print_r($response);exit;
 }
 
 //1e6ebc80dd4e57ed4860d32fb09f7b5837a2ffca6c5cc37ea4179c3eea65cd2d
+}
+else{ 
+  $res['status'] = 0;
+  $res['msg'] = "Order not eligible for to send via Webhooks.";
+  echo json_encode($res);exit;
 }
 }
 
