@@ -1058,13 +1058,14 @@ color: #00a3ed !important;
 																	<?php echo $orderData->seller_last_name; ?></td>
 													<td>
 														<?php
-														if ($orderData->booking_source == 1) {
-															echo "Web";
-														} else if ($orderData->booking_source == 2) {
-															echo "Api";
-														} else if ($orderData->booking_source == 3) {
-															echo "Affiliate";
-														}
+														echo $orderData->partner_company_name;
+														// if ($orderData->booking_source == 1) {
+														// 	echo "Web";
+														// } else if ($orderData->booking_source == 2) {
+														// 	echo "Api";
+														// } else if ($orderData->booking_source == 3) {
+														// 	echo "Affiliate";
+														// }
 														?>
 													</td>
 													<td><?php echo $orderData->tournament_name; ?></td>
