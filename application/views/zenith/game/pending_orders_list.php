@@ -222,6 +222,41 @@
    ->view(THEME.'common/footer'); ?>
    <script type="text/javascript">
    $(document).ready(function () {
+
+      $('.clear_all').click(function () {
+
+$('.date_search_filter').removeClass("filter_active");
+$('.order_id_search_filter').removeClass("filter_active");
+$('.seller_name_btn').removeClass("filter_active");
+$('.event_name_filter').removeClass("filter_active");
+$('.shipping_status_name_btn').removeClass("filter_active"); 
+$('.order_status_btn').removeClass("filter_active");  
+
+$("#booking_no").val('');
+//$("#seller_name").val('');
+$("#event_name").val('');        
+$("#MyTextbox2").datepicker("setDate", null); // clear selected date value
+$("#MyTextbox3").datepicker("setDate", null); // clear selected date value
+$('.order_status_check_box input:checked').prop('checked', false);
+//$('.seller_reset').trigger('click');
+
+$('.seller_name_btn').removeClass("filter_active");
+$('.seller_name_btn').text("Seller Name");  
+$("#seller_name").val('');
+$('.check_box input:checked').prop('checked', false);        
+//$('.category_reset').trigger('click');
+
+$('.ticket_category_btn').removeClass("filter_active");
+$('.ticket_category_btn').text("Ticket Category");  
+$("#ticket_category").val('');
+$('.seat_category_check_box input:checked').prop('checked', false);
+
+$('.search_box').trigger('keyup');
+// trigger your desired action here
+Dtable.draw();
+
+});
+
       
       $(".search_box").on('keyup', function(){
               var value = $(this).val().toLowerCase();               
