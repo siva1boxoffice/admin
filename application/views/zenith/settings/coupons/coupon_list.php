@@ -764,8 +764,23 @@ var Dtable = $('#coupon-datatable').DataTable(
                url: base_url + 'settings/discount_coupons/coupon_by_id/' + id,
               type: "GET",// Pass the search text to the PHP script
               success: function(response) {            
-                   data=jQuery.parseJSON(response);                   
+                   data=jQuery.parseJSON(response);     
+                  // console.log("Coupon Type"+data.coupon_type);              
                   $(".coupon_form #c_id").val(data.c_id);
+                  if(data.coupon_type==1)
+                  {
+                     $('#dollar').show();
+                     $('#percent').hide();
+                     $('#coupon_currency').css('pointer-events','visible');
+                      $('#coupon_currency').attr('required', 'required');            
+                  }
+                  else if(data.coupon_type==2)
+                  {
+                     $('#dollar').hide();
+                     $('#percent').show();
+                     $('#coupon_currency').css('pointer-events','none');
+                     $('#coupon_currency').removeAttr('required', 'required');
+                  }
                   if(data.t_id){
                      $(".coupon_form #t_id").val(data.t_id);
 
