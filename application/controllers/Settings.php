@@ -3585,6 +3585,31 @@ public function get_country_name(){
 		}
 	}
 
+ function get_currency($from_currency,$to_currency,$amount,$symbol="")
+    {
+     
+        $currency_sym = "";
+        if($symbol){
+             $currency_type = $this->General_Model->getAllItemTable('currency_types', 'currency_code', $to_currency, 'id', 'DESC')->row();
+
+            //pr($currency_type);
+            $currency_sym =  $currency_type->symbol." ";
+        }
+        //echo $from_currency."--".$to_currency;
+        if($amount == 0)  $total_amount =  $amount;
+        $total_amount = $amount;
+        if($from_currency  !=  $to_currency){
+
+            $currency = $this->General_Model->getAllItemTable_array('currency_converter',array('from_code' => $from_currency,'to_code' => $to_currency))->row();
+
+            $total_amount =  @$currency->rates * @$amount;
+        }
+        return $currency_sym.($total_amount);
+        //return $currency_sym.number_format((float)$total_amount, 2, '.', ''); 
+
+        //return $currency_sym.round($total_amount,2);  
+    }
+
 
 	public function discount_coupons()
 	{
@@ -3655,7 +3680,30 @@ public function get_country_name(){
 			//$edit_id = $edit_id = json_decode(base64_decode($this->uri->segment(4)));
 			$edit_id = $this->uri->segment(4);
 			$this->data['coupons'] = $this->General_Model->getAllItemTable('coupon_code', 'c_id', $edit_id, 'c_id', 'DESC')->row();
+			$total_coupon_prices = @$this->data['coupons']->coupon_value;
+			if(@$this->data['coupons']->coupon_code != ""){
+				$applied_coupons = $this->General_Model->getAllItemTable('coupon_logs', 'coupon_code', $this->data['coupons']->coupon_code, 'cl_id', 'DESC')->result();
+				$applied_prices = array();
+				foreach($applied_coupons as $applied_coupon){
 
+					$coupon_applied_currency = $applied_coupon->currency;
+					$coupon_currency 	  = $this->data['coupons']->currency_type;
+					$coupon_currency_data = $this->General_Model->getAllItemTable('currency_types', 'id', $coupon_currency, 'id', 'DESC')->row();
+					$coupon_cuurency = trim($coupon_currency_data->currency_code);
+					//echo $coupon_applied_currency.'='.trim($coupon_currency_data->currency_code);exit;
+					$coupon_price_v1        =  $this->get_currency($coupon_applied_currency,trim($coupon_currency_data->currency_code),$applied_coupon->applied_discount_amount,0);
+					$applied_prices[] = $coupon_price_v1;
+
+					 
+
+
+				} 
+				$applied_total_prices = number_format(array_sum($applied_prices),2);
+				$remaining_coupon_value = $total_coupon_prices - $applied_total_prices;
+
+			}
+			
+			$this->data['coupons']->remaining_coupon_value = number_format($remaining_coupon_value,2);
 			echo json_encode($this->data['coupons']);
 		}
 		else if ($segment == 'discount_coupon_list') {
