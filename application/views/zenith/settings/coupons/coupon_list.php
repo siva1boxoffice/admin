@@ -705,6 +705,10 @@ var Dtable = $('#coupon-datatable').DataTable(
             // branch-form-btn
             var formData = new FormData(myform);
 
+            if ($('#credit_note').prop('checked')==true){ 
+            formData.append('credit_note', 1);
+            }
+
             // $('#'+$(form).attr('id')+'-btn').addClass("is-loading no-click");
 
             // $('.has-loader').addClass('has-loader-active');
