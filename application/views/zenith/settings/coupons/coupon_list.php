@@ -329,7 +329,19 @@ label.error{
                                  <label for="simpleinput">Limit</label>
                                  <input type="text" id="usage_limit" name="usage_limit" class="form-control" placeholder="Enter Limit" required value="<?php echo $coupons->min_price;?>" autocomplete="off">
                               </div>
-                           </div>                                               
+                           </div>  
+                            <div class="col-md-6" id="coupon_balance_div" style="display: none;">
+                              <div class="form-group">
+                                 <label>Coupon Balance</label>
+                                 <div class="input-group">
+                                    <div class="input-group-prepend">
+                                       <span class="input-group-text rounded-0" id="basic-addon1"><img src="<?php echo base_url();?>assets/zenith_assets/images/dollar.svg" class="mCS_img_loaded"></span>
+                                    </div>
+                                    <input type="text" id="coupon_balance"  class="form-control" placeholder="Enter Coupon Balance" required value="" disabled>
+                                 </div>                                                    
+                                 <label id="coupon_value-error" class="error" for="coupon_balance"></label>
+                              </div>
+                           </div>                                             
                         </div>
                        <!--  <div class="row">
                            <div class="col-md-6">
@@ -704,7 +716,6 @@ var Dtable = $('#coupon-datatable').DataTable(
              //is-loading no-click
             // branch-form-btn
             var formData = new FormData(myform);
-
             if ($('#credit_note').prop('checked')==true){ 
             formData.append('credit_note', 1);
             }
@@ -796,6 +807,8 @@ var Dtable = $('#coupon-datatable').DataTable(
                   $(".coupon_form #create_date").val(data.create_date);
                   $(".coupon_form #coupon_type").val(data.coupon_type);
                   $(".coupon_form #usage_limit").val(data.usage_limit);
+                  $(".coupon_form #coupon_balance").val(data.remaining_coupon_value);
+                  
                   $(".coupon_form #coupon_currency").val(data.currency_type);
                   $(".coupon_form #coupon_value").val(data.coupon_value);
                   $(".coupon_form #coupon_value_percent").val(data.coupon_value);
@@ -804,7 +817,11 @@ var Dtable = $('#coupon-datatable').DataTable(
                   $(".coupon_form #max_price").val(data.max_price);
                  
                   if(data.credit_note == 1){ 
+                     $("#coupon_balance_div").show();
                      $(".coupon_form #credit_note").attr('checked','checked');
+                  }
+                  else{
+                    $("#coupon_balance_div").hide();
                   }
                    event.preventDefault();
                    $("#centermodal").modal('show');
