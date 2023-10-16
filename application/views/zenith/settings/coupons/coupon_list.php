@@ -1,3 +1,4 @@
+
 <?php $tournments   = $this->General_Model->get_tournments()->result();?>
 
 <?php $this->load->view(THEME.'common/header');?>
@@ -352,7 +353,7 @@ label.error{
                            </div>                                               
                         </div> -->
                         <div class="row">
-                           <div class="col-md-6">
+                           <div class="col-md-6" style="display:none;">
                         <div class="form-check">
                                       
                                                   <input class="form-check-input check_credit_note" type="checkbox" id="credit_note" name="credit_note" value="1">
