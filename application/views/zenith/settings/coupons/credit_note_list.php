@@ -25,26 +25,13 @@ label.error{
             <div class="page-title-box">
                <div class="container-fluid">
                   <div class="page-title dflex-between-center mb-2">
-                     <h3 class="mb-1">Coupon List</h3>
+                     <h3 class="mb-1">Credit Note List</h3>
                      <div class="add_new_btn">
                         <a href="#" class="btn btn-primary waves-effect waves-light add_coupon" data-effect="wave"   >
                             <i class="bx bx-plus bx-flashing"></i>
                             Add New
                          </a>
                       </div>
-                     <!-- <ol class="breadcrumb mb-0 mt-1">
-                        <li class="breadcrumb-item">
-                           <a href="../index.html">
-                              <i class="bx bx-home fs-xs"></i>
-                           </a>
-                        </li>
-                        <li class="breadcrumb-item">
-                           <a href="calender.html">
-                              Tickets
-                           </a>
-                        </li>
-                        <li class="breadcrumb-item active">Ticket approval</li>
-                     </ol> -->
                   </div>
                </div>
             </div>
@@ -99,38 +86,7 @@ label.error{
                                                 </div>
                                              </div>
                                           </li>
-                                          <li class="sort_list">
-                                             <div class="btn-group">
-                                                <div class="dropdown">
-                                                   <button class="btn btn-light dropdown-toggle coupon_type_btn" type="button" id="dropdownMenuButton"
-                                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                   Coupon Type <i class="mdi mdi-chevron-down"></i>
-                                                   </button>
-                                                   <div class="dropdown-menu dropdown-menu-custom" aria-labelledby="dropdownMenuButton">
-                                                      <div id="view_project_list_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-                                                      <div id="view_project_list_filter" class="dataTables_filter"><label class="search-box d-inline-flex position-relative">Search:<input type="search" class="form-control form-control-sm" placeholder="Search in Filters..." aria-controls="view_project_list" id="coupon_types"></label></div>
-                                                   </div>
-                                                      <!-- <a class="dropdown-item" href="#">Supercopa De Italia</a>
-                                                      <a class="dropdown-item" href="#">Super Lig</a>
-                                                      <a class="dropdown-item" href="#">Test Tournament English2</a> -->
-                                                      <div class="check_box">
-                                                        <div class="custom-control custom-checkbox">
-                                                          <input type="checkbox" class="custom-control-input" id="customCheck2">
-                                                          <label class="custom-control-label" for="customCheck2">Percentage</label>
-                                                        </div>
-                                                        <div class="custom-control custom-checkbox">
-                                                          <input type="checkbox" class="custom-control-input" id="customCheck1">
-                                                          <label class="custom-control-label" for="customCheck1">Amount</label>
-                                                        </div>
-                                                      </div>
-                                                      <div class="reset_btn">
-                                                         <div class="reset_txt"><button class="btn btn-info coupon_reset">Reset</button></div>
-                                                         <div class="reset_ok"><button class="btn btn-info coupon_type_search">Search</button></div>
-                                                      </div>
-                                                   </div>
-                                                </div>
-                                             </div>
-                                          </li>
+                                        
                                           <li class="sort_list">
                                              <div class="btn-group">
                                                 <div class="dropdown">
@@ -142,9 +98,6 @@ label.error{
                                                       <div id="view_project_list_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
                                                       <div id="view_project_list_filter" class="dataTables_filter"><label class="search-box d-inline-flex position-relative">Search:<input type="search" class="form-control form-control-sm" placeholder="Search in Filters..." aria-controls="view_project_list" id="status_type"></label></div>
                                                    </div>
-                                                      <!-- <a class="dropdown-item" href="#">Supercopa De Italia</a>
-                                                      <a class="dropdown-item" href="#">Super Lig</a>
-                                                      <a class="dropdown-item" href="#">Test Tournament English2</a> -->
                                                       <div class="seat_category_check_box">
                                                         <div class="custom-control custom-checkbox">
                                                           <input type="checkbox" class="custom-control-input" id="status1">
@@ -170,11 +123,6 @@ label.error{
                                              <a class="report_sts" href="">Search</a>
                                           </li>
                                        </ul>
-
-
-
-                                      
-                              
                                     </div>
                                  </div>
                               </div>
@@ -186,7 +134,7 @@ label.error{
                               <thead class="thead-light">
                                  <tr>
                               
-                                    <th>Coupon Code</th>
+                                    <th>Credit Note Code</th>
                                     <th>Used Count</th>
                                     <th>Remaining Count</th>
                                     <th>Coupon Type</th>
@@ -198,33 +146,7 @@ label.error{
                                  </tr>
                               </thead>
                               <tbody>
-                                 <!-- <tr>
-                                    <td>1</td>
-                                    <td>WC2022</td>                                 
-                                    <td>20</td>
-                                    <td>5</td>
-                                    <td>Amount </td>
-                                    <td>USD</td>                               
-                                    <td>200</td>
-                                    <td>5 Mar 2023 to 15 Apr 2023</td>
-                                    <td>
-                                       <div class="bttns">
-                                         <span class="badge badge-success">Active</span>
-                                       </div>
-                                    </td>
-                                    <td>
-                                       <div class="dropdown">
-                                          <a href="javascript:void(0)" class="btn-icon btn-icon-sm btn-icon-soft-primary" data-toggle="dropdown">
-                                             <i class="mdi mdi-dots-vertical fs-sm"></i>
-                                          </a>
-                                          <div class="dropdown-menu dropdown-menu-right">
-                                             <a href="#" class="dropdown-item">View</a>
-                                             <a href="#" class="dropdown-item">Edit </a>
-                                             <a href="#" class="dropdown-item">Delete </a>
-                                          </div>
-                                       </div>
-                                    </td>
-                                 </tr> -->
+                               
                               </tbody>
                            </table>
                         </div>
@@ -240,17 +162,17 @@ label.error{
             <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                <div class="modal-header">
-                  <h4 class="modal-title" id="myCenterModalLabel">Create Coupon</h4>
+                  <h4 class="modal-title" id="myCenterModalLabel">Create Credit Note</h4>
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                </div>
                <div class="modal-body">
                   <div class="create_coupon coupon_popup">
-                     <form id="coupon_form" method="post" class="coupon_form" action="<?php echo base_url();?>settings/discount_coupons/save_coupon" >
+                     <form id="coupon_form" method="post" class="coupon_form" action="<?php echo base_url();?>settings/credit_note_coupons/save_coupon" >
                      <input type="hidden" name="id" id="c_id"  value="<?php echo $coupons->c_id;?>"> 
                         <div class="row">
                            <div class="col-md-12">
                               <div class="form-group">
-                                 <label for="simpleinput">Coupon Code*</label>
+                                 <label for="simpleinput">Credit Note Code*</label>
                                  <input type="text" id="coupon_code" name="coupon_code"  class="form-control" placeholder="Enter coupon code here" placeholder="Enter Coupon Code" required value="<?php echo $coupons->coupon_code;?>" >
                               </div>
                            </div>
@@ -270,14 +192,11 @@ label.error{
                            </div>
                         </div>
                         <div class="row">
-                           <div class="col-md-4">
+                           <div class="col-md-4" style="display:none;">
                               <div class="form-group">
-                                 <label for="simpleinput">Coupon Type * </label>
-                                 
+                                 <label for="simpleinput">Coupon Type * </label>                                 
                                  <select class="custom-select check_credit_note" name="coupon_type" id="coupon_type" required >
-                                 <option value="" >Choose</option>
-                                    <option value="1" <?php if('1' == $coupons->coupon_type){?> selected <?php } ?>>Amount</option>
-                                 <option value="2" <?php if('2' == $coupons->coupon_type){?> selected <?php } ?>>Percentage</option>
+                                    <option value="1">Amount</option>
                               </select>
                               </div>
                            </div>
@@ -286,7 +205,7 @@ label.error{
                               <div class="form-group">
                                  <label for="simpleinput">Currency</label>
                                  
-                                 <select class="custom-select" name="coupon_currency" id="coupon_currency" >
+                                 <select class="custom-select" name="coupon_currency" id="coupon_currency" required >
                                  <option value="" >Choose</option>
                                  <?php if($currency){
                                     foreach ($currency as $key => $value) {
@@ -298,7 +217,7 @@ label.error{
                            </div>
 
 
-                              <div class="col-md-5" id="dollar" >
+                              <div class="col-md-4" id="dollar" >
                               <div class="form-group">
                                  <label>Coupon Value</label>
                                  <div class="input-group">
@@ -311,17 +230,19 @@ label.error{
                               </div>
                            </div>
 
-                           <div class="col-md-5 "  id='percent' style="display:none">
+                           <div class="col-md-5" id="coupon_balance_div" >
                               <div class="form-group">
-                                 <label>Coupon Value</label>
+                                 <label>Remaining Balance</label>
                                  <div class="input-group">
-                                    <input type="text"   id="coupon_value_percent" name="coupon_value_percent" class="form-control" placeholder="Enter Coupon Value" aria-label="" aria-describedby="basic-addon1" required value="<?php echo $coupons->coupon_value;?>"> 
                                     <div class="input-group-prepend">
-                                       <span class="input-group-text rounded-0" id="basic-addon1"><img src="<?php echo base_url();?>assets/zenith_assets/images/percent.svg" class="mCS_img_loaded"></span>
+                                       <span class="input-group-text rounded-0" id="basic-addon1"><img src="<?php echo base_url();?>assets/zenith_assets/images/dollar.svg" class="mCS_img_loaded"></span>
                                     </div>
-                                 </div>
+                                    <input type="text" id="coupon_balance"  class="form-control" placeholder="Remaining Balance" required value="" disabled>
+                                 </div>                                                    
+                                 <label id="coupon_value-error" class="error" for="coupon_balance"></label>
                               </div>
-                           </div>
+                           </div>   
+
                         </div>
                         <div class="row">
                            <div class="col-md-6">
@@ -330,32 +251,13 @@ label.error{
                                  <input type="text" id="usage_limit" name="usage_limit" class="form-control" placeholder="Enter Limit" required value="<?php echo $coupons->min_price;?>" autocomplete="off">
                               </div>
                            </div>  
-                            <div class="col-md-6" id="coupon_balance_div" style="display: none;">
-                              <div class="form-group">
-                                 <label>Coupon Balance</label>
-                                 <div class="input-group">
-                                    <div class="input-group-prepend">
-                                       <span class="input-group-text rounded-0" id="basic-addon1"><img src="<?php echo base_url();?>assets/zenith_assets/images/dollar.svg" class="mCS_img_loaded"></span>
-                                    </div>
-                                    <input type="text" id="coupon_balance"  class="form-control" placeholder="Enter Coupon Balance" required value="" disabled>
-                                 </div>                                                    
-                                 <label id="coupon_value-error" class="error" for="coupon_balance"></label>
-                              </div>
-                           </div>                                             
+                                                                     
                         </div>
-                       <!--  <div class="row">
-                           <div class="col-md-6">
-                              <div class="form-group">
-                                 <label for="simpleinput">Mark as to use in Credit Note</label>
-                                 <input type="checkbox" id="credit_note" name="credit_note" class="form-control check_credit_note" placeholder="Credit Note" value="1" autocomplete="off">
-                              </div>
-                           </div>                                               
-                        </div> -->
                         <div class="row">
-                           <div class="col-md-6">
+                           <div class="col-md-6" style="display:none;">
                         <div class="form-check">
                                       
-                                                  <input class="form-check-input check_credit_note" type="checkbox" id="credit_note" name="credit_note" value="1">
+                                                  <input class="form-check-input check_credit_note" type="checkbox" id="credit_note" name="credit_note" value="1" >
                                          <label class="form-check-label" for="credit_note">
                                           Mark as to use in Credit Note
                                          </label></div>
@@ -378,7 +280,18 @@ label.error{
 <script>
      $(document).ready(function () {
 
-      
+      $("#coupon_value").keyup(function() {   
+         var inputValue = $(this).val();     
+         inputValue = inputValue.replace(/[^0-9]/g, '');
+         $(this).val(inputValue);
+         $('#coupon_balance').val(inputValue);
+      });
+
+      $("#usage_limit").keyup(function() {  
+         var inputValue = $(this).val();     
+         inputValue = inputValue.replace(/[^0-9]/g, '');
+         $(this).val(inputValue);
+         });
 
       $(document).on('change', '.check_credit_note', function() {
         if ($('#credit_note').prop('checked')==true){ 
@@ -428,7 +341,7 @@ var Dtable = $('#coupon-datatable').DataTable(
         'scrollX': !0,
         'serverMethod': 'post',
         "ajax": {
-            url: base_url + 'settings/get_item',
+            url: base_url + 'settings/get_credit_note_item',
             data: function (d) {
                var fromDate = document.getElementById('MyTextbox3').value;
                var toDate = document.getElementById('MyTextbox2').value;
@@ -470,8 +383,6 @@ var Dtable = $('#coupon-datatable').DataTable(
             processing: 'Loading...'
          },
          drawCallback: function () {
-            // $(".dataTables_paginate").addClass("page-link"),
-            // $(".dataTables_paginate  .paginate_button").addClass("page-link")
             $(".dataTables_paginate > .pagination").addClass("flat-rounded-pagination "), $(".dataTables_filter").find("label").addClass("search-box d-inline-flex position-relative"), $(".dataTables_filter").find(".form-control").attr("placeholder", "Search...")
          },
         'columns': [
@@ -682,22 +593,22 @@ var Dtable = $('#coupon-datatable').DataTable(
 
           function call_defined(t,w=''){
             console.log(t +" "+ w);
-                    $.ajax({
-                          type: "POST",
-                          url: "<?php echo base_url();?>settings/discount_coupons/change_tournment",
-                          data: {
-                            t_id: t,
-                            m_id: w,
-                          },
-                          success: function(odata) {
-                            data=jQuery.parseJSON(odata);
-                            if (data.status==1) {
-                                $('.choose_match').html(data.val);
-                            }else{
-                                $('.choose_match').html("<option value=''>Change Tournament</option>");
-                            }
-                          }
-                        });  
+                  //   $.ajax({
+                  //         type: "POST",
+                  //         url: "<?php //echo base_url();?>settings/credit_note_coupons/change_tournment",
+                  //         data: {
+                  //           t_id: t,
+                  //           m_id: w,
+                  //         },
+                  //         success: function(odata) {
+                  //           data=jQuery.parseJSON(odata);
+                  //           if (data.status==1) {
+                  //               $('.choose_match').html(data.val);
+                  //           }else{
+                  //               $('.choose_match').html("<option value=''>Change Tournament</option>");
+                  //           }
+                  //         }
+                  //       });  
                 }
 
 
@@ -714,16 +625,10 @@ var Dtable = $('#coupon-datatable').DataTable(
            submitHandler: function(form) {
             
             var myform = $('#'+$(form).attr('id'))[0];
-             //is-loading no-click
-            // branch-form-btn
             var formData = new FormData(myform);
             if ($('#credit_note').prop('checked')==true){ 
             formData.append('credit_note', 1);
             }
-
-            // $('#'+$(form).attr('id')+'-btn').addClass("is-loading no-click");
-
-            // $('.has-loader').addClass('has-loader-active');
              
             var action = $(form).attr('action');
              $.ajax({
@@ -737,28 +642,15 @@ var Dtable = $('#coupon-datatable').DataTable(
                dataType: "json",
 
                success: function(data) { 
-
-              //   $('#'+$(form).attr('id')+'-btn').removeClass("is-loading no-click");
-
                  if(data.status == 1) {
                   
                      swal('Updated !', data.msg, 'success').then(function() {
                          window.location.reload();
                      });
-                     // setTimeout(function(){ window.location.reload();  }, 2000);
-                   // notyf.success(data.msg, "Success", {
-                   // timeOut: "1800"
-                   // });
-                  // setTimeout(function(){ window.location.href = data.redirect_url; }, 2000);
+                     
                  }else if(data.status == 0) {
 
-                   swal('Updation Failed !', data.msg, 'error');
-
-                   //  notyf.error(data.msg, "Failed", "Oops!", {
-                   // timeOut: "1800"
-                   // });
-                   //setTimeout(function(){ window.location.href = data.redirect_url; }, 2000);
-                   
+                   swal('Updation Failed !', data.msg, 'error');                   
                  }
                }
              })
@@ -767,17 +659,22 @@ var Dtable = $('#coupon-datatable').DataTable(
          });
 
         $("body").on("click",".add_coupon",function(){
+         
+         
          $(".coupon_form select, .coupon_form input").val("");
 
                   event.preventDefault();
                  
 
                    $("#centermodal").modal('show');
+                   $('#myCenterModalLabel').text('Create Credit Note');
+                   $(".coupon_form #coupon_type").val(1);
+                   $(".coupon_form #credit_note").attr('checked','checked');
         });
         $("body").on("click",".load_coupon_edit",function(){
             var id  = $(this).data('id');
            $.ajax({
-               url: base_url + 'settings/discount_coupons/coupon_by_id/' + id,
+               url: base_url + 'settings/credit_note_coupons/coupon_by_id/' + id,
               type: "GET",// Pass the search text to the PHP script
               success: function(response) {            
                    data=jQuery.parseJSON(response);     
@@ -803,7 +700,8 @@ var Dtable = $('#coupon-datatable').DataTable(
                   }
 
                   call_defined(data.t_id,data.m_id);
-                 
+
+                  $('#myCenterModalLabel').text('Edit Credit Note');                 
                   $(".coupon_form #coupon_code").val(data.coupon_code);
                   $(".coupon_form #create_date").val(data.create_date);
                   $(".coupon_form #coupon_type").val(data.coupon_type);

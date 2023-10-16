@@ -865,7 +865,111 @@ public function get_country_name(){
 		echo json_encode($result);
 		exit();
 	}
-	
+	public function get_credit_note_item()
+	{
+
+			
+		$row_per_page = 50;
+        $rowno = $_POST['start'];$where_array=[];$draw = $_POST['draw'];$data = [];
+        if(!empty($_GET)){
+         $row_per_page = 10000;
+        }
+        
+        // Row position
+        if ($rowno != 0) {
+            $rowno = ($rowno - 1) * $row_per_page;
+        }  
+		if ( !empty($_POST['event_start_date']) || !empty($_POST['event_end_date']) || !empty($_POST['coupon_type']) || !empty($_POST['status_type'])  ) 
+		{
+			
+			$fromDate 							    = $_POST['event_start_date'];
+            $toDate 							    = $_POST['event_end_date'];
+			$ip_coupon_type 							= $_POST['coupon_type'];
+			$status_type 							= $_POST['status_type'];
+			$credit_note							= 1;	
+
+			$records = $this->General_Model->get_limit_based_data_search('coupon_code ', $rowno, $row_per_page, 'c_id', 'DESC',$fromDate,$toDate,$ip_coupon_type,$status_type,$credit_note)->result();
+			// echo $this->db->last_query();
+			// exit;
+			$allcount = $this->General_Model->get_limit_based_data_search('coupon_code ', '','', 'c_id', 'DESC',$fromDate,$toDate,$ip_coupon_type,$status_type,$credit_note)->num_rows();
+		}
+		else
+		{
+			$search['credit_note']=1;
+			$records = $this->General_Model->get_limit_based_data('coupon_code ', $rowno, $row_per_page, 'c_id', 'DESC',$search)->result();		
+
+			$allcount = $this->General_Model->get_limit_based_data('coupon_code ', '','', 'c_id', 'DESC',$search)->num_rows();
+		}
+		// Get records
+		$i=1;
+		foreach($records as $record ){
+
+			$expiry_date				= date("d M Y",strtotime(time_zone_calc(@$_COOKIE["client_time_zone"],$record->create_date)))." to ".date("d M Y",strtotime(time_zone_calc(@$_COOKIE["client_time_zone"],$record->expiry_date)));
+			
+			$used_count = !empty($record->used_count) ? $record->used_count : 0;
+			$remaing_count=$record->usage_limit-$record->usage_used_count;
+			
+			$currency_type='---';
+			if($record->coupon_type == 1)
+			{
+				$get_currency=$this->General_Model->get_coupon_currency($record->currency_type);
+				$currency_type= $get_currency->currency_code;				
+			}
+
+			$c_type 					= 		($record->coupon_type == '1') ? "Amount" : "Percentage";
+			$coupon_code				=		$record->coupon_code;
+			$coupon_value				=		$record->coupon_value;
+
+			$ip_status=($record->status == '1') ? "Active" : "InActive";
+			$badge=($record->status == '1') ? "success" : "danger";	
+
+			$status						=		'<div class="bttns">
+			<span class="badge badge-'.$badge.'">'.$ip_status.'</span>
+			 </div>';
+
+			 $edit_url= base_url()."settings/credit_note_coupons/add_discount_coupon/".base64_encode(json_encode($record->c_id));
+			 $delete_url= base_url()."settings/credit_note_coupons/delete_coupon/".$record->c_id;
+
+			$action	 =	'<div class="dropdown">
+					<a href="javascript:void(0)" class="btn-icon btn-icon-sm btn-icon-soft-primary" data-toggle="dropdown">
+						<i class="mdi mdi-dots-vertical fs-sm"></i>
+					</a>
+					<div class="dropdown-menu dropdown-menu-right">
+						<!-- <a href="javascript:void(0)" class="dropdown-item">View</a> -->
+						<a href="javascript:void(0)" class="dropdown-item load_coupon_edit" data-id="'.$record->c_id.'">Edit </a>
+						<a href="javascript:void(0)" class="dropdown-item"   id="branch_'.$record->c_id.'" data-id 
+						="'.$record->c_id.'"  data-href="'.$delete_url.'"onclick="delete_data(\''.$record->c_id.'\');">Delete </a>
+					</div>
+				</div>';
+			$c_id						=		$record->c_id;
+			$i							=		$i;
+
+			$data[] = array( 
+                "c_type"				=> $c_type, 
+				"coupon_value"			=> $coupon_value,
+				"expiry_date"			=> $expiry_date,
+				"status"				=> $status,
+				"c_id"					=> $c_id,
+				"used_count"			=> $used_count,
+				"remaining_count"		=> $remaing_count,
+				"coupon_code"			=> $coupon_code,			
+				"action"				=> $action,
+				"currency"				=> $currency_type,
+			);
+			$i++;
+	}
+
+		$result = array(
+            "draw" => $draw,
+              "recordsTotal" => $allcount,
+              "recordsFiltered" => $allcount,
+              "data" => $data
+         );
+
+
+		echo json_encode($result);
+		exit();
+	}
 	public function get_item_sep22()
 	{
 
@@ -3781,6 +3885,135 @@ public function get_country_name(){
 		}
 	}
 
+	public function credit_note_coupons()
+	{
+
+		$this->data['currency'] = $this->General_Model->get_all_currency_types()->result();
+		if($_POST['coupon_type']==2)
+		{
+			$_POST['coupon_currency']="";
+			$_POST['coupon_value']=$_POST['coupon_value_percent'];
+		}
+
+		$segment = $this->uri->segment(3);
+		
+		if ($segment == 'add_discount_coupon') {
+			$segment4 = $this->uri->segment(4);
+
+			if ($segment4 != "") {
+
+				$edit_id = $edit_id = json_decode(base64_decode($this->uri->segment(4)));
+				$this->data['coupons'] = $this->General_Model->getAllItemTable('coupon_code', 'c_id', $edit_id, 'c_id', 'DESC')->row();
+			}
+
+
+			$this->load->view('settings/coupons/add_coupon', $this->data);
+		} 
+
+		else if ($segment == 'coupon_by_id') {
+			//$edit_id = $edit_id = json_decode(base64_decode($this->uri->segment(4)));
+			$edit_id = $this->uri->segment(4);
+			$this->data['coupons'] = $this->General_Model->getAllItemTable('coupon_code', 'c_id', $edit_id, 'c_id', 'DESC')->row();
+			$total_coupon_prices = @$this->data['coupons']->coupon_value;
+			if(@$this->data['coupons']->coupon_code != ""){
+				$applied_coupons = $this->General_Model->getAllItemTable('coupon_logs', 'coupon_code', $this->data['coupons']->coupon_code, 'cl_id', 'DESC')->result();
+				$applied_prices = array();
+				foreach($applied_coupons as $applied_coupon){
+
+					$coupon_applied_currency = $applied_coupon->currency;
+					$coupon_currency 	  = $this->data['coupons']->currency_type;
+					$coupon_currency_data = $this->General_Model->getAllItemTable('currency_types', 'id', $coupon_currency, 'id', 'DESC')->row();
+					$coupon_cuurency = trim($coupon_currency_data->currency_code);
+					//echo $coupon_applied_currency.'='.trim($coupon_currency_data->currency_code);exit;
+					$coupon_price_v1        =  $this->get_currency($coupon_applied_currency,trim($coupon_currency_data->currency_code),$applied_coupon->applied_discount_amount,0);
+					$applied_prices[] = $coupon_price_v1;
+
+					 
+
+
+				} 
+				$applied_total_prices = number_format(array_sum($applied_prices),2);
+				$remaining_coupon_value = $total_coupon_prices - $applied_total_prices;
+
+			}
+			
+			$this->data['coupons']->remaining_coupon_value = number_format($remaining_coupon_value,2);
+			echo json_encode($this->data['coupons']);
+		}
+		else if ($segment == 'discount_coupon_list') {
+			$row_count = $this->uri->segment(4);
+			$this->loadRecord($row_count, 'coupon_code', 'settings/credit_note_coupons/discount_coupon_list', 'c_id', 'DESC', THEME.'settings/coupons/credit_note_list', 'coupons');
+		} else if ($segment == 'delete_coupon') {
+
+			$segment4 = $this->uri->segment(4);
+			$delete_id = $segment4;
+			$delete = $this->General_Model->delete_data('coupon_code', 'c_id', $delete_id);
+			if ($delete == 1) {
+				$response = array('status' => 1, 'msg' => 'Credit Note Coupon details deleted Successfully.');
+				echo json_encode($response);
+				exit;
+			} else {
+				$response = array('status' => 1, 'msg' => 'Error while deleting Credit Note Coupon details.');
+				echo json_encode($response);
+				exit;
+			}
+		} else if ($segment == 'save_coupon') {
+ 
+			$this->form_validation->set_rules('coupon_code', 'Coupon Code', 'required');
+			$this->form_validation->set_rules('coupon_type', 'Coupon Type', 'required');
+			$this->form_validation->set_rules('coupon_value', 'Coupon Value', 'required');
+			// $this->form_validation->set_rules('min_price', 'Min Price Range', 'required');
+			// $this->form_validation->set_rules('max_price', 'Max Price Range', 'required');
+			$this->form_validation->set_rules('create_date', 'Start Date', 'required');
+			$this->form_validation->set_rules('expiry_date', 'Expiry Date', 'required');
+			if ($this->form_validation->run() !== false) {
+				$insert_data = array(
+					'coupon_code' => $_POST['coupon_code'],
+					'coupon_type' => $_POST['coupon_type'],
+					'coupon_value' => $_POST['coupon_value'],
+					'currency_type' => $_POST['coupon_currency'],
+					'min_price' => $_POST['min_price'],
+					'max_price' => $_POST['max_price'],
+					'usage_limit' => $_POST['usage_limit'],
+					'm_id' => 0,
+					't_id' => $_POST['t_id'],
+					'status' => 1,
+					'expiry_date' => date('Y-m-d', strtotime($_POST['expiry_date'])),
+					'create_date' => date('Y-m-d', strtotime($_POST['create_date'])),
+				);
+				$insert_data['credit_note'] = 0;
+				if($_POST['credit_note'] == 1){
+					$insert_data['credit_note'] = 1;
+				}
+				if ($_POST['id'] == '') {
+
+					$inserted_id = $this->General_Model->insert_data('coupon_code', $insert_data);
+					if ($inserted_id) {
+						$response = array('msg' => 'New Credit Note Coupon Created successfully.', 'redirect_url' => base_url() . 'settings/credit_note_coupons/discount_coupon_list', 'status' => 1);
+					} else {
+						$response = array('msg' => 'Failed to Create New Credit Note Coupon.', 'redirect_url' => base_url() . 'settings/credit_note_coupons/discount_coupon_list', 'status' => 0);
+					}
+					echo json_encode($response);
+					exit;
+				} else {
+					$id = $_POST['id'];
+
+
+					if ($this->General_Model->update_table('coupon_code', 'c_id', $id, $insert_data)) {
+						$response = array('msg' => 'Credit Note Coupon details updated Successfully.', 'redirect_url' => base_url() . 'settings/credit_note_coupons/discount_coupon_list', 'status' => 1);
+					} else {
+						$response = array('msg' => 'Failed to update Credit Note Coupon details.', 'redirect_url' => base_url() . 'settings/credit_note_coupons/discount_coupon_list', 'status' => 0);
+					}
+					echo json_encode($response);
+					exit;
+				}
+			} else {
+				$response = array('msg' => validation_errors(), 'redirect_url' => base_url() . 'settings/credit_note_coupons/discount_coupon_list', 'status' => 0);
+			}
+			echo json_encode($response);
+			exit;
+		}
+	}
 	public function discount_coupons_sep22()
 	{
 
