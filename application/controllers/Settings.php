@@ -879,7 +879,7 @@ public function get_country_name(){
         if ($rowno != 0) {
             $rowno = ($rowno - 1) * $row_per_page;
         }  
-		if ( !empty($_POST['event_start_date']) || !empty($_POST['event_end_date']) || !empty($_POST['coupon_type']) || !empty($_POST['status_type'])  ) 
+		if ( !empty($_POST['event_start_date']) || !empty($_POST['event_end_date']) || !empty($_POST['coupon_type']) || !empty($_POST['status_type']) || !empty($_POST['credit_note'])  ) 
 		{
 			
 			$fromDate 							    = $_POST['event_start_date'];
@@ -887,11 +887,12 @@ public function get_country_name(){
 			$ip_coupon_type 							= $_POST['coupon_type'];
 			$status_type 							= $_POST['status_type'];
 			$credit_note							= 1;	
+			$credit_note_code						= $_POST['credit_note'];	
 
-			$records = $this->General_Model->get_limit_based_data_search('coupon_code ', $rowno, $row_per_page, 'c_id', 'DESC',$fromDate,$toDate,$ip_coupon_type,$status_type,$credit_note)->result();
+			$records = $this->General_Model->get_limit_based_data_search('coupon_code ', $rowno, $row_per_page, 'c_id', 'DESC',$fromDate,$toDate,$ip_coupon_type,$status_type,$credit_note,$credit_note_code)->result();
 			// echo $this->db->last_query();
 			// exit;
-			$allcount = $this->General_Model->get_limit_based_data_search('coupon_code ', '','', 'c_id', 'DESC',$fromDate,$toDate,$ip_coupon_type,$status_type,$credit_note)->num_rows();
+			$allcount = $this->General_Model->get_limit_based_data_search('coupon_code ', '','', 'c_id', 'DESC',$fromDate,$toDate,$ip_coupon_type,$status_type,$credit_note,$credit_note_code)->num_rows();
 		}
 		else
 		{

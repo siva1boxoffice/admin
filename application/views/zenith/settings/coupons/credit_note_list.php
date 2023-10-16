@@ -55,6 +55,34 @@ label.error{
                                        <ul>
 
                                        <li class="sort_list">
+                                       <div class="btn-group">
+                                          <div class="dropdown">
+                                             <button class="btn btn-light dropdown-toggle event_name_filter" type="button"
+                                                id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false">
+                                                Credit Note <i class="mdi mdi-chevron-down"></i>
+                                             </button>
+                                             <div class="dropdown-menu dropdown-menu-custom"
+                                                aria-labelledby="dropdownMenuButton">
+                                                <div id="view_project_list_wrapper"
+                                                   class="dataTables_wrapper dt-bootstrap4 no-footer">
+                                                   <div id="view_project_list_filter" class="dataTables_filter"><label
+                                                         class="search-box d-inline-flex position-relative">Search:<input
+                                                            type="search" class="form-control form-control-sm"
+                                                            id="event_name" name="event_name" placeholder="Search in Filters..."
+                                                            aria-controls="view_project_list"></label></div>
+                                                </div>
+                                                    <div class="reset_btn">
+                                                         <div class="reset_txt"><button class="btn btn-info code_reset" >Reset</button></div>
+                                                         <div class="reset_ok"><button class="btn btn-info event_search_ok">Search</button></div>
+                                                      </div>
+
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </li>
+
+                                       <li class="sort_list">
                                              <div class="btn-group">
                                                 <div class="dropdown">
                                                    <button class="btn btn-light dropdown-toggle date_search_filter" type="button" id="dropdownMenuButton"
@@ -135,8 +163,6 @@ label.error{
                                  <tr>
                               
                                     <th>Credit Note Code</th>
-                                    <th>Used Count</th>
-                                    <th>Remaining Count</th>
                                     <th>Coupon Type</th>
                                     <th>Currency</th>
                                     <th>Coupon Value</th>
@@ -245,10 +271,10 @@ label.error{
 
                         </div>
                         <div class="row">
-                           <div class="col-md-6">
+                           <div class="col-md-6" style="display:none;">
                               <div class="form-group">
                                  <label for="simpleinput">Limit</label>
-                                 <input type="text" id="usage_limit" name="usage_limit" class="form-control" placeholder="Enter Limit" required value="<?php echo $coupons->min_price;?>" autocomplete="off">
+                                 <input type="text" id="usage_limit" name="usage_limit" class="form-control" placeholder="Enter Limit" required value="1" autocomplete="off">
                               </div>
                            </div>  
                                                                      
@@ -365,10 +391,13 @@ var Dtable = $('#coupon-datatable').DataTable(
                   statusIds.push(newID);
                });
 
+               var credit_note = $("#event_name").val();
+
                d.coupon_type = checkedIds;
                d.status_type = statusIds;
                d.event_start_date = fromDate;
-               d.event_end_date = toDate;
+               d.event_end_date = toDate;               
+               d.credit_note = credit_note;
             }
 
         },       
@@ -386,35 +415,41 @@ var Dtable = $('#coupon-datatable').DataTable(
             $(".dataTables_paginate > .pagination").addClass("flat-rounded-pagination "), $(".dataTables_filter").find("label").addClass("search-box d-inline-flex position-relative"), $(".dataTables_filter").find(".form-control").attr("placeholder", "Search...")
          },
         'columns': [
-       
             { data: 'coupon_code' },
-
-            { data: 'used_count' },
-            { data: 'remaining_count' },
-
             { data: 'c_type' },
             { data: 'currency' },
             { data: 'coupon_value' },   
             { data: 'expiry_date' },         
             { data: 'status' },            
-            { data: 'action' },    
-            
-                 
-           
+            { data: 'action' },              
         ]
     });
 
     $('.clear_all').click(function () {
+      $('.event_name_filter').removeClass("filter_active");
       $('.date_search_filter').removeClass("filter_active");
       $('.coupon_type_btn').removeClass("filter_active");
       $('.status_type_btn').removeClass("filter_active");
       
          $("#MyTextbox2").datepicker("setDate", null); // clear selected date value
          $("#MyTextbox3").datepicker("setDate", null); // clear selected date value
+         $('#event_name').val(''); 
          $('.coupon_reset').trigger('click');
          $('.status_reset').trigger('click');
-         //Dtable.draw();
+        // Dtable.draw();
 
+      });
+
+
+      $('.event_search_ok').on('click', function (e) {
+         $('.event_name_filter').addClass("filter_active");
+         Dtable.draw();
+      });
+
+      $('.code_reset').click(function () {          
+         $('.event_name_filter').removeClass("filter_active");
+         $("#event_name").val(''); 
+         Dtable.ajax.reload(); 
       });
 
       $('.coupon_reset').click(function () {
@@ -669,6 +704,7 @@ var Dtable = $('#coupon-datatable').DataTable(
                    $("#centermodal").modal('show');
                    $('#myCenterModalLabel').text('Create Credit Note');
                    $(".coupon_form #coupon_type").val(1);
+                   $(".coupon_form #usage_limit").val(1);
                    $(".coupon_form #credit_note").attr('checked','checked');
         });
         $("body").on("click",".load_coupon_edit",function(){
