@@ -2227,7 +2227,7 @@ class General_Model extends CI_Model
 		return $query;
 	}
 
-	public function get_limit_based_data_search($table, $row_no, $row_per_page, $orderColumn = '', $orderby = '',$fromDate='',$toDate='',$coupon_type,$status_type)
+	public function get_limit_based_data_search($table, $row_no, $row_per_page, $orderColumn = '', $orderby = '',$fromDate='',$toDate='',$coupon_type,$status_type,$credit_note="",$credit_note_code="")
 	{
 		$this->db->select('*');
 		$this->db->from($table);
@@ -2271,6 +2271,13 @@ class General_Model extends CI_Model
 		   $this->db->where_in('coupon_code.status',$comma_separated,FALSE);
 	   }
 
+	   if(!empty($credit_note)){
+	   $this->db->where('coupon_code.credit_note',1);
+	   }
+
+	   if (!empty($credit_note_code)) {		
+			 $this->db->like('coupon_code.coupon_code', $credit_note_code);		
+		}
 		//$this->db->where($columnkey, $value);
 
 		if ($orderColumn != "" && $orderby != "") {
