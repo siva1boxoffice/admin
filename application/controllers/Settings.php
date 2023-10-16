@@ -780,20 +780,21 @@ public function get_country_name(){
         }  
 		if ( !empty($_POST['event_start_date']) || !empty($_POST['event_end_date']) || !empty($_POST['coupon_type']) || !empty($_POST['status_type'])  ) 
 		{
-			
-			
 			$fromDate 							    = $_POST['event_start_date'];
             $toDate 							    = $_POST['event_end_date'];
 			$ip_coupon_type 							= $_POST['coupon_type'];
 			$status_type 							= $_POST['status_type'];
+			$credit_note							= 0;
 
-			$records = $this->General_Model->get_limit_based_data_search('coupon_code ', $rowno, $row_per_page, 'c_id', 'DESC',$fromDate,$toDate,$ip_coupon_type,$status_type)->result();
-			$allcount = $this->General_Model->get_limit_based_data_search('coupon_code ', '','', 'c_id', 'DESC',$fromDate,$toDate,$ip_coupon_type,$status_type)->num_rows();
+			$records = $this->General_Model->get_limit_based_data_search('coupon_code ', $rowno, $row_per_page, 'c_id', 'DESC',$fromDate,$toDate,$ip_coupon_type,$status_type,$credit_note)->result();
+			//echo $this->db->last_query();exit;
+			$allcount = $this->General_Model->get_limit_based_data_search('coupon_code ', '','', 'c_id', 'DESC',$fromDate,$toDate,$ip_coupon_type,$status_type,$credit_note)->num_rows();
 		}
 		else
 		{
-			$records = $this->General_Model->get_limit_based_data('coupon_code ', $rowno, $row_per_page, 'c_id', 'DESC')->result();
-			$allcount = $this->General_Model->get_limit_based_data('coupon_code ', '','', 'c_id', 'DESC')->num_rows();
+			$search['credit_note']=0;
+			$records = $this->General_Model->get_limit_based_data('coupon_code ', $rowno, $row_per_page, 'c_id', 'DESC',$search)->result();
+			$allcount = $this->General_Model->get_limit_based_data('coupon_code ', '','', 'c_id', 'DESC',$search)->num_rows();
 		}
 		// Get records
 		$i=1;
@@ -945,6 +946,22 @@ public function get_country_name(){
 			$c_id						=		$record->c_id;
 			$i							=		$i;
 
+
+			$total_coupon_prices = @$record->coupon_value;
+			$applied_coupons = $this->General_Model->getAllItemTable('coupon_logs', 'coupon_code', $record->coupon_code, 'cl_id', 'DESC')->result();
+			$applied_prices = array();
+			foreach($applied_coupons as $applied_coupon){
+				$coupon_applied_currency = $applied_coupon->currency;
+				$coupon_currency 	  = $record->currency_type;
+				$coupon_currency_data = $this->General_Model->getAllItemTable('currency_types', 'id', $coupon_currency, 'id', 'DESC')->row();
+				$coupon_cuurency = trim($coupon_currency_data->currency_code);
+				$coupon_price_v1        =  $this->get_currency($coupon_applied_currency,trim($coupon_currency_data->currency_code),$applied_coupon->applied_discount_amount,0);
+				$applied_prices[] = $coupon_price_v1;
+			} 
+			$applied_total_prices = number_format(array_sum($applied_prices),2);
+			$remaining_coupon_value = $total_coupon_prices - $applied_total_prices;
+			$inpt_remaining_coupon_value = number_format($remaining_coupon_value,2);
+
 			$data[] = array( 
                 "c_type"				=> $c_type, 
 				"coupon_value"			=> $coupon_value,
@@ -956,6 +973,7 @@ public function get_country_name(){
 				"coupon_code"			=> $coupon_code,			
 				"action"				=> $action,
 				"currency"				=> $currency_type,
+				"remaining_coupon_value"				=> $inpt_remaining_coupon_value,
 			);
 			$i++;
 	}

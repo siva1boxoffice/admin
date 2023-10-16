@@ -2208,6 +2208,13 @@ class General_Model extends CI_Model
 						$this->db->like('currency_types.currency_code', $where_array['currency_code']);
 					
 			}
+			else if(isset($where_array['credit_note']) && $where_array['credit_note']==0)
+			{
+				$this->db->or_group_start();
+				$this->db->or_where('credit_note', NULL);
+				$this->db->or_where('credit_note', 0);
+				$this->db->group_end();
+			}
 			else
 			{
 				foreach ($where_array as $columnkey => $value) {
@@ -2271,8 +2278,16 @@ class General_Model extends CI_Model
 		   $this->db->where_in('coupon_code.status',$comma_separated,FALSE);
 	   }
 
-	   if(!empty($credit_note)){
-	   $this->db->where('coupon_code.credit_note',1);
+	   if($credit_note!=""){
+				if($credit_note==1)
+	   			$this->db->where('coupon_code.credit_note',1);
+				else
+				{
+					$this->db->group_start();
+					$this->db->where('coupon_code.credit_note', NULL);
+					$this->db->or_where('coupon_code.credit_note', 0);
+					$this->db->group_end();
+				}
 	   }
 
 	   if (!empty($credit_note_code)) {		

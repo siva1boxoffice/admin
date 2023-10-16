@@ -1,3 +1,4 @@
+
 <?php $tournments   = $this->General_Model->get_tournments()->result();?>
 
 <?php $this->load->view(THEME.'common/header');?>
@@ -166,6 +167,7 @@ label.error{
                                     <th>Coupon Type</th>
                                     <th>Currency</th>
                                     <th>Coupon Value</th>
+                                    <th>Remaining Balance</th>
                                     <th>Expiry Date</th>
                                     <th>Status </th>
                                     <th>&nbsp;</th>
@@ -419,6 +421,7 @@ var Dtable = $('#coupon-datatable').DataTable(
             { data: 'c_type' },
             { data: 'currency' },
             { data: 'coupon_value' },   
+            { data: 'remaining_coupon_value' },   
             { data: 'expiry_date' },         
             { data: 'status' },            
             { data: 'action' },              
