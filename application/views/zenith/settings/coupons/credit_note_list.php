@@ -265,7 +265,7 @@ label.error{
                                     <div class="input-group-prepend">
                                        <span class="input-group-text rounded-0" id="basic-addon1"><img src="<?php echo base_url();?>assets/zenith_assets/images/dollar.svg" class="mCS_img_loaded"></span>
                                     </div>
-                                    <input type="text" id="coupon_balance"  class="form-control" placeholder="Remaining Balance" required value="" disabled>
+                                    <input type="text" id="coupon_balance"  class="form-control" placeholder="Remaining Balance" required value="" disabled style="background:#f3f7f9;">
                                  </div>                                                    
                                  <label id="coupon_value-error" class="error" for="coupon_balance"></label>
                               </div>
