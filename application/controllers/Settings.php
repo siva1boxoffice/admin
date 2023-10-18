@@ -9251,6 +9251,8 @@ public function get_country_name(){
 						$insertData['store_id'] = $this->session->userdata('storefront')->admin_id	;	
 						$insertData['added_by'] = $this->session->userdata('admin_id');
 						$insertData['banner_description'] = $this->input->post('banner_description');					
+						$insertData['long_descrption_title'] = $this->input->post('long_descrption_title');					
+						$insertData['long_descrption'] = $this->input->post('long_descrption');					
 						$p_id = $this->General_Model->insert_data('promotion_banner', $insertData);				
 									
 						$response = array('status' => 1, 'msg' => 'Promotion Banner Details Added Successfully. ' . $msg, 'redirect_url' => base_url() . 'settings/promotion_banner/edit/'.$p_id);
@@ -9332,6 +9334,15 @@ public function get_country_name(){
 						$banner_description = $this->input->post('banner_description');
 						if (!empty($banner_description)) {
 							$updateData['banner_description'] = trim($banner_description);
+						}
+
+						$long_descrption_title = $this->input->post('long_descrption_title');
+						if (!empty($long_descrption_title)) {
+							$updateData['long_descrption_title'] = trim($long_descrption_title);
+						}
+						$long_descrption = $this->input->post('long_descrption');
+						if (!empty($long_descrption)) {
+							$updateData['long_descrption'] = trim($long_descrption);
 						}
 						
 						$updateData['store_id'] = $this->session->userdata('storefront')->admin_id	;	
