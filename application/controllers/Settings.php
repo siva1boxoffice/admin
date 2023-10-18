@@ -9251,9 +9251,20 @@ public function get_country_name(){
 						$insertData['store_id'] = $this->session->userdata('storefront')->admin_id	;	
 						$insertData['added_by'] = $this->session->userdata('admin_id');
 						$insertData['banner_description'] = $this->input->post('banner_description');					
-						$insertData['long_descrption_title'] = $this->input->post('long_descrption_title');					
-						$insertData['long_descrption'] = $this->input->post('long_descrption');					
-						$p_id = $this->General_Model->insert_data('promotion_banner', $insertData);				
+						// $insertData['long_descrption_title'] = $this->input->post('long_descrption_title');					
+						// $insertData['long_descrption'] = $this->input->post('long_descrption');					
+						$p_id = $this->General_Model->insert_data('promotion_banner', $insertData);	
+						
+						$lang = $this->General_Model->getAllItemTable('language','store_id',$this->session->userdata('storefront')->admin_id)->result();
+						foreach ($lang as $key => $l_code) {
+							$insertData_lang = array();
+							$insertData_lang['promotion_id'] = $p_id;
+							$insertData_lang['language'] = $l_code->language_code;
+							$insertData_lang['long_descrption_title'] = trim($this->input->post('name'));
+							$insertData_lang['long_descrption'] = $insertData['country_image'];							
+							$this->General_Model->insert_data('promotion_banner_lang', $insertData_lang);
+						}	
+
 									
 						$response = array('status' => 1, 'msg' => 'Promotion Banner Details Added Successfully. ' . $msg, 'redirect_url' => base_url() . 'settings/promotion_banner/edit/'.$p_id);
 						echo json_encode($response);
@@ -9367,6 +9378,52 @@ public function get_country_name(){
 				}
 			}
 		}	
+		else if ($url_segment == "save_section") {		
+			
+			$promotionId = $this->input->post('promotionId');
+		   if ($promotionId != '') {
+
+			$promotion_id =    $promotionId;
+		   
+			   if ($this->input->post()) {
+					   
+					$this->form_validation->set_rules('long_descrption_title', 'Section Title', 'required');
+
+				   $updateData = array();
+				   $updateData_lang = array();
+				   
+				   $msg = '';
+				   if ($this->form_validation->run() !== false) {
+
+												   
+				   $teamdata = $this->General_Model->getAllItemTable_array('promotion_banner', array('p_id' => $promotion_id))->row();
+					  
+					   $long_descrption_title = $this->input->post('long_descrption_title');
+					   if (!empty($long_descrption_title)) {
+						   $updateData_lang['long_descrption_title'] = trim($long_descrption_title);
+					   }
+					   $long_descrption = $this->input->post('long_descrption');
+					   if (!empty($long_descrption)) {
+						   $updateData_lang['long_descrption'] = trim($long_descrption);
+					   }
+
+					   //$this->General_Model->update('promotion_banner_lang', array('p_id' => $promotion_id), $updateData);	
+					   $this->General_Model->update('promotion_banner_lang', array('promotion_id' => $promotion_id, 'language' =>$this->session->userdata('language_code') ), $updateData_lang);	
+
+					   $response = array('status' => 1, 'msg' => 'Changes updated Successfully.', 'redirect_url' => base_url() . 'settings/promotion_banner');
+					   echo json_encode($response);
+					   exit;
+				   }
+				   else {
+					   $errors = validation_errors();
+					   
+				   $response = array('msg' => validation_errors(), 'redirect_url' => base_url() . 'settings/seo_venue_list/add', 'status' => 0);
+				   echo json_encode($response);
+				   exit;
+			   }
+			   }
+		   } 
+	   }	
 		else if ($url_segment == "edit") {
 				$search['p_id'] =$promotion_id;	
 				$this->data['tournaments']      = $this->General_Model->get_promotion_banner_list($search)->row();			
