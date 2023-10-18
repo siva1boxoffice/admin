@@ -7065,7 +7065,10 @@ public function get_seat_category_main()
 
 	public function get_promotion_banner_list($search='')
 	{
-		$this->db->select('promotion_banner.*')->from('promotion_banner');
+		//$this->db->select('promotion_banner.*')->from('promotion_banner');
+
+		$this->db->select('promotion_banner.*,promotion_banner_lang.*')->from('promotion_banner');
+		$this->db->where('promotion_banner_lang.language', $this->session->userdata('language_code'))	->join('promotion_banner_lang', 'promotion_banner_lang.promotion_id = promotion_banner.p_id', 'left');
 
 		if (!empty($search['p_id'])) {			
 			$this->db->where_in('promotion_banner.p_id', $search['p_id']);			

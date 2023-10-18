@@ -49,7 +49,13 @@ $this->load->view(THEME . 'common/header'); ?>
                                  Add or Edit Promotion Banner
                               </a>
                            </li>
-
+                           <li class="nav-item">
+                              <a href="#profile-b1" data-id="content" data-toggle="tab" aria-expanded="true"
+                                 class="nav-link  <?php echo $tab == "content" ? "active" : ""; ?>"
+                                 id="profile-b1-link">
+                                 Section Content 
+                              </a>
+                           </li>
                         </ul>
                         <!--  -->
                         <div class="tab-content">
@@ -100,12 +106,12 @@ $this->load->view(THEME . 'common/header'); ?>
                                                       </div>
                                                    </div>
 
-                                                      <div class="col-lg-6">
+                                                      <!-- <div class="col-lg-6">
                                                          <div class="form-group">
                                                             <label for="simpleinput">Section Title</label>
                                                             <input  type="text" id="section_title" name="long_descrption_title"
                                                                class="form-control" placeholder="Enter Title" value="<?php
-                                                               echo isset($tournaments->long_descrption_title) ? $tournaments->long_descrption_title : ''; ?>" required> 
+                                                              // echo isset($tournaments->long_descrption_title) ? $tournaments->long_descrption_title : ''; ?>" required> 
                                                          </div>
                                                       </div>
 
@@ -114,9 +120,9 @@ $this->load->view(THEME . 'common/header'); ?>
                                                          <label for="example-textarea">Section Description *</label>
                                                          <textarea class="form-control height_auto " id="long_descrption"
                                                             rows="5" name="long_descrption"
-                                                            placeholder="Enter Section Description" required><?php echo isset($tournaments->long_descrption) ? $tournaments->long_descrption : ''; ?></textarea>
+                                                            placeholder="Enter Section Description" required><?php //echo isset($tournaments->long_descrption) ? $tournaments->long_descrption : ''; ?></textarea>
                                                       </div>
-                                                   </div>
+                                                   </div> -->
 
 
                                                    <div class="col-lg-6">
@@ -201,6 +207,71 @@ $this->load->view(THEME . 'common/header'); ?>
                               <!-- end row -->
                               </form>
                            </div>
+
+                           <div class="tab-pane <?php echo $tab == "content" ? "active" : ""; ?>" id="profile-b1">
+                              <div class="row">
+                                 <div class="col-12">
+                                    <div class="card">
+                                       <div class="">
+                                          <h5 class="card-title">Section Content Info</h5>
+                                          <p>Fill the Section Content Information</p>
+                                       </div>
+                                       <div class="">
+                                          <form id="seo_tab" method="post"
+                                             class="<?php echo (isset($tournaments->c_id)) ? 'validate_edit_v2' : 'validate_form_v2'; ?>  login-wrapper"
+                                             action="<?php echo base_url(); ?>settings/promotion_banner/save_section">
+                                             <input type="hidden" name="promotionId" value="<?php if (isset($tournaments->p_id)) {
+                                                echo $tournaments->p_id;
+                                             } ?>">
+                                             <input type="hidden" name="flag" value="content">
+                                             <div class="row column_modified"> 
+                                                
+                                          <div class="col-lg-6">
+                                             <div class="form-group">
+                                                <label for="simpleinput">Section Title</label>
+                                                <input  type="text" id="section_title" name="long_descrption_title"
+                                                   class="form-control" placeholder="Enter Title" value="<?php
+                                                   echo isset($tournaments->long_descrption_title) ? $tournaments->long_descrption_title : ''; ?>" required> 
+                                             </div>
+                                          </div>
+
+                                          <div class="col-lg-6">
+                                          <div class="form-group">
+                                             <label for="example-textarea">Section Description *</label>
+                                             <textarea class="form-control height_auto " id="long_descrption"
+                                                rows="5" name="long_descrption"
+                                                placeholder="Enter Section Description" required><?php echo isset($tournaments->long_descrption) ? $tournaments->long_descrption : ''; ?></textarea>
+                                          </div>
+                                       </div>
+                                             
+                                                <div class="col-lg-12">
+                                                   <div class="tick_details border-top">
+                                                      <div class="row">
+                                                         <div class="col-sm-8">
+                                                            <!-- <h5 class="card-title">Matches</h5> -->
+                                                         </div>
+                                                         <div class="col-sm-4">
+                                                            <div class="float-sm-right mt-2 mt-sm-0 ml-sm-1 mx-sm-2">
+                                                               <a href="<?php echo base_url(); ?>settings/promotion_banner/"
+                                                                  class="btn btn-primary mb-2 mt-3">Back</a>
+                                                               <button type="submit"
+                                                                  class="btn btn-success mb-2 ml-2 mt-3">Save</button>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+
+
+
+                                             </div> <!-- end col -->
+                                          </form>
+                                       </div> <!-- end card-body -->
+                                    </div> <!-- end card -->
+                                 </div><!-- end col -->
+                              </div>
+                           </div>
+
                         </div>
                      </div>
                   </div>
@@ -339,9 +410,9 @@ $this->load->view(THEME . 'common/header'); ?>
 
             $(".nav-tabs a[data-toggle=tab]").on("click", function (e) {
                var href = $(this).data("id");
-      <?php if (empty($tournaments->v_id)) { ?>
+      <?php if (empty($tournaments->p_id)) { ?>
          if (href != "home") {
-                     swal('Attention!', ' Please Fill The Stadium Details', 'error');
+                     swal('Attention!', ' Please Fill The Banner Details', 'error');
                      return false;
                   }
      <?php } else {
