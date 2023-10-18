@@ -102,6 +102,25 @@ $this->load->view(THEME . 'common/header'); ?>
 
                                                       <div class="col-lg-6">
                                                          <div class="form-group">
+                                                            <label for="simpleinput">Section Title</label>
+                                                            <input  type="text" id="section_title" name="long_descrption_title"
+                                                               class="form-control" placeholder="Enter Title" value="<?php
+                                                               echo isset($tournaments->long_descrption_title) ? $tournaments->long_descrption_title : ''; ?>" required> 
+                                                         </div>
+                                                      </div>
+
+                                                      <div class="col-lg-6">
+                                                      <div class="form-group">
+                                                         <label for="example-textarea">Section Description *</label>
+                                                         <textarea class="form-control height_auto " id="long_descrption"
+                                                            rows="5" name="long_descrption"
+                                                            placeholder="Enter Section Description" required><?php echo isset($tournaments->long_descrption) ? $tournaments->long_descrption : ''; ?></textarea>
+                                                      </div>
+                                                   </div>
+
+
+                                                   <div class="col-lg-6">
+                                                         <div class="form-group">
                                                             <label for="example-select">Banner Image<span
                                                                   class="text-danger">*</label>
                                                             <div class="prev_back_img">

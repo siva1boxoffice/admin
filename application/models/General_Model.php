@@ -7094,6 +7094,8 @@ public function get_seat_category_main()
 			
 			$this->db->where_in('promotion_banner.status', [0,1]);	
 		}
+		$this->db->where('store_id', $this->session->userdata('storefront')->admin_id);
+		
 		$query = $this->db->get();
 		//echo $this->db->last_query();exit;
 		return $query;
