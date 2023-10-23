@@ -5648,6 +5648,16 @@ public function getOrderData_v2()
 		return $qry;
 	}
 
+
+	function get_booking_billing_address($bg_id)
+	{
+		$this->db->select('booking_billing_address.*');
+		$this->db->from('booking_billing_address');
+		$this->db->where('booking_billing_address.booking_id', $bg_id);
+		$qry = $this->db->get();
+		return $qry;
+	}
+
 	function my_sales()
 	{
 		$this->db->select('booking_global.*,booking_tickets.*,booking_billing_address.*,booking_payments.*,stadium_details.*,sell_tickets.s_no');

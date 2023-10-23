@@ -575,9 +575,7 @@ public function update_tracking_data(){
 		  $this->db->where(array('booking_no' => "1BX".$bg_id));
 		$query = $this->db->get('booking_global');
 		$this->datas['booking_global'] = $query->row();
-
-		$this->datas['orderData'] =  $this->General_Model->getOrderData(md5("1BX".$bg_id));	
-
+		$this->datas['orderData'] =  $this->General_Model->get_booking_billing_address($bg_id)->row();
   		$response = $this->load->view(THEME.'game/booking_ticket_items', $this->datas,true);
   		echo json_encode(array('status' => 1,'response' => $response));exit;
 
@@ -1337,9 +1335,10 @@ if($record->delivery_status != 0)
 			$updateData['updated_at'] = date("Y-m-d h:i:s");			
 			unlink('uploads/ticket_instruction/'.$resultTest->ticket_instruction);
 			$done = $this->General_Model->update_table('booking_global', 'booking_no', $resultTest->booking_no, $updateData);
+			$booking_data = 		$this->General_Model->getAllItemTable_Array('booking_global', array('booking_no' => $resultTest->booking_no))->row();
 			//echo $this->db->last_query();exit;
 			$msg = 'Uploaded Instructions deleted successfully.';
-			$response = array('status' => 1, 'msg' => $msg);				
+			$response = array('status' => 1, 'msg' => $msg,'bg_id' => $booking_data->bg_id);				
 			echo json_encode($response);
 			exit;
 		}
@@ -1358,9 +1357,10 @@ if($record->delivery_status != 0)
 		//	$updateData['updated_at'] = date("Y-m-d h:i:s");			
 			unlink('uploads/pod/'.$resultTest->pod);
 			$done = $this->General_Model->update_table('booking_ticket_tracking', 'booking_id', $resultTest->booking_id, $updateData);
+			$booking_data = 		$this->General_Model->getAllItemTable_Array('booking_global', array('booking_no' => $resultTest->booking_no))->row();
 			//echo $this->db->last_query();exit;
 			$msg = 'POD deleted successfully.';
-			$response = array('status' => 1, 'msg' => $msg);				
+			$response = array('status' => 1, 'msg' => $msg,'bg_id' => $booking_data->bg_id);				
 			echo json_encode($response);
 			exit;
 		}
@@ -1463,7 +1463,9 @@ if($record->delivery_status != 0)
 						$updateData['instruction_file'] = $instruction_file_name;
 						$updateData['updated_at'] = date("Y-m-d h:i:s");
 						$done = $this->General_Model->update_table('booking_global', 'booking_no', $resultTest->booking_no, $updateData);
-						$response = array('status' => 1, 'msg' => $msg);
+
+						$booking_data = 		$this->General_Model->getAllItemTable_Array('booking_global', array('booking_no' => $resultTest->booking_no))->row();
+						$response = array('status' => 1, 'msg' => $msg,'bg_id' => $booking_data->bg_id);
 					}
 		  }
 
@@ -2435,18 +2437,18 @@ public function get_order_status(){
 					$post_data = array("bg_id" => $tickets->bg_id,'email_address' => $email);
 					
 					//echo "<pre>";print_r($post_data);exit;
-					// $handle = curl_init();
-					// $url = API_CRON_URL.'admin-approve-notfication';
-					// curl_setopt($handle, CURLOPT_HTTPHEADER, array(
-					// 'domainkey: https://www.1boxoffice.com/en/'
-					// ));
-					// curl_setopt($handle, CURLOPT_URL, $url);
-					// curl_setopt($handle, CURLOPT_POST, 1);
-					// curl_setopt($handle, CURLOPT_POSTFIELDS,$post_data);
-					// curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
-					// $output = curl_exec($handle);
-					// //echo "<pre>";print_r($output);exit;
-					// curl_close($handle);			
+					$handle = curl_init();
+					$url = API_CRON_URL.'admin-approve-notfication';
+					curl_setopt($handle, CURLOPT_HTTPHEADER, array(
+					'domainkey: https://www.1boxoffice.com/en/'
+					));
+					curl_setopt($handle, CURLOPT_URL, $url);
+					curl_setopt($handle, CURLOPT_POST, 1);
+					curl_setopt($handle, CURLOPT_POSTFIELDS,$post_data);
+					curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+					$output = curl_exec($handle);
+					//echo "<pre>";print_r($output);exit;
+					curl_close($handle);			
 
 						//echo $this->db->last_query();exit;
 				$response = array('status' => 1, 'msg' => "Email Sent Successfully.",'first'=>$first_query,'second'=>$second_query);
@@ -7598,13 +7600,13 @@ if ($dateObj !== false) {
 					$tracking_data['pod_status'] = 1;
 					$tracking_id = $this->General_Model->insert_data('booking_ticket_tracking', $tracking_data);
 				}
-
+				$booking_ticket_tracking = $this->General_Model->getAllItemTable('booking_ticket_tracking', 'booking_id', $bg_id)->row();
 				
 				if ($this->General_Model->update_table('booking_ticket_tracking', 'tracking_id', $booking_ticket_tracking->tracking_id, $tracking_data)) {
 
-						$response = array('msg' => 'Ticket Tracking Details updated Successfully.','status' => 1);
+						$response = array('msg' => 'Ticket Tracking Details updated Successfully.','status' => 1,'bg_id' => $booking_ticket_tracking->booking_id);
 					} else {
-						$response = array('msg' => 'Failed to update Ticket Tracking Details.','status' => 0);
+						$response = array('msg' => 'Failed to update Ticket Tracking Details.','status' => 0,'bg_id' => $booking_ticket_tracking->booking_id);
 					}
 					echo json_encode($response);
 					exit;
