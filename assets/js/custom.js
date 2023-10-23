@@ -258,3 +258,23 @@ function set_storefront(admin_id){
   // End of store front 
   }
 
+  function get_booking_state_city(country_id,city_id="",order_id) {
+    if(country_id != ''){ 
+      $('#city_'+order_id).html('');
+      $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: base_url + 'event/matches/get_city',
+        data: {'country_id' : country_id},
+        success: function(res_data) {
+            var state_city = JSON.parse(JSON.stringify(res_data));
+          $('#city_'+order_id).html(state_city.city);
+          if(city_id != "'"){
+               $('#city_'+order_id).val(city_id);
+            }
+        }
+      })
+  
+    }
+  }
+

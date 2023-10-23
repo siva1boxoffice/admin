@@ -561,7 +561,7 @@ color: #00a3ed !important;
 								<?php
 
 
-								 if($orderData->ticket_type == 2 || $orderData->ticket_type == 4){ ?>
+								 //if($orderData->ticket_type == 2 || $orderData->ticket_type == 4){ ?>
 								 <div class="upload_e_ticket_btn_page">
 									<div class="form-group mb-20">
 											 <div class="input-group">
@@ -575,7 +575,7 @@ color: #00a3ed !important;
 											 </div>
 										  </div>
 								 </div>
-								<?php } ?>
+								<?php //} ?>
 								 <div class="btn_instructions">
                                     <div class="form-group mb-20">
                                              <div class="input-group">
@@ -591,7 +591,7 @@ color: #00a3ed !important;
                                  </div>
 								 <?php
 
-									if (($eticketDatas[0]->ticket_status == 2 || $eticketDatas[0]->ticket_status == 1) && ($orderData->ticket_type == 2 || $orderData->ticket_type == 4)) { 
+									//if (($eticketDatas[0]->ticket_status == 2 || $eticketDatas[0]->ticket_status == 1) && ($orderData->ticket_type == 2 || $orderData->ticket_type == 4)) { 
 
 										if ($eticketDatas[0]->ticket_file != '') {
 										?>
@@ -627,7 +627,7 @@ color: #00a3ed !important;
 											$i++;
 										} ?>
 									</div>
-									<?php } } 
+									<?php } //} 
 									 if(($eticketDatas[0]->ticket_status == 0 || $eticketDatas[0]->ticket_status == 2 || $eticketDatas[0]->ticket_status == 1) && ($orderData->ticket_type == 1 || $orderData->ticket_type == 2 || $orderData->ticket_type == 4)){
 									 		//if ($eticketDatas[0]->qr_link != '') {
 									  ?>

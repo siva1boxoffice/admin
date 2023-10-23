@@ -181,6 +181,43 @@ public function update_tracking_data(){
 
 	}
 	
+	public function update_qr_link_orders(){
+		//echo "<pre>";print_r($_POST);exit;
+
+		if($_POST['delete_flag']==0)
+		{
+			$this->form_validation->set_rules('qr_link', 'QR Link', 'required');
+		}
+			
+			$this->form_validation->set_rules('ticket_id', 'Ticket', 'required');
+
+			if ($this->form_validation->run() !== false) {
+
+				$ticketid 		= $_POST['ticket_id'];
+				$os 		    = $_POST['os'];
+				if($os == "ANDROID"){
+					$ticket_data 	= array('qr_link' => $_POST['qr_link'],'ticket_status' => 1);
+				}
+				else if($os == "IOS"){
+					$ticket_data 	= array('qr_link_ios' => $_POST['qr_link'],'ticket_status' => 1);
+				}
+				
+				if ($this->General_Model->update_table('booking_etickets', 'id', $ticketid, $ticket_data)) {
+
+						$response = array('msg' => 'Ticket QR Link updated Successfully.','status' => 1);
+					} else {
+						$response = array('msg' => 'Failed to update Ticket QR Link.','status' => 0);
+					}
+					echo json_encode($response);
+					exit;
+				}
+				else{
+					$response = array('msg' => 'Failed to update Ticket QR Link.','status' => 0);
+					echo json_encode($response);
+					exit;
+				}
+
+	}
 	public function get_review_request_status(){
 
 		$searchText = strtolower($_POST['search_text']);
@@ -512,6 +549,40 @@ public function update_tracking_data(){
 	 echo json_encode($result);
 	 exit();
    }
+
+   
+
+   public function booking_ticket_items()
+  {
+  	//echo "<pre>";print_r($_POST);exit;
+  	if($_POST['bg_id'] != ""){
+
+  		$bg_id = $_POST['bg_id'];
+
+  		$booking_tickets            = 		$this->General_Model->getAllItemTable_Array('booking_tickets', array('booking_id' => $bg_id))->row();
+  		$this->datas['eticketDatas'] = "";
+  		if($booking_tickets->ticket_type == 2 || $booking_tickets->ticket_type == 4){
+
+  			$this->datas['eticketDatas'] = 		$this->General_Model->getAllItemTable_Array('booking_etickets', array('booking_id' => $bg_id))->result();
+
+  		}
+  		else if($booking_tickets->ticket_type == 1 || $booking_tickets->ticket_type == 3){
+
+  		}
+  		
+		  $this->datas['tracking_details'] = $this->General_Model->getAllItemTable_Array('booking_ticket_tracking', array('booking_id' => $_POST['bg_id']))->row();
+
+		  $this->db->where(array('booking_no' => "1BX".$bg_id));
+		$query = $this->db->get('booking_global');
+		$this->datas['booking_global'] = $query->row();
+
+		$this->datas['orderData'] =  $this->General_Model->getOrderData(md5("1BX".$bg_id));	
+
+  		$response = $this->load->view(THEME.'game/booking_ticket_items', $this->datas,true);
+  		echo json_encode(array('status' => 1,'response' => $response));exit;
+
+  	}
+  }
   public function get_items()
   {
 
@@ -1255,7 +1326,7 @@ if($record->delivery_status != 0)
 
 	public function delete_uploaded_instructions()
 	{
-		$ticketid=$_POST['ticket_id'];
+		$ticketid="1BX".$_POST['ticket_id'];
 		$this->db->where(array('booking_no' => $ticketid));
 		$query = $this->db->get('booking_global');
 		$resultTest = $query->row();
@@ -1266,7 +1337,29 @@ if($record->delivery_status != 0)
 			$updateData['updated_at'] = date("Y-m-d h:i:s");			
 			unlink('uploads/ticket_instruction/'.$resultTest->ticket_instruction);
 			$done = $this->General_Model->update_table('booking_global', 'booking_no', $resultTest->booking_no, $updateData);
+			//echo $this->db->last_query();exit;
 			$msg = 'Uploaded Instructions deleted successfully.';
+			$response = array('status' => 1, 'msg' => $msg);				
+			echo json_encode($response);
+			exit;
+		}
+	}
+	public function delete_pod_instructions()
+	{
+		$booking_id=$_POST['booking_id'];
+		$this->db->where(array('booking_id' => $booking_id));
+		$query = $this->db->get('booking_ticket_tracking');
+		$resultTest = $query->row();
+		
+		if(!empty($resultTest))
+		{
+			$updateData['pod'] = "";
+			$updateData['pod_status'] = "0";
+		//	$updateData['updated_at'] = date("Y-m-d h:i:s");			
+			unlink('uploads/pod/'.$resultTest->pod);
+			$done = $this->General_Model->update_table('booking_ticket_tracking', 'booking_id', $resultTest->booking_id, $updateData);
+			//echo $this->db->last_query();exit;
+			$msg = 'POD deleted successfully.';
 			$response = array('status' => 1, 'msg' => $msg);				
 			echo json_encode($response);
 			exit;
@@ -1330,9 +1423,10 @@ if($record->delivery_status != 0)
 
 	public function save_ticket_instruction()
 	{
+		
 		//echo "<pre>";print_r($_POST);exit;
 		//$config["upload_path"] = UPLOAD_PATH_PREFIX.'uploads/ticket_instruction';
-		$config["upload_path"] = UPLOAD_PATH_PREFIX.'uploads/e_tickets';
+		$config["upload_path"] = FCPATH.'/uploads/e_tickets';
 		//$config["destination_dir"] = 'uploads/e_tickets/temp';
 		$config['allowed_types'] = 'pdf|jpeg|jpg|png';
 		$config['max_size'] = 2048;
@@ -2279,36 +2373,83 @@ public function get_order_status(){
 	{
 				$ticket_type = $_POST['ticket_id'];
 				@$email = $_POST['email'];
-				
+
 				if(/*$ticket_type >  1 && */filter_var($email, FILTER_VALIDATE_EMAIL)  ){
 
 					$tickets = $this->General_Model->getAllItemTable_Array('booking_global', array('md5(bg_id)' => $_POST['ticket_id']))->row();
 					// echo '<pre/>';
-					
+					//echo $this->db->last_query();
 					
 					$updateData = array('ticket_email_status' => 1);
 					$cond = array('booking_id' =>  $tickets->bg_id);
 					$done = $this->General_Model->update('booking_etickets', $cond, $updateData);
-		
+		//echo $this->db->last_query();exit;
 
 					$post_data = array("bg_id" => $tickets->bg_id,'email_address' => $email);
 					
 					//echo "<pre>";print_r($post_data);exit;
-					$handle = curl_init();
-					$url = API_CRON_URL.'admin-approve-notfication';
-					curl_setopt($handle, CURLOPT_HTTPHEADER, array(
-					'domainkey: https://www.1boxoffice.com/en/'
-					));
-					curl_setopt($handle, CURLOPT_URL, $url);
-					curl_setopt($handle, CURLOPT_POST, 1);
-					curl_setopt($handle, CURLOPT_POSTFIELDS,$post_data);
-					curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
-					$output = curl_exec($handle);
-					//echo "<pre>";print_r($output);exit;
-					curl_close($handle);			
+					// $handle = curl_init();
+					// $url = API_CRON_URL.'admin-approve-notfication';
+					// curl_setopt($handle, CURLOPT_HTTPHEADER, array(
+					// 'domainkey: https://www.1boxoffice.com/en/'
+					// ));
+					// curl_setopt($handle, CURLOPT_URL, $url);
+					// curl_setopt($handle, CURLOPT_POST, 1);
+					// curl_setopt($handle, CURLOPT_POSTFIELDS,$post_data);
+					// curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+					// $output = curl_exec($handle);
+					// //echo "<pre>";print_r($output);exit;
+					// curl_close($handle);			
 
 						//echo $this->db->last_query();exit;
 				$response = array('status' => 1, 'msg' => "Email Sent Successfully.");
+
+			echo json_encode($response);
+			exit;
+			}
+			else {
+				$response = array('status' => 0, 'msg' => "Failed to sent Email.");
+				echo json_encode($response);
+				exit;
+			}
+	}
+
+	public function resend_email()
+	{
+				$ticket_type = $_POST['ticket_id'];
+				@$email = $_POST['email'];
+
+				if(/*$ticket_type >  1 && */filter_var($email, FILTER_VALIDATE_EMAIL)  ){
+
+					$tickets = $this->General_Model->getAllItemTable_Array('booking_global', array('bg_id' => $_POST['ticket_id']))->row();
+					// echo '<pre/>';
+					//echo $this->db->last_query();
+					$first_query=$this->db->last_query();
+					
+					$updateData = array('ticket_email_status' => 1);
+					$cond = array('booking_id' =>  $tickets->bg_id);
+					$done = $this->General_Model->update('booking_etickets', $cond, $updateData);
+					//echo $this->db->last_query();exit;
+					$second_query=$this->db->last_query();
+
+					$post_data = array("bg_id" => $tickets->bg_id,'email_address' => $email);
+					
+					//echo "<pre>";print_r($post_data);exit;
+					// $handle = curl_init();
+					// $url = API_CRON_URL.'admin-approve-notfication';
+					// curl_setopt($handle, CURLOPT_HTTPHEADER, array(
+					// 'domainkey: https://www.1boxoffice.com/en/'
+					// ));
+					// curl_setopt($handle, CURLOPT_URL, $url);
+					// curl_setopt($handle, CURLOPT_POST, 1);
+					// curl_setopt($handle, CURLOPT_POSTFIELDS,$post_data);
+					// curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+					// $output = curl_exec($handle);
+					// //echo "<pre>";print_r($output);exit;
+					// curl_close($handle);			
+
+						//echo $this->db->last_query();exit;
+				$response = array('status' => 1, 'msg' => "Email Sent Successfully.",'first'=>$first_query,'second'=>$second_query);
 
 			echo json_encode($response);
 			exit;
@@ -2329,6 +2470,7 @@ public function get_order_status(){
 	 */
 	public function orders()
 	{
+		
 		error_reporting(0);
 		$idiom = $this->session->get_userdata('language');
 		//echo "<pre>";print_r($this->session->all_userdata());exit; print_r($idiom); exit;
@@ -2369,6 +2511,7 @@ public function get_order_status(){
 
 		}
 		else if ($segment == 'list_order') {
+			
 			
 			/*if (!empty($_POST)) {
 				$event 					= $_POST['event'];
@@ -6172,7 +6315,6 @@ public function get_order_status(){
 	public function get_download_record()
 	{
 		$eticketData = $this->General_Model->get_ticket_file_list($this->uri->segment(3))->result();
-
 		$createdzipname = "1BX" . $this->uri->segment(3) . '_Tickets';
 
 		$this->load->library('zip');
@@ -6266,19 +6408,19 @@ error_reporting(E_ALL);*/
 
 			$delivery_status = "";
 			if ($record->delivery_status == 0) {
-				$delivery_status = '<span class="text-warning">Tickets Not Uploaded</span>';
+				$delivery_status = '<span class="text-notupload">Not Uploaded</span>';
 			} else if ($record->delivery_status == 1) {
-				$delivery_status = '<span class="text-warning">Tickets In-Review</span>';
+				$delivery_status = '<span class="text-in-review">Under Review</span>';
 			} else if ($record->delivery_status == 2) {
-				$delivery_status = '<span class="text-success">Tickets Approved</span>';
+				$delivery_status = '<span class="text-ticket-approval">Approved</span>';
 			} else if ($record->delivery_status == 3) {
-				$delivery_status = '<span class="text-danger">Tickets Rejected</span>';
+				$delivery_status = '<span class="text-cancelled">Rejected</span>';
 			} else if ($record->delivery_status == 4) {
-				$delivery_status = '<span class="text-success">Tickets Downloaded</span>';
+				$delivery_status = '<span class="text-confirmed">Downloaded</span>';
 			} else if ($record->delivery_status == 5) {
-				$delivery_status = '<span class="text-success">Tickets Shipped</span>';
+				$delivery_status = '<span class="text-shipped">Shipped</span>';
 			} else if ($record->delivery_status == 6) {
-				$delivery_status = '<span class="text-success">Tickets Delivered</span>';
+				$delivery_status = '<span class="text-delivered">Delivered</span>';
 			}
 
 			if ($record->ticket_block != 0) {
@@ -6314,21 +6456,21 @@ error_reporting(E_ALL);*/
 // exit;
 
 			if ($record->booking_status == 1)
-				$order_status = '<span class="text-success">Confirmed</span>';
+				$order_status = '<span class="text-confirmed">Confirmed</span>';
 			else if ($record->booking_status == 2)
-				$order_status = '<span class="text-warning>Pending</span>';
+				$order_status = '<span class="text-pending">Pending</span>';
 			else if ($record->booking_status == 3)
-				$order_status = '<span class="text-danger">Cancelled</span>';
+				$order_status = '<span class="text-cancelled">Cancelled</span>';
 			else if ($record->booking_status == 4)
 				$order_status = '<span class="text-shipped">Shipped</span>';
 			else if ($record->booking_status == 5)
-				$order_status = '<span class="text-success">Delivered</span>';
+				$order_status = '<span class="text-delivered">Delivered</span>';
 			else if ($record->booking_status == 6)
-				$order_status = '<span class="text-success">Downloaded</span>';
+				$order_status = '<span class="text-downloaded">Downloaded</span>';
 			else if ($record->booking_status == 7)
-				$order_status = '<span class="text-grey">Initiated</span>';
+				$order_status = '<span class="text-notupload">Initiated</span>';
 			else if ($record->booking_status == 0)
-				$order_status = '<span class="text-danger">Failed</span>';
+				$order_status = '<span class="text-rejected">Failed</span>';
 			else
 				$order_status = "";
 
@@ -6378,8 +6520,38 @@ error_reporting(E_ALL);*/
 				$delivery_date = date('D j F Y', strtotime($record->match_date . ' -3 days')) . "<br/>" . date('H:i', strtotime($record->match_time));
 			}
 				*/
-			$delivery_date = date('D j F Y', strtotime($record->match_date . ' -2 days')) . "<br/>" . date('H:i', strtotime($record->match_time));
-			$record->delivery_date = $delivery_date;
+				
+					$delivery_date = date('D j F Y', strtotime($record->match_date . ' -3 days')) . "<br/>" . date('H:i', strtotime($record->match_time));
+					$record->delivery_date = $delivery_date;
+
+
+					$record->inpt_delivery_dead_line = "";
+					if ($record->delivery_dead_line != "" && $record->delivery_dead_line != "0000-00-00") {
+						$record->inpt_delivery_dead_line = date('d/m/Y', strtotime($record->delivery_dead_line));
+					} else {
+						$record->inpt_delivery_dead_line = date('d/m/Y', strtotime($record->match_date . ' -3 days'));
+					}
+
+
+			$delivery_dead_line="";
+			$delivery_dead_line = ($record->delivery_dead_line != "" && $record->delivery_dead_line != "0000-00-00") 
+				? date('l j F Y', strtotime($record->delivery_dead_line))
+				: date('l j F Y', strtotime($record->match_date . ' -3 days'));
+
+			$record->delivery_date = $delivery_dead_line;
+			$delivery_date =$delivery_dead_line;
+
+
+			$countries = $this->General_Model->getAllItemTable('countries')->result();
+			$cityArray ="";
+			//if($record->booking_no=="1BX19125")
+				$cityArray = $this->General_Model->getAllItemTable('states','country_id',$record->country_id)->result();
+			//
+			// echo '<pre/>';
+			// print_r($cityArray);
+			// exit;
+
+			$encrpty_bg_id = md5($record->bg_id);
 
 			$data[] = array(
 				"toggle" => '<i class="fas fa-angle-right"></i>',
@@ -6396,6 +6568,11 @@ error_reporting(E_ALL);*/
 				"purchase_date" => date('d/m/Y', strtotime($record->payment_date)),
 				"seller" => $record->seller_first_name . " " . $record->seller_last_name,
 				"delivery_date" =>  $delivery_date,
+				"delivery_dead_line" =>  $delivery_dead_line,
+				"inpt_delivery_dead_line" =>  $record->inpt_delivery_dead_line,
+				"encrpty_bg_id" =>  $encrpty_bg_id,
+				"countries" =>  $countries,
+				"cities" =>  $cityArray,
 				"shipping_status" => $delivery_status,
 				"order_status" => $order_status,
 				'order_data' => $record,
@@ -7282,6 +7459,191 @@ function updateSellTickets($bg_id) {
     $this->db->set('sold', "sold + $booking_tickets->quantity", false);
     $this->db->where('s_no', $booking_tickets->ticket_id);
     $this->db->update('sell_tickets', $data);
+}
+
+public function save_billing_information()
+	{
+		$order_id = $_POST['order_id'];
+		$delivery_method = $_POST['delivery_method'];
+		$email = $_POST['email'];
+		$delivery_deadline = $_POST['delivery_deadline'];
+		
+$dateObj = DateTime::createFromFormat('d/m/Y', $delivery_deadline);
+if ($dateObj !== false) {
+    $outputDate = $dateObj->format('Y-m-d');
+} 
+		$address = $_POST['address'];
+		$name = $_POST['name'];
+		$nameParts = explode(" ", $_POST['name']);   
+		$firstName=""; 
+		$lastName=""; 
+		if(count($nameParts) >= 2) {
+			$firstName = $nameParts[0];
+			$lastName = implode(" ", array_slice($nameParts, 1));			
+		}
+		$postal = $_POST['postal'];
+		$check_in_out = $_POST['check_in_out'];
+		$hotel_ref = $_POST['hotel_ref'];
+		$country = $_POST['country'];
+		$city = $_POST['city'];
+
+		$address = $_POST['address'];
+		$addressParts = explode(",", $_POST['address']);   
+		$inptAddress=""; 
+		if(count($addressParts) >= 2) {
+			$inptAddress = $addressParts[1];
+		}
+
+		if (!empty($order_id)) {
+			$updateData = array(
+				'delivery_method' => $delivery_method,
+				'first_name' => $firstName,
+				'last_name' => $lastName,
+				'email' => $email,
+				'address' => $inptAddress,
+				'postal_code' => $postal,
+				'check_in_out' => $check_in_out,
+				'hotel_ref' => $hotel_ref,
+				'state_id' => $city,
+				'country_id' => $country,
+				'delivery_dead_line' => $outputDate,
+			);
+			$cond = array('booking_id' => $order_id);
+			
+			$done = $this->General_Model->update('booking_billing_address', $cond, $updateData);
+
+			$deadline=date('l j F Y', strtotime($outputDate));
+			$response = array('status' => 1, 'msg' => "Delivery Details Added Successfully.","deadline"=>$deadline);
+			echo json_encode($response);
+			exit;
+		} else {
+			$response = array('status' => 0, 'msg' => "Delivery Details Failed to Add.");
+			echo json_encode($response);
+			exit;
+		}
+	}
+
+	public function update_nominee()
+	{
+		$id = $this->input->post('nominee_id');
+		if ($_POST["nominee_name"] != '') {
+			$this->db->where(array('id' => $id));
+			$this->db->limit(1);
+			$query = $this->db->get('booking_etickets');	
+			$resultTest = $query->row();				
+			if (!empty($resultTest)) {
+				$nameParts = explode(" ", $_POST['nominee_name']);
+				$updateData['first_name'] 			= 		count($nameParts) >= 2 ? $nameParts[0] : $_POST['nominee_name'];
+				$updateData['last_name'] 			= 		count($nameParts) >= 2 ? implode(" ", array_slice($nameParts, 1)) : '';
+				$updateData['nationality'] 			= 		$_POST["nominee_nationality"];
+				$updateData['dob'] 					=		$_POST["nominee_dob"];
+
+				$this->General_Model->update_table('booking_etickets', 'id', $resultTest->id, $updateData);					
+				$updateData['id']=$resultTest->id;
+				$response = array('status' => 1, 'msg' => 'Nominee updated successfully.', "nominee_details"=>$updateData);
+			}
+			else{
+				$response = array('status' => 0, 'msg' => 'Nominee not Updated.');
+			}
+		}
+		echo json_encode($response);
+		exit;
+	}
+
+	public function update_tracking_data_orders(){
+		
+		
+				$bg_id 		        = $_POST['bg_id'];
+
+				if($_POST['tracking_provider'] != ""){
+					$tracking_data['delivery_provider'] = $_POST['tracking_provider'];
+				}
+				if($_POST['tracking_number'] != ""){
+					$tracking_data['tracking_number'] = $_POST['tracking_number'];
+				}
+				if($_POST['tracking_link'] != ""){
+					$tracking_data['tracking_link'] = $_POST['tracking_link'];
+				}
+				// if($_POST['pod'] != ""){
+				// 	$tracking_data['pod'] = $_POST['pod'];
+				// }
+
+				if($_FILES["file"]["name"] != ""){
+					
+				$config["upload_path"] = FCPATH.'uploads/pod/';
+				$config["allowed_types"] = 'pdf|jpg|jpeg|png';
+				$this->load->library('upload', $config);
+				$this->upload->initialize($config);
+				$ticketId = time();
+				$file_ext = pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION);
+				$_FILES["file"]["name"] =  $ticketId .'.'. $file_ext;
+				$_FILES["file"]["type"] = $_FILES["file"]["type"];
+				$_FILES["file"]["tmp_name"] = $_FILES["file"]["tmp_name"];
+				$_FILES["file"]["error"] = $_FILES["file"]["error"];
+				$_FILES["file"]["size"] = $_FILES["file"]["size"];
+				if ($this->upload->do_upload('file')) {
+				$data = $this->upload->data();
+				$tracking_data['pod'] = $data["file_name"];
+				$tracking_data['pod_status'] = 1;
+				}
+
+				}
+
+				$booking_ticket_tracking = $this->General_Model->getAllItemTable('booking_ticket_tracking', 'booking_id', $bg_id)->row();
+					
+
+				if($booking_ticket_tracking->tracking_id == ""){
+					
+					$tracking_data['booking_id'] = $bg_id;
+					$tracking_data['pod_status'] = 1;
+					$tracking_id = $this->General_Model->insert_data('booking_ticket_tracking', $tracking_data);
+				}
+
+				
+				if ($this->General_Model->update_table('booking_ticket_tracking', 'tracking_id', $booking_ticket_tracking->tracking_id, $tracking_data)) {
+
+						$response = array('msg' => 'Ticket Tracking Details updated Successfully.','status' => 1);
+					} else {
+						$response = array('msg' => 'Failed to update Ticket Tracking Details.','status' => 0);
+					}
+					echo json_encode($response);
+					exit;
+	}
+
+	public function update_tracking_data_orders_delete(){
+		
+		
+		$bg_id 		        = $_POST['bg_id'];
+
+		if($_POST['tracking_provider'] != "" && $_POST['delete']==1){
+			$tracking_data['delivery_provider'] = "";
+		}
+		if($_POST['tracking_number'] != "" && $_POST['delete']==1){
+			$tracking_data['tracking_number'] = "";
+		}
+		if($_POST['tracking_link'] != "" && $_POST['delete']==1){
+			$tracking_data['tracking_link'] = "";
+		}
+
+		$booking_ticket_tracking = $this->General_Model->getAllItemTable('booking_ticket_tracking', 'booking_id', $bg_id)->row();
+
+		if($booking_ticket_tracking->tracking_id == ""){
+			
+			$tracking_data['booking_id'] = $bg_id;
+			$tracking_data['pod_status'] = 1;
+			$tracking_id = $this->General_Model->insert_data('booking_ticket_tracking', $tracking_data);
+		}
+
+		if ($this->General_Model->update_table('booking_ticket_tracking', 'tracking_id', $booking_ticket_tracking->tracking_id, $tracking_data)) {
+
+				$response = array('msg' => 'Ticket Tracking Details updated Successfully.','status' => 1);
+			} else {
+				$response = array('msg' => 'Failed to update Ticket Tracking Details.','status' => 0);
+			}
+			echo json_encode($response);
+			exit;
+	
+
 }
 
 }

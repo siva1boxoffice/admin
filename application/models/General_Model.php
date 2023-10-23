@@ -2048,6 +2048,7 @@ class General_Model extends CI_Model
 		$this->db->select('states.id')->from('states');
 		$this->db->where('states.country_id', $country_id);
 		$query = $this->db->get();
+		
 		if ($query->num_rows() > 0) {
 			$state_data =  $query->result();
 			$city_array = array();

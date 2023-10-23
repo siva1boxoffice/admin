@@ -9098,3 +9098,88 @@ span.compare_price {
 .tooltip_texts .fa-comment-dots {
   font-size: 20px;
 }
+
+
+
+/************************new files ****************/
+
+.booking_file_page th , .booking_file_page td {font-size: 12px;font-weight: 400;color: #4C5271 !important;}
+.booking_file_page .thead-light th {padding: 15px 5px;font-size: 12px;color: #0037D5 !important;}
+.booking_file_page .bo-table tbody th, .booking_file_page .bo-table tbody td {padding: 8px 8px;font-size: 12px;color: #1A1919;}
+/*.booking_file_page td span{display: flex;align-items: center;justify-content: center;color: #4C5271;}*/
+.text-notupload {background: #9932CC;color: #fff !important;padding: 5px 7px;width: 100%;display: block;text-align: center;}
+.text-delivered {background: #0037D5;color: #fff !important;padding: 5px 7px;width: 100%;display: block;text-align: center;}
+.text-cancelled {background: #FF5C75;color: #fff !important;padding: 5px 7px;width: 100%;display: block;text-align: center;}
+.text-confirmed {background: #43D39E;color: #fff !important;padding: 5px 7px;width: 100%;display: block;text-align: center;}
+.text-pending {background: #00A3ED;color: #fff !important;padding: 5px 7px;width: 100%;display: block;text-align: center;}
+.text-ticket-approval {background: #FF8227;color: #fff !important;padding: 5px 7px;width: 100%;display: block;text-align: center;}
+.text-in-review {background: #6c757d;color: #fff !important;padding: 5px 7px;width: 100%;display: block;text-align: center;}
+.text-rejected {background: #c82333;color: #fff !important;padding: 5px 7px;width: 100%;display: block;text-align: center;}
+.text-downloaded {background: #0037D5;color: #fff !important;padding: 5px 7px;width: 100%;display: block;text-align: center;}
+.text-shipped {background: #0037D5;color: #fff !important;padding: 5px 7px;width: 100%;display: block;text-align: center;}
+.booking_file_page th.wid_50 {
+    width: 10% !important;
+}
+.booking_file_page .thead-light th {background-color: #fff !important;border-color: #F3F6FE !important;border-top: 0px;}
+.booking_file_page .tbl-collapsed-row td .card .card-body label {font-size: 13px;font-weight: 400;line-height: 16px;color: #1A1919;margin-bottom: 0px;}
+.new_tabs .nav-pills .nav-link {color: #0037D5;font-size: 14px;font-weight: 600;border: 1px solid #0037D5;box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);margin: 10px 0;text-align: center;border-radius: 0px;height: 25px;width: 100%;display: flex;align-items: center;justify-content: center;padding: 0px;}
+.new_tabs .nav-pills .nav-link.active, .nav-pills .show > .nav-link {color: #fff !important;background-color: #43D39E;border: 1px solid #43D39E;outline: none;text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);}
+.booking_file_page .bo-table .tbl-collapsed-row td .card .card-body select{font-size: 12px;}
+.uploads_imgg .icon_hover{top: 48px;background: none;}
+.uploads_imgg .imag_view img {height: 120px;}
+.topAirSlider_new .owl-next .fa-arrow-right {top: 5px;position: absolute;right: -7px;color: #fff;cursor: pointer;background: #00A3ED;padding: 7px 10px;}
+.topAirSlider_new .owl-prev .fa-arrow-left {top: 5px;position: absolute;right: 30px;color: #ccc;cursor: pointer;background: #ccc;color: #fff;padding: 7px 10px;}
+.tick_upload_form .form-control {height: 25px;}
+.ticket_scroll {height: 170px;overflow-x: auto;}
+.tick_upload_lists ul {padding-inline-start: 0px;margin-bottom: 0px;display: flex;align-items: center;justify-content: space-between;list-style-type: none;margin-top: 10px;}
+.copy_icon .far{color: #96B0B7;}
+.copy_icon .far:hover{color: #0037D5;}
+.trash_icon .far{color: #D80027;}
+.ticket_scroll .mCSB_scrollTools .mCSB_draggerRail {background-color: #F0F3FD;}
+.ticket_scroll .mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{width: 2px;}
+.ticket_scroll .mCSB_scrollTools .mCSB_dragger {height: 100px;}
+.upload_inst_trash p{margin-bottom: 0px;}
+.upload_inst_trash p span {color: #00A3ED;display: block;font-size: 14px;font-weight: 400;}
+.upload_inst_trash ul {margin: 0px;padding: 0px;list-style-type: none;}
+.upload_inst_trash ul li {display: inline-block;}
+.upload_inst_trash .remove_ico {width: 30px;height: 30px;font-size: 12px;}
+.upload_inst_trash .view_ico {width: 30px;height: 30px;font-size: 12px;}
+.imag_view p {margin-bottom: 0px;}
+.aprove_bttns {background: #039871;color: #fff;outline: none;border: 1px solid #039871;box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);width: 47%;font-size: 15px;font-weight: 600;}
+.reject_bttns {background: #B00505;color: #fff;outline: none;border: 1px solid #B00505;box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);width: 47%;font-size: 15px;font-weight: 600;}
+.approve_reject {display: flex;align-items: center;justify-content: space-between;margin-top: 10px;}
+.edit_btnn a {color: #00A3ED !important;text-decoration: underline;}
+.edit_btnn a:hover {color: #0037D5 !important;}
+.save_btnn a {color: #D80027 !important;text-decoration: underline;}
+.save_btnn a:hover {color: #D80027 !important;}
+.edit_save {position: absolute;right: 20px;top: 20px;display: flex;align-items: center;}
+.edit_save .edit_btnn {margin: 0 10px;}
+.copy_arrow {position: relative;}
+.arrow_up {position: absolute;right: 20px;top: 60px;z-index: 100;}
+.image-upload > input{display: none;}
+.far.fa-copy {color: #96B0B7;}
+.far.fa-copy:hover {color: #0037D5;}
+.copy_all {position: relative;display: inline-block;}
+.copy_icons {position: absolute;bottom: -8px;right: -20px;}
+.bo-table .tbl-collapsed-row td .card .card-body h5{display: inline-block;}
+.time_center {display: block;text-align: center;}
+.edit_tr .form-control {height: 25px;padding: 0 10px;}
+.ticket_holder {height: 300px;overflow-x: auto;}
+.ticket_holder .mCSB_scrollTools .mCSB_draggerRail {background-color: #F0F3FD;}
+.ticket_holder .mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{width: 2px;}
+.ticket_holder .mCSB_scrollTools .mCSB_dragger {height: 100px;}
+.edit_text a {color: #00A3ED !important;text-decoration: underline;margin-right: 10px;}
+.edit_tr_new .form-control {height: 25px;padding: 0 10px;}
+.edit_tr_new input::placeholder{font-size: 12px;}
+.edit_btnn_new a {color: #00A3ED !important;text-decoration: underline;margin-right: 10px;}
+.save_btnn_new a{color: #B00505 !important;text-decoration: underline;margin-right: 10px;}
+.booking_file_page .tbl-collapsed-row td .card .card-body span {
+    font-size: 13px;font-weight: 400;line-height: 16px;color: #1A1919;margin-bottom: 0px;}
+.file_s .input-icons i {position: absolute;right: 20px;}
+.file_s .input-icons {width: 100%;}
+.file_s .icon {padding: 10px;color: green;min-width: 50px;text-align: center;}
+.file_s .input-field {width: 100%;padding: 0 10px;height: 25px;font-weight: 700;color: #96B0B7;border: 1px solid #E0E0E0;
+    outline: none;}
+
+
+    .download_e_ticket {margin-top: 33%;margin-left: 60px;}
