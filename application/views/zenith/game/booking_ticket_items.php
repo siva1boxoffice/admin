@@ -189,7 +189,11 @@ color: #0037D5 !important;
                               aria-labelledby="v-pills-messages-tab2">
                               <div class="row">
                               <div class="col-lg-10">
+                              <?php if($eticketDatas[0]->ticket_file!=""){ ?>
                               <button type="button" class="btn btn-primary-outline download_e_ticket"  data-booking-id="<?php echo $eticketDatas[0]->booking_id;?>" >Download E-Tickets</button>
+                              <?php } else{ ?>
+                                 No tickets available to Download.
+                              <?php } ?>
                               </div>
                               </div>
                               </div>
@@ -234,9 +238,13 @@ color: #0037D5 !important;
                              
                               <div class="tab-pane fade" id="v-pills-sett2_<?php echo $eticketDatas[0]->booking_id; ?>" role="tabpanel"
                               aria-labelledby="v-pills-sett-tab2">
+
+                                 <?php  if($eticketDatas[0]->ticket_file!=""){ ?>
                                  <div id="TopAirLine_new" class="topAirSlider_new owl-carousel owl-theme">
 
-                                    <?php foreach ($eticketDatas as $eticketData) {
+                                    <?php 
+                                    
+                                    foreach ($eticketDatas as $eticketData) {
                                       // echo "<pre>";print_r($eticketData);
                                       if($eticketData->ticket_file!=""){
                                      ?>
@@ -260,6 +268,10 @@ color: #0037D5 !important;
                                     <?php }} ?>
                                    
                                  </div>
+                                     <?php }else{
+                                     echo "<p> E Tickets not available. </p>"; ?>
+                                     <a style="color: #D80027 !important;text-decoration: underline;" target="_blank" href="<?php echo base_url();?>game/orders/upload_e_ticket/<?php echo md5('1BX'.$orderData->booking_id);?>" >Upload E-Ticket</a>
+                                 <?php  }?>
                               </div>
                               
                            </div>
@@ -270,9 +282,9 @@ color: #0037D5 !important;
                            <a class="nav-link active show mb-1" id="v-pills-home-tab2" data-toggle="pill"
                            href="#v-pills-home2_<?php echo $eticketDatas[0]->booking_id; ?>" role="tab" aria-controls="v-pills-home2" aria-selected="true">
                            POD Upload</a>
-                           <?php if($eticketDatas[0]->ticket_file!=""){ ?>
+                           <?php //if($eticketDatas[0]->ticket_file!=""){ ?>
                               
-                           <a class="nav-link mb-1" id="v-pills-sett-tab2 " data-toggle="pill"
+                           <a class="nav-link mb-1" id="v-pills-sett-tab2" data-toggle="pill"
                            href="#v-pills-sett2_<?php echo $eticketDatas[0]->booking_id; ?>" role="tab" aria-controls="v-pills-sett2"
                            aria-selected="false">
                            Upload E-ticket</a>
@@ -281,7 +293,7 @@ color: #0037D5 !important;
                            href="#v-pills-messages2_<?php echo $eticketDatas[0]->booking_id; ?>" role="tab" aria-controls="v-pills-messages2"
                            aria-selected="false">
                            Download</a>
-                           <?php }?>
+                           <?php //}?>
                            <a class="nav-link mb-1" id="v-pills-settings-tab2" data-toggle="pill"
                            href="#v-pills-settings2_<?php echo $eticketDatas[0]->booking_id; ?>" role="tab" aria-controls="v-pills-settings2"
                            aria-selected="false">
@@ -349,7 +361,7 @@ color: #0037D5 !important;
                   <div class="custom-file">
                     <button type="button"
                       form-id="ticket_tracking"
-                      class="email_submit custom-file-label" for="inputGroupFile04">Save</button>
+                      class="email_submit custom-file-label" for="inputGroupFile04">Send</button>
                   </div>
                 </div>
               </div>
@@ -370,8 +382,24 @@ color: #0037D5 !important;
                   </div>
                </div>
             </div>
+
        <script>
          $(document).ready(function() {
+
+
+         $("#content_1").mCustomScrollbar({
+            scrollButtons:{
+            enable:true
+            }
+         });
+
+         $("#content_2").mCustomScrollbar({
+            scrollButtons:{
+            enable:true
+            }
+         });
+
+
             $("body").on("click", ".copy_ticket", function () {
                var ticket_id = $(this).data('ticket-id');
                var os = $(this).data('os'); 
@@ -499,6 +527,10 @@ color: #0037D5 !important;
       url: '<?php echo base_url(); ?>game/update_tracking_data_orders',
       success: function(response) {
         // Handle the server's response
+        if(response.status == 1){ 
+         reload_upload_area(response.bg_id);
+        }
+        
         $("#response").html(response);
         swal('Updated', response.msg, 'success');
       //   setTimeout(window.location.reload(),200);
@@ -566,7 +598,12 @@ color: #0037D5 !important;
       processData: false,
       success: function(response) {
         // Handle the response from the server
-        console.log(response);
+       
+        if(response.status == 1){ 
+            reload_upload_area(response.bg_id);
+        }
+        
+
     swal('Updated !', response.msg, 'success');
       $('#all-orders').trigger('click');
                     //  setTimeout(window.location.reload(),200);
@@ -587,7 +624,11 @@ $.ajax({
          type: 'POST',
          dataType: "json",
          data: {  ticket_id: data_id   },
-         success: function (response) {               
+         success: function (response) {
+
+               if(response.status == 1){ 
+               reload_upload_area(response.bg_id);
+               }               
                swal('Updated !', response.msg, 'success');
              //  setTimeout(window.location.reload(),300);
              $('#all-orders').trigger('click');
@@ -609,7 +650,10 @@ $.ajax({
          type: 'POST',
          dataType: "json",
          data: {  booking_id: booking_id   },
-         success: function (response) {               
+         success: function (response) { 
+               if(response.status == 1){ 
+               reload_upload_area(response.bg_id);
+               }                
                swal('Updated !', response.msg, 'success');
                $('#all-orders').trigger('click');
               // $("#updateNominee").hide();
@@ -668,6 +712,28 @@ if (Email == "") {
 
       if (window.focus) {newwindow.focus()}
       return false;
+   }
+
+
+   function reload_upload_area(bg_id){
+
+       var file_upload_area = "";
+        $.ajax({
+         
+          url: '<?php echo base_url(); ?>game/booking_ticket_items',
+          type: 'POST',
+          data: { 'bg_id': bg_id }, 
+          dataType : 'JSON',
+          async: false,  
+          success:function(data) {
+            if(data.response != ""){
+               $("#file_upload_area").html(data.response);
+            }
+             //file_upload_area = data.response; 
+              
+          }
+       });
+
    }
  
        </script>     
