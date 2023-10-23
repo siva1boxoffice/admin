@@ -2048,6 +2048,7 @@ class General_Model extends CI_Model
 		$this->db->select('states.id')->from('states');
 		$this->db->where('states.country_id', $country_id);
 		$query = $this->db->get();
+		
 		if ($query->num_rows() > 0) {
 			$state_data =  $query->result();
 			$city_array = array();
@@ -2208,6 +2209,13 @@ class General_Model extends CI_Model
 						$this->db->like('currency_types.currency_code', $where_array['currency_code']);
 					
 			}
+			else if(isset($where_array['credit_note']) && $where_array['credit_note']==0)
+			{
+				$this->db->or_group_start();
+				$this->db->or_where('credit_note', NULL);
+				$this->db->or_where('credit_note', 0);
+				$this->db->group_end();
+			}
 			else
 			{
 				foreach ($where_array as $columnkey => $value) {
@@ -2227,7 +2235,7 @@ class General_Model extends CI_Model
 		return $query;
 	}
 
-	public function get_limit_based_data_search($table, $row_no, $row_per_page, $orderColumn = '', $orderby = '',$fromDate='',$toDate='',$coupon_type,$status_type)
+	public function get_limit_based_data_search($table, $row_no, $row_per_page, $orderColumn = '', $orderby = '',$fromDate='',$toDate='',$coupon_type,$status_type,$credit_note="",$credit_note_code="")
 	{
 		$this->db->select('*');
 		$this->db->from($table);
@@ -2271,6 +2279,21 @@ class General_Model extends CI_Model
 		   $this->db->where_in('coupon_code.status',$comma_separated,FALSE);
 	   }
 
+	   if($credit_note!=""){
+				if($credit_note==1)
+	   			$this->db->where('coupon_code.credit_note',1);
+				else
+				{
+					$this->db->group_start();
+					$this->db->where('coupon_code.credit_note', NULL);
+					$this->db->or_where('coupon_code.credit_note', 0);
+					$this->db->group_end();
+				}
+	   }
+
+	   if (!empty($credit_note_code)) {		
+			 $this->db->like('coupon_code.coupon_code', $credit_note_code);		
+		}
 		//$this->db->where($columnkey, $value);
 
 		if ($orderColumn != "" && $orderby != "") {
