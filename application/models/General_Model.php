@@ -2048,6 +2048,7 @@ class General_Model extends CI_Model
 		$this->db->select('states.id')->from('states');
 		$this->db->where('states.country_id', $country_id);
 		$query = $this->db->get();
+		
 		if ($query->num_rows() > 0) {
 			$state_data =  $query->result();
 			$city_array = array();
@@ -5643,6 +5644,16 @@ public function getOrderData_v2()
 		$this->db->or_where('booking_global.booking_status', 4);
 		$this->db->or_where('booking_global.booking_status', 5);
 		$this->db->or_where('booking_global.booking_status', 6);
+		$qry = $this->db->get();
+		return $qry;
+	}
+
+
+	function get_booking_billing_address($bg_id)
+	{
+		$this->db->select('booking_billing_address.*');
+		$this->db->from('booking_billing_address');
+		$this->db->where('booking_billing_address.booking_id', $bg_id);
 		$qry = $this->db->get();
 		return $qry;
 	}

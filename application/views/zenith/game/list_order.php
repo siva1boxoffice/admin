@@ -722,35 +722,35 @@ $(".seat_category_check_box").change(function() {
 
 
       $(document).on("click", ".download_e_ticket", function() {
-				//$(".download_ticket").click(function() {
+        //$(".download_ticket").click(function() {
 
-				  var orderId = $(this).data("booking-id");
-				  if(orderId=="")
+          var orderId = $(this).data("booking-id");
+          if(orderId=="")
               {
                swal('Error!', "No tickets found", 'error');
               }
               else
               {
-				  $.ajax({
-									  url: '<?php echo base_url();?>game/get_encrpty_id ',
-									  type: 'POST',
-									  dataType: "json",
-									  data: {  booking_id: orderId  },
-									  success: function (response) {        
-								         window.location.href = '<?php echo base_url(); ?>game/get_download_record/'+orderId
-									  },
-									  error: function () {
-									  console.log('Failed');
-									  }
-								  });
-			  
+          $.ajax({
+                    url: '<?php echo base_url();?>game/get_encrpty_id ',
+                    type: 'POST',
+                    dataType: "json",
+                    data: {  booking_id: orderId  },
+                    success: function (response) {        
+                         window.location.href = '<?php echo base_url(); ?>game/get_download_record/'+orderId
+                    },
+                    error: function () {
+                    console.log('Failed');
+                    }
+                  });
+        
                         }
-			  
-			  
-				  // AJAX request to fetch the record set based on order_id
-				
-				
-				});
+        
+        
+          // AJAX request to fetch the record set based on order_id
+        
+        
+        });
          
 
 
