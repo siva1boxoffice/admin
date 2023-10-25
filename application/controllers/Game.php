@@ -1426,7 +1426,7 @@ if($record->delivery_status != 0)
 		
 		//echo "<pre>";print_r($_POST);exit;
 		//$config["upload_path"] = UPLOAD_PATH_PREFIX.'uploads/ticket_instruction';
-		$config["upload_path"] = FCPATH.'/uploads/e_tickets';
+		$config["upload_path"] = UPLOAD_PATH_PREFIX.'/uploads/e_tickets';
 		//$config["destination_dir"] = 'uploads/e_tickets/temp';
 		$config['allowed_types'] = 'pdf|jpeg|jpg|png';
 		$config['max_size'] = 2048;
@@ -7572,7 +7572,7 @@ if ($dateObj !== false) {
 
 				if($_FILES["file"]["name"] != ""){
 					
-				$config["upload_path"] = FCPATH.'uploads/pod/';
+				$config["upload_path"] = UPLOAD_PATH_PREFIX.'uploads/pod/';
 				$config["allowed_types"] = 'pdf|jpg|jpeg|png';
 				$this->load->library('upload', $config);
 				$this->upload->initialize($config);
