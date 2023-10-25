@@ -2403,7 +2403,7 @@ public function get_order_status(){
 					//echo "<pre>";print_r($output);exit;
 					curl_close($handle);			
 
-						//echo $this->db->last_query();exit;
+						//echo $this->db->last_query();exit;s
 				$response = array('status' => 1, 'msg' => "Email Sent Successfully.");
 
 			echo json_encode($response);
