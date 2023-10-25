@@ -1,4 +1,15 @@
 <style>
+   .ticket_table {
+      color:#1A1919 !important;
+      display: block;
+    overflow-x: auto;
+   }
+   .delivery_inpt_error
+   {
+      border-color: #ff5c75 !important;
+   }
+   .edit_hide,.edit_hide_nominee{display: none;}
+   .save_btnn_new,.save_btnn{display: none;}
 .order_status_check_box {
     padding: 0 15px;
     margin-top: 15px;
@@ -12,6 +23,9 @@
 .check_box, .seat_category_check_box, .order_status_check_box, .seller_status_check_box {
     max-height: 250px;
     overflow-y: auto;
+}
+.highlighted {
+color: #0037D5 !important;
 }
 </style>
 <?php  $this->load->view('zenith/common/header'); ?>
@@ -267,7 +281,7 @@
                               </div>
                            </div>
                         </div>
-                        <div class="table-responsive">
+                        <div class="table-responsive booking_file_page">
                               <table style='width:100% !important' id="all-orders" class="table table-responsive bo-table w-100 dataTable no-footer">
                                  <thead class="thead-light">
                                     <tr>
@@ -284,8 +298,8 @@
                                        <th>Purchase date</th>
                                        <th>Seller</th>
                                        <th>Delivery date</th>
-                                       <th>Shipping status</th>
-                                       <th>Order status</th>
+                                       <th class="wid_50">Shipping status</th>
+                                       <th class="wid_50">Order status</th>
                                      
                                     </tr>
                                  </thead>
@@ -311,25 +325,56 @@
  <script type="text/javascript">
       $(document).ready(function () {
 
+         $("body").on("change",".seller_order_status",function(e){
+         // $('.seller_order_status').on('click',function (e){
+  e.preventDefault();
+      var bg_id = $(this).data('bg-id');
+    var seller_status = $("#seller_order_status_"+bg_id+" option:selected").val();
+
+    $.ajax({
+      url: base_url + 'game/orders/update_seller_status',
+      method: "POST",
+      data: { "bg_id": bg_id, "seller_status": seller_status },
+      dataType: 'json',
+      success: function (result) {
+
+        if (result) {
+
+          swal('Updated !', result.msg, 'success');
+
+        }
+        else {
+          swal('Updation Failed !', result.msg, 'error');
+
+        }
+
+        
+      }
+    });
+
+
+  });
 
        //  $('.status_change').on('change', function() {
             $(document).on("change", ".status_change", function() {
+            //   alert('entered');
     var bookingId = $(this).data('status-booking-id');
     var selectedValue = $(this).val();
 
     $.ajax({
-						url: '<?php echo base_url();?>game/get_encrpty_id ',
-						type: 'POST',
-						dataType: "json",
-						data: {  booking_id: bookingId  },
-						success: function (response) {        
+            url: '<?php echo base_url();?>game/get_encrpty_id ',
+            type: 'POST',
+            dataType: "json",
+            data: {  booking_id: bookingId  },
+            success: function (response) {        
                    //  window.location.href = '<?php //echo base_url(); ?>game/orders/upload_e_ticket/'+response.msg
-                       update_booking_status(response.msg, selectedValue);
-						},
-						error: function () {
-						console.log('Failed');
-						}
-					});
+                   update_booking_all_order_status(response.msg, selectedValue,bookingId);
+                  
+            },
+            error: function () {
+            console.log('Failed');
+            }
+          });
     
     // Call your JavaScript function here and pass the bookingId and selectedValue
     
@@ -340,17 +385,17 @@
     var booking_id = "1BX"+$(this).data("booking");
     console.log(booking_id);
     $.ajax({
-						url: '<?php echo base_url();?>game/get_encrpty_id ',
-						type: 'POST',
-						dataType: "json",
-						data: {  booking_id: booking_id  },
-						success: function (response) {        
+            url: '<?php echo base_url();?>game/get_encrpty_id ',
+            type: 'POST',
+            dataType: "json",
+            data: {  booking_id: booking_id  },
+            success: function (response) {        
                      window.location.href = '<?php echo base_url(); ?>game/orders/upload_e_ticket/'+response.msg
-						},
-						error: function () {
-						console.log('Failed');
-						}
-					});
+            },
+            error: function () {
+            console.log('Failed');
+            }
+          });
   });
 
 
@@ -369,17 +414,17 @@
               {
     
     $.ajax({
-						url: '<?php echo base_url();?>game/get_encrpty_id ',
-						type: 'POST',
-						dataType: "json",
-						data: {  booking_id: orderId  },
-						success: function (response) {        
+            url: '<?php echo base_url();?>game/get_encrpty_id ',
+            type: 'POST',
+            dataType: "json",
+            data: {  booking_id: orderId  },
+            success: function (response) {        
                      window.location.href = '<?php echo base_url(); ?>game/get_download_record/'+orderId
-						},
-						error: function () {
-						console.log('Failed');
-						}
-					});
+            },
+            error: function () {
+            console.log('Failed');
+            }
+          });
             }
 
     
@@ -441,8 +486,14 @@
 
  
       function format(d) { 
-      //console.log('xxxxxxxxxxxxx');
+      
+     
+
        var order = d.order_data;
+       countries=d.countries;
+       encrpty_bg_id=d.encrpty_bg_id;
+       cities=d.cities;
+
        var order_seller_notes = '';
        var order_block_row = '';
        var discount_amount = '0.00';
@@ -450,6 +501,21 @@
        var delivery_status = "";
        var ticket_status = "";
        var order_nominees = "";
+
+       var file_upload_area = "";
+        $.ajax({
+         
+          url: '<?php echo base_url(); ?>game/booking_ticket_items',
+          type: 'POST',
+          data: { 'bg_id': d.order_data.bg_id }, 
+          dataType : 'JSON',
+          async: false,  
+          success:function(data) {
+             file_upload_area = data.response; 
+              
+          }
+       });
+
 
        if(order.seller_notes != ""){
 
@@ -483,6 +549,10 @@
             partner_amount = order.partner_fee;
         }
             
+         order.check_in_out = order.check_in_out == null ? "" : order.check_in_out;
+         order.hotel_ref = order.hotel_ref == null ? "" : order.hotel_ref;
+         order.delivery_method = order.delivery_method == null ? "" : order.delivery_method;
+   
         if (order.delivery_status == 0 || order.delivery_status == '') {
         delivery_status = "Tickets Not Uploaded";
         }
@@ -547,26 +617,113 @@
          selectBox += '</select>';
          }
 
-         console.log(selectBox);
+
+         var booking_selectBox = '';
+
+         if (<?php echo $this->session->userdata("role") == 6 ? 'true' : 'false'; ?>) {
+         booking_selectBox += '<select name="delivery_status" class="custom-select me-2 status_change" data-status-booking-id=' + order.bg_id + '>';
+
+         if (order.booking_status != 0 && order.booking_status != 7 && order.booking_status != 3) {
+            booking_selectBox += '<option ' + (2 == order.booking_status ? 'selected ' : '') + 'value="2">Pending</option>';
+            booking_selectBox += '<option ' + (1 == order.booking_status ? 'selected ' : '') + 'value="1">Confirmed</option>';
+         }
+
+         if (<?php echo $this->session->userdata("role") == 6 ? 'true' : 'false'; ?>) {
+            booking_selectBox += '<option ' + (0 == order.booking_status ? 'selected ' : '') + 'value="0">Failed</option>';
+            booking_selectBox += '<option value="3" ' + (3 == order.booking_status ? 'selected' : '') + '>Cancelled</option>';
+
+            if ( order.booking_status != 0 && order.booking_status != 7 && order.booking_status != 3 ) {
+               booking_selectBox += '<option ' + (4 == order.booking_status ? 'selected ' : '') + 'value="4">Shipped</option>';
+               booking_selectBox += '<option ' + (5 == order.booking_status ? 'selected ' : '') + 'value="5">Delivered</option>';
+               booking_selectBox += '<option ' + (6 == order.booking_status ? 'selected ' : '') + 'value="6">Downloaded</option>';
+            }
+         }
+
+         booking_selectBox += '</select>';
+         }
+
+
+         //console.log(selectBox);
+
+            var Country_selectBox = '';        
+            var city_id="";
+            Country_selectBox += '<select class="custom-select" id="country_' + order.bg_id + '" name="country" onchange="get_booking_state_city(this.value, \'\', ' + order.bg_id + ');" required>';
+
+           for (var i = 0; i < countries.length; i++) {
+            var option = countries[i];
+            Country_selectBox += '<option  ' + (option.name == order.country_name ? 'selected ' : '') + 'value="' + option.id + '">' + option.name + '</option>';
+            }
+
+            Country_selectBox += '</select>';
+
+
+            var City_selectBox = '';        
+            City_selectBox += '<select class="custom-select" id="city_'+ order.bg_id +'" name="city"  required>';
+          for (var i = 0; i < cities.length; i++) {
+            var option = cities[i];
+            City_selectBox += '<option  ' + (option.name == order.city_name ? 'selected ' : '') + 'value="' + option.id + '">' + option.name + '</option>';
+            }
+
+            City_selectBox += '</select>';
+
+
+            var Delivery_Status_selectBox = '<select class="custom-select" id="delivery_status_order_' + order.bg_id + '" name="delivery_status" required>';
+
+            Delivery_Status_selectBox += '<option value="0" ' + (order.delivery_status === "0" ? 'selected' : '') + '>Tickets Not Uploaded </option>';
+            Delivery_Status_selectBox += '<option value="1" ' + (order.delivery_status === "1" ? 'selected' : '') + '>Tickets In-Review </option>';
+            Delivery_Status_selectBox += '<option value="2" ' + (order.delivery_status === "2" ? 'selected' : '') + '>Tickets Approved </option>';
+            Delivery_Status_selectBox += '<option value="3" ' + (order.delivery_status === "3" ? 'selected' : '') + '>Tickets Rejected </option>';
+            Delivery_Status_selectBox += '<option value="4" ' + (order.delivery_status === "4" ? 'selected' : '') + '>Tickets Downloaded </option>';
+            Delivery_Status_selectBox += '<option value="5" ' + (order.delivery_status === "5" ? 'selected' : '') + '>Tickets Shipped </option>';
+            Delivery_Status_selectBox += '<option value="6" ' + (order.delivery_status === "6" ? 'selected' : '') + '>Tickets Delivered </option>';
+
+            Delivery_Status_selectBox += '</select>';
+
+            var seller_selectBox = '<select class="custom-select seller_order_status" id="seller_order_status_' + order.bg_id + '"  required data-bg-id="'+order.bg_id+'">';
+            seller_selectBox += '<option value="0" ' + (order.seller_status === "0" ? 'selected' : '') + '>Processing </option>';
+            seller_selectBox += '<option value="1" ' + (order.seller_status === "1" ? 'selected' : '') + '>Completed </option>';
+            seller_selectBox += '<option value="2" ' + (order.seller_status === "2" ? 'selected' : '') + '>Issue </option>';
+            seller_selectBox += '<option value="3" ' + (order.seller_status === "3" ? 'selected' : '') + '>Get Paid </option>';
+            seller_selectBox += '</select>';
+
 
     if(order.nominees != ""){
+
+     
         //if(order.nominees.length > 0){
             if(order.nominees?.length !== 0){
             $.each(order.nominees, function (key, val) {
                
-                if(val.first_name != null){
+                //if(val.first_name != null){
                   var email = val.email != null ? val.email : 'N/A';
-                  var dob = val.dob != null ? val.dob : 'N/A';
-
-                    order_nominees += '<tr>'+
-                    '<td>'+val.first_name+' '+val.last_name+'</td>'+
-                    '<td>'+dob+'</td>'+
-                    '<td>'+email+'</td>'+
+                  var nationality = val.nationality != null ? val.nationality : 'N/A';
+                  var fullname = val.first_name != null ? val.first_name+' '+val.last_name : 'N/A';
+                  var dob = val.dob != null ? val.dob.replace(/-/g, '/') : 'N/A';
+                  var nominee_action_edit = '<span class="edit_btnn" data-bg-id="'+val.id+'"><a href="javascript:void(0)" id="edit_nominee_'+val.id+'">Edit</a></span>';
+                  var nominee_action_save = '<span class="save_btnn" data-bg-id="'+val.id+'" id="save_nominee_'+val.id+'"><a href="javascript:void(0)">Save</a></span>';
+                  /*var nominee_action_edit = val.first_name != null ? '<span class="edit_btnn" data-bg-id="'+val.id+'"><a href="javascript:void(0)" id="edit_nominee_'+val.id+'">Edit</a></span>' : 'N/A';
+                  var nominee_action_save = val.first_name != null ? '<span class="save_btnn" data-bg-id="'+val.id+'" id="save_nominee_'+val.id+'"><a href="javascript:void(0)">Save</a></span>' : 'N/A';*/
+ 
+                  
+                    order_nominees += '<tr class="edit_tr">'+
+                    '<td><span class="edit_text" id="nominee_name_show_'+val.id+'">'+fullname+'</span> <span class="edit_box edit_hide" ><input type="text" class="form-control"  value="'+fullname+'" placeholder="Name" id="nominee_name_'+val.id+'"></span>'+
+                    '<td><span class="edit_text" id="nominee_dob_show_'+val.id+'">'+dob+'</span> <span class="edit_box edit_hide" ><input type="text" class="form-control attendee_date"  value="'+dob+'" placeholder="Date of Birth" id="nominee_dob_'+val.id+'"></span>  </td>'+
+                    '<td><span class="edit_text" id="nominee_nationality_show_'+val.id+'">'+nationality+'</span>  <span class="edit_box edit_hide" ><input type="text" class="form-control"  value="'+nationality+'" placeholder="Nationality" id="nominee_nationality_'+val.id+'"></span></td>'+
+                    '<td>'+nominee_action_edit+"<br/>"+nominee_action_save+'</td>'+
+                  //   '<td>'+nominee_action_save+'</td>'+
                     '</tr>';
-                }
+
+                  //   order_nominees += '<tr class="edit_tr">'+
+                  //   '<td>'+val.first_name+' '+val.last_name+'<span class="edit_box edit_hide_nominee" ><input type="text" class="form-control"  value="" placeholder="18/12/1992"></span></td>'+
+                  //   '<td>'+dob+'</td>'+
+                  //   '<td>'+email+'</td>'+
+                  //   '<td>'+nominee_action_edit+'</td>'+
+                  //   '<td>'+nominee_action_save+'</td>'+
+                  //   '</tr>';
+                /*}
                 else{
                     order_nominees = '<tr><td colspan="3">NA</td></tr>';
-                }
+                }*/
                 
             });
         }
@@ -579,7 +736,27 @@
         }
        
 
+        //delivery_dealine_date=order.delivery_date
+var currency_icon = "";
+if(order.currency_type == "GBP"){
+ currency_icon = "<i class='mdi mdi-currency-gbp'></i>";
+}
+else if(order.currency_type == "EUR"){
+  currency_icon = "<i class='mdi mdi-currency-eur'></i>";
+}
+else if(order.currency_type == "USD"){
+  currency_icon = "<i class='mdi mdi-currency-usd'></i>";
+}
+else{
+  currency_icon = "AED"
+}
 
+var team_array = (order.match_name).split(' vs ');
+var team_area  = "";
+if(team_array[0] != null){
+  team_area = team_array[0];
+}
+   
     // `d` is the original data object for the row
     return (
 '<div class="row ms-0">'+
@@ -588,67 +765,108 @@
 '<div class="col mr-3 card">'+
 '<div class="card-body">'+
 '<h5>Buyer Info</h5>'+
+'<div class="copy_all">'+
+'   <div class="copy_icons">'+
+'      <a href="javascript:void(0);"><i class="far fa-copy copyBuyerButton" data-bg-id="'+order.bg_id+'"></i></a>'+
+'   </div>'+
+'</div>'+
 '<div class="row">'+
 '<label class="col-md-5">'+
 'Buyer Name:'+
 '</label>'+
-'<div class="col-md-7">'+
-order.customer_first_name+" "+order.customer_last_name+
-'</div>'+
+'<div class="col-md-5" id="buyer_name_' + order.bg_id + '">' +order.customer_first_name + ' ' + order.customer_last_name +'</div>'+
+'<div class="col-md-2">'+
+   '<a href="javascript:void(0);"><i class="far fa-copy" onclick="copy_data(\'buyer_name_' + order.bg_id + '\', this)"></i></a>'+
+'</div>'+                              
 '</div>'+
 '<div class="row">'+
 '<label class="col-md-5">'+
 'Buyer Email:'+
 '</label>'+
-'<div class="col-md-7">'+
-order.email+
+'<div class="col-md-5" id="buyer_email_' + order.bg_id + '">'+order.email+'</div>'+
+'<div class="col-md-2">'+
+   '<a href="javascript:void(0);"><i class="far fa-copy" onclick="copy_data(\'buyer_email_' + order.bg_id + '\', this)"></i></a>'+
 '</div>'+
 '</div>'+
 '<div class="row">'+
 '<label class="col-md-5">'+
 'Phone Number:'+
 '</label>'+
-'<div class="col-md-7">'+
-order.mobile_no+" "+order.dialing_code+
+'<div class="col-md-5" id="buyer_mobile_' + order.bg_id + '">'+order.dialing_code+" "+order.mobile_no+'</div>'+
+'<div class="col-md-2">'+
+   '<a href="javascript:void(0);"><i class="far fa-copy" onclick="copy_data(\'buyer_mobile_' + order.bg_id + '\', this)"></i></a>'+
 '</div>'+
 '</div>'+
 '<div class="row">'+
 '<label class="col-md-5">'+
 'Alternative Phone:'+
 '</label>'+
-'<div class="col-md-7">'+
-order.mobile_no+" "+order.dialing_code+
+'<div class="col-md-5" id="buyer_mobile_alter_' + order.bg_id + '">'+order.dialing_code+" "+order.mobile_no+'</div>'+
+'<div class="col-md-2">'+
+   '<a href="javascript:void(0);"><i class="far fa-copy" onclick="copy_data(\'buyer_mobile_alter_' + order.bg_id + '\', this)"></i></a>'+
 '</div>'+
 '</div>'+
 '<div class="row">'+
 '<label class="col-md-5">'+
 'Billing Address:'+
 '</label>'+
-'<div class="col-md-7">'+
-order.billing_first_name+" "+order.billing_last_name+"<br>"+
-order.billing_postal_code+","+order.billing_address+"<br>"+
-order.city_name+","+order.country_name+"<br>"+
+'<div class="col-md-5" id="buyer_billing_' + order.bg_id + '">'/*+
+order.billing_first_name+" "+order.billing_last_name+"<br>"*/+order.billing_address+"<br>"+'</div>'+
+'<div class="col-md-2">'+
+   '<a href="javascript:void(0);"><i class="far fa-copy" onclick="copy_data(\'buyer_billing_' + order.bg_id + '\', this)"></i></a>'+
 '</div>'+
 '</div>'+
-'<div class="row mt-3">'+
+'<div class="row">'+
+'<label class="col-md-5">'+
+'City:'+
+'</label>'+
+'<div class="col-md-5" id="buyer_city_' + order.bg_id + '">'+
+order.city_name+'</div>'+
+/*'<div class="col-md-2">'+
+   '<a href="javascript:void(0);"><i class="far fa-copy" onclick="copy_data(\'buyer_city_' + order.bg_id + '\', this)"></i></a>'+
+'</div>'+*/
+'</div>'+
+'<div class="row">'+
+'<label class="col-md-5">'+
+'Post / Zip Code:'+
+'</label>'+
+'<div class="col-md-5" id="buyer_postal_' + order.bg_id + '">'+
+order.billing_postal_code+'</div>'+
+/*'<div class="col-md-2">'+
+   '<a href="javascript:void(0);"><i class="far fa-copy" onclick="copy_data(\'buyer_postal_' + order.bg_id + '\', this)"></i></a>'+
+'</div>'+*/
+'</div>'+
+'<div class="row">'+
+'<label class="col-md-5">'+
+'Country:'+
+'</label>'+
+'<div class="col-md-5" id="buyer_country_' + order.bg_id + '">'+
+order.country_name+'</div>'+
+/*'<div class="col-md-2">'+
+   '<a href="javascript:void(0);"><i class="far fa-copy" onclick="copy_data(\'buyer_country_' + order.bg_id + '\', this)"></i></a>'+
+'</div>'+*/
+'</div>'+
+'<div class="row">'+
 '<label class="col-md-5">'+
 'Partners:'+
 '</label>'+
-'<div class="col-md-7">'+
-order.source_type+
+'<div class="col-md-5" id="buyer_source_' + order.bg_id + '">'+
+order.source_type+'</div>'+
+/*'<div class="col-md-2">'+
+   '<a href="javascript:void(0);"><i class="far fa-copy" onclick="copy_data(\'buyer_source_' + order.bg_id + '\', this)"></i></a>'+
+'</div>'+*/
 '</div>'+
 '</div>'+
 '</div>'+
-'</div>'+
-'<div class="col me-3 card">'+
+'<div class="col mr-3 card">'+
 '<div class="card-body">'+
 '<h5>Payment Details</h5>'+
 '<div class="row">'+
 '<label class="col-md-5">'+
 'Price/Ticket:'+
 '</label>'+
-'<div class="col-md-7">'+
-order.price+' '+order.currency_type+
+'<div class="col-md-7">'+currency_icon+' '+
+order.price+/*' '+order.currency_type+*/
 '</div>'+
 '</div>'+
 '<div class="row">'+
@@ -663,56 +881,56 @@ order.quantity+' '+order.ticket_type+
 '<label class="col-md-5">'+
 'Sub Total:'+
 '</label>'+
-'<div class="col-md-7">'+
-order.ticket_amount+' '+order.currency_type+
+'<div class="col-md-7">'+currency_icon+' '+
+order.ticket_amount+/*' '+order.currency_type+*/
 '</div>'+
 '</div>'+
 '<div class="row">'+
 '<label class="col-md-5">'+
 'Partner Fee:'+
 '</label>'+
-'<div class="col-md-7">'+
-partner_amount+' '+order.currency_type+
+'<div class="col-md-7">'+currency_icon+' '+
+partner_amount+/*' '+order.currency_type+*/
 '</div>'+
 '</div>'+
 '<div class="row">'+
 '<label class="col-md-5">'+
 'Store Fee:'+
 '</label>'+
-'<div class="col-md-7">'+
-order.store_fee+' '+order.currency_type+
+'<div class="col-md-7">'+currency_icon+' '+
+order.store_fee+/*+' '+order.currency_type+*/
 '</div>'+
 '</div>'+
 '<div class="row">'+
 '<label class="col-md-5">'+
 'Delivery Fee:'+
 '</label>'+
-'<div class="col-md-7">'+
-order.delivery_fee+' '+order.currency_type+
+'<div class="col-md-7">'+currency_icon+' '+
+order.delivery_fee+/*+' '+order.currency_type+*/
 '</div>'+
 '</div>'+
 '<div class="row">'+
 '<label class="col-md-5">'+
 'Booking Protect Fee:'+
 '</label>'+
-'<div class="col-md-7">'+
-order.premium_price+' '+order.currency_type+
+'<div class="col-md-7">'+currency_icon+' '+
+order.premium_price+/*+' '+order.currency_type+*/
 '</div>'+
 '</div>'+
 '<div class="row">'+
 '<label class="col-md-5">'+
 'Total Discount:'+
 '</label>'+
-'<div class="col-md-7">'+
-discount_amount+' '+order.currency_type+
+'<div class="col-md-7">'+currency_icon+' '+
+discount_amount+/*+' '+order.currency_type+*/
 '</div>'+
 '</div>'+
 '<div class="row">'+
 '<label class="col-md-5">'+
 'Total Selling Amount:'+
 '</label>'+
-'<div class="col-md-7">'+
-order.total_amount+' '+order.currency_type+
+'<div class="col-md-7">'+currency_icon+' '+
+order.total_amount+/*+' '+order.currency_type+*/
 '</div>'+
 '</div>'+
 '<div class="row">'+
@@ -725,123 +943,33 @@ order.currency_type+
 '</div>'+
 '</div>'+
 '</div>'+
-'</div>'+
-'<div class="row">'+
-/*'<div class="col me-3 mb-0 card">'+
-'<div class="card-body">'+
-'<h5>Delivery Details</h5>'+
-'<div class="row">'+
-'<label class="col-md-5">'+
-'Ticket Type:'+
-'</label>'+
-'<div class="col-md-7">'+
-order.ticket_type_name+
-'</div>'+
-'</div>'+
-'<div class="row">'+
-'<label class="col-md-5">'+
-'Delivery Fee:'+
-'</label>'+
-'<div class="col-md-7">'+
-order.delivery_fee+' '+order.currency_type+
-'</div>'+
-'</div>'+
-'<div class="row">'+
-'<label class="col-md-5">'+
-'Ticket Upload Status:'+
-'</label>'+
-'<div class="col-md-7">'+
-delivery_status+' '+order.ticket_upload_date+
-'</div>'+
-'</div>'+
-'<div class="row">'+
-'<label class="col-md-5">'+
-'Ticket Approve Status:'+
-'</label>'+
-'<div class="col-md-7">'+
-ticket_status+' '+order.ticket_approve_date+
-'</div>'+
-'</div>'+
-'</div>'+
-'</div>'+*/
-'<div class="col mr-3 mb-0 card">'+
-'<div class="card-body">'+
-'<h5>Delivery Details</h5>'+
-'<div class="row">'+
-'<label class="col-md-5">'+
-'Method:'+
-'</label>'+
-'<div class="col-md-7">'+
-'Pickup'+
-'</div>'+
-'</div>'+
-'<div class="row">'+
-'<label class="col-md-5">'+
-'Delivery Deadline:'+
-'</label>'+
-'<div class="col-md-7">'+
-order.delivery_date+
-'</div>'+
-'</div>'+
-'<div class="row">'+
-'<label class="col-md-5">'+
-'Name:'+
-'</label>'+
-'<div class="col-md-7">'+
-order.billing_first_name+" "+order.billing_last_name+"<br>"+
-'</div>'+
-'</div>'+
-'<div class="row">'+
-'<label class="col-md-5">'+
-'Address:'+
-'</label>'+
-'<div class="col-md-7">'+
-order.billing_postal_code+","+order.billing_address+
-'</div>'+
-'</div>'+
-'<div class="row">'+
-'<label class="col-md-5">'+
-'City:'+
-'</label>'+
-'<div class="col-md-7">'+
-order.city_name+"<br>"+
-'</div>'+
-'</div>'+
-'<div class="row">'+
-'<label class="col-md-5">'+
-'Postal/Zip Code:'+
-'</label>'+
-'<div class="col-md-7">'+
-order.billing_postal_code+
-'</div>'+
-'</div>'+
-'<div class="row">'+
-'<label class="col-md-5">'+
-'Country:'+
-'</label>'+
-'<div class="col-md-7">'+
-order.country_name+
-'</div>'+
-'</div>'+
-'</div>'+
-'</div>'+
-'<div class="col me-3 mb-0 card">'+
-'<div class="card-body">'+
-'<h5>Ticket Holder Details</h5>'+
-'<table class="bo-table w-100 mb-0">'+
-'<thead>'+
-'<tr>'+
-'<th>NAME:</th>'+
-'<th>DOB:</th>'+
-'<th>EMAIL:</th>'+
-'</tr>'+
-'</thead>'+
-'<tbody>'+
-order_nominees+
-'</tbody>'+
-'</table>'+
-'</div>'+
-'</div>'+
+'<div class="col mr-3 card">'+
+                     '<div class="card-body">'+
+                        '<div class="row">'+
+                        ' <div class="col-md-12 delivery-select">'+
+                        '     <h5>Delivery Status</h5>'+Delivery_Status_selectBox+
+                        '  </div>'+
+                        '</div>'+
+                        '<div class="row">'+
+                        '  <div class="col-md-12 delivery-select">'+
+                        '     <h5 class="mt-3">Booking Status</h5>'+booking_selectBox+
+                        '  </div>'+
+                        '</div>'+
+                        '<div class="row">'+
+                        '  <div class="col-md-12 delivery-select">'+
+                        '     <h5 class="mt-3">Seller Order Status</h5>'+seller_selectBox+
+                        '  </div>'+
+                        '</div>'+
+                        '<div class="row">'+
+                        '  <div class="col-md-12 delivery-select">'+
+                        '     <div class="bo-checkbox mt-3">'+
+                        '     <input type="checkbox" class="bo-checkbox-input send_email_'+order.booking_id+'" checked="checked" id="checkbox-signin" >'+
+                        '     <label class="bo-checkbox-label" for="checkbox-sendmail">Send Mail</label>'+
+                        ' </div>'+
+                        '  </div>'+
+                        '</div>'+
+                        '</div>'+
+                        '</div>'+
 '</div>'+
 '</div>'+
 '<div class="col-md-4 ps-0 d-flex flex-column justify-content-between">'+
@@ -922,30 +1050,129 @@ order_seller_notes+
 '</div>'+
 '<div class="row">'+
 '<label class="col-md-5">'+
-'Seller Name:'+
+'Team Area:'+
 '</label>'+
 '<div class="col-md-7">'+
-order.seller_first_name+' '+order.seller_last_name+
+team_area+
 '</div>'+
+'</div>'+
+'<div class="row">'+
+'<label class="col-md-5">'+
+'<b>Seller Name:</b>'+
+'</label>'+
+'<div class="col-md-7"><b>'+
+order.seller_first_name+' '+order.seller_last_name+
+'</b></div>'+
 '</div>'+
 '<div class="d-flex justify-content-end mt-5">'+
-'<button type="button" class="btn btn-primary-outline me-3 mr-2 upload_ticket" data-booking="'+order.bg_id+'" data-org-id='+order.bg_id+' >Upload E-Ticket</button>'
+/*'<button type="button" class="btn btn-primary-outline me-3 mr-2 upload_ticket" data-booking="'+order.bg_id+'" data-org-id='+order.bg_id+' >Upload E-Ticket</button>'
 +
-'<button type="button" class="btn btn-primary-outline me-3 mr-2 download_e_ticket"  data-booking-id="'+download_id+'" >Download</button>'+
+'<button type="button" class="btn btn-primary-outline me-3 mr-2 download_e_ticket"  data-booking-id="'+download_id+'" >Download</button>'+*/
 '</div>'+
 '</div>'+
 '</div>'+
-'<div class="card mb-0">'+
+'</div>'+
+'</div>'+
+'</div>'+
+'<div class="row ml-0">'+
+ '        <div class="col-md-7">'+
+'<div class="row">'+
+ '<div class="col mr-3 mb-0 card">'+
+'<div class="card-body edit_tr_new">'+'<h5>Delivery Details</h5>'+
+   '<div class="edit_save "> <span class="edit_btnn_new" data-bg-id="'+order.booking_id+'"><a href="javascript:void(0)"   id="edit_'+order.booking_id+'">Edit</a></span> <span class="save_btnn_new" data-bg-id="'+order.booking_id+'" id="save_'+order.booking_id+'"><a href="javascript:void(0)">Save</a></span> </div>'+
+   '<div class="copy_arrow">'+
+   '<div class="arrow_up">'+
+   '<div class="image-upload" style="margin-bottom:8px;"> <label for="file-input" class="send_email" id="send_email_'+order.booking_id+'" data-bg-id="'+order.booking_id+'" data-bg-encrpty-id="'+encrpty_bg_id+'"> <img src="<?php echo base_url(); ?>assets/zenith_assets/img/file_ipload.png"> </label>  </div>'+
+   '<a href="javascript:void(0);" class="copyDetails"><i class="far fa-copy copyDeliveryDetails" data-bg-id="'+order.bg_id+'"></i></a> '+
+   '</div>'+
+   '</div>'+
+   '<div class="row mt-1">'+
+   '<label class="col-md-4"> Method: </label> '+
+   '<div class="col-md-6 "> <span class="edit_text_new" id="show_method_'+order.booking_id+'">'+ order.delivery_method+'</span> <span class="edit_box_new edit_hide" > <input id="method_'+order.booking_id+'" type="text" class="form-control" value="'+ order.delivery_method+'" placeholder="Pickup" required></span> </div>'+
+   '<div class="col-md-2"></div>'+
+   '</div>'+
+   '<div class="row mt-1">'+
+   '<label class="col-md-4"> <span style="color:#B00505;display: block;">Delivery Deadline:</span> </label>'+'<div class="col-md-6"> <span class="edit_text_new" style="color:#B00505;display: block;" id="inpt_delivery_date_'+order.booking_id+'">'+ order.delivery_date+'</span>'+ '<span class="edit_box_new edit_hide" >'+
+   
+   
+   // <span class="edit_box_new edit_hide" style="color:#B00505;" id="delivery_'+order.booking_id+'">'+ order.delivery_date+'</span>
+
+   '<input type="text" class="form-control deadline"  value="'+order.inpt_delivery_dead_line+'" placeholder="Delivery Deadline" id="deadline_'+order.booking_id+'"></span>'+
+   
+   '</div>'+
+   '<div class="col-md-2"></div>'+
+   '</div>'+
+   '<div class="row mt-1">'+
+   '<label class="col-md-4"> Email: </label> '+
+   '<div class="col-md-6"> <span class="edit_text_new" id="show_email_'+order.booking_id+'">'+ order.email+'</span> <span class="edit_box_new edit_hide" > <input type="text" id="email_'+order.booking_id+'" class="form-control" value="'+ order.email+'" placeholder="Email"></span> </div>'+
+        '<div class="col-md-2"></div>'+
+         '</div>'+
+         '<div class="row mt-1">'+
+         '<label class="col-md-4"> Name: </label> '+
+         '<div class="col-md-6"> <span class="edit_text_new" id="show_name_'+order.booking_id+'"> '+ order.billing_first_name+" "+order.billing_last_name+'</span> <span class="edit_box_new edit_hide" > <input id="name_'+order.booking_id+'" type="text" class="form-control" value="'+ order.billing_first_name+" "+order.billing_last_name+'" placeholder=" Name"></span> </div>'+
+         '<div class="col-md-2"></div>'+
+         '</div>'+
+         '<div class="row mt-1">'+
+         '<label class="col-md-4"> Address: </label> '+
+         '<div class="col-md-6"> <span class="edit_text_new" id="show_address_'+order.booking_id+'">'+order.billing_postal_code+","+order.billing_address+'</span> <span class="edit_box_new edit_hide" > <input id="address_'+order.booking_id+'" type="text" class="form-control" value="'+order.billing_postal_code+","+order.billing_address+'" placeholder="Address"></span> </div>'+
+         '<div class="col-md-2"></div>'+
+         '</div>'+
+         '<div class="row mt-1">'+
+         '<label class="col-md-4"> City: </label> '+
+         '<div class="col-md-6"> <span class="edit_text_new" id="show_city_'+order.booking_id+'">'+order.city_name+'</span> <span class="edit_box_new edit_hide" >'+City_selectBox+'</span> </div>'+
+         '<div class="col-md-2"></div>'+
+         '</div>'+
+         '<div class="row mt-1">'+
+         '<label class="col-md-4"> Postal/Zip Code: </label> '+
+         '<div class="col-md-6"> <span class="edit_text_new" id="show_postal_'+order.booking_id+'">'+order.billing_postal_code+'</span> <span class="edit_box_new edit_hide" > <input  id="postal_'+order.booking_id+'" type="text" class="form-control" value="'+order.billing_postal_code+'" placeholder="Postal Code"></span> </div>'+
+         '<div class="col-md-2"></div>'+
+         '</div>'+
+         '<div class="row mt-1">'+
+         '<label class="col-md-4"> Country: </label> '+
+         '<div class="col-md-6"> <span class="edit_text_new" id="show_country_'+order.booking_id+'">'+order.country_name+'</span> <span class="edit_box_new edit_hide" >'+Country_selectBox+'</span> </div>'+
+         '<div class="col-md-2"></div>'+
+         '</div>'+
+         '<div class="row mt-1">'+
+         '<label class="col-md-4"> Check In / Out: </label> '+
+         '<div class="col-md-6"> <span class="edit_text_new" id="show_check_in_'+order.booking_id+'">'+order.check_in_out+'</span> <span class="edit_box_new edit_hide" > <input type="text" id="check_in_out_'+order.booking_id+'" class="form-control" value="'+order.check_in_out+'" placeholder="Check In / Out"></span> </div>'+
+         '<div class="col-md-2"></div>'+
+         '</div>'+
+         '<div class="row mt-1">'+
+         '<label class="col-md-4"> Hotel Ref: </label> '+
+         '<div class="col-md-6"> <span class="edit_text_new" id="show_hotel_ref_'+order.booking_id+'">'+order.hotel_ref+'</span> <span class="edit_box_new edit_hide" > <input type="text" id="hotel_ref_'+order.booking_id+'" class="form-control" value="'+order.hotel_ref+'" placeholder="Hotel Ref"></span> </div>'+
+         '<div class="col-md-2"></div>'+
+         '</div>'+
+         '</div>'+
+         '</div><div class="col me-3 mb-0 card">'+
 '<div class="card-body">'+
-'<h5>Booking Status</h5>'+
-'<div class="d-flex justify-content-between align-items-center mt-4">'+selectBox+
-'<div class="bo-checkbox">'+
-'<input type="checkbox" class="bo-checkbox-input" checked="checked" id="sendmail">'+
-'<label class="bo-checkbox-label" for="checkbox-sendmail">Send Mail</label>'+
+'<h5>Ticket Holder Details</h5>'+
+'<div class="copy_all">'+
+' <div class="copy_icons">'+
+'    <a href="javascript:void(0);"><i class="far fa-copy copyTicketHolder" data-bg-id="'+order.bg_id+'" ></i></a>'+
+' </div>'+
 '</div>'+
-'<button type="button" class="btn btn-tbl-card-action">Need to Receive ('+order.quantity+')</button>'+
+'<div class="table-responsive ticket_holder " id="ticket_holder_' + order.bg_id + '">'+
+'<table class="ticket_table" >'+
+'<thead>'+
+'<tr>'+
+'<th style="color:#1A1919 !important;">NAME:</th>'+
+'<th style="color:#1A1919 !important;">DOB:</th>'+
+'<th style="color:#1A1919 !important;">Nationality:</th>'+
+'<th></th>'+
+// '<th></th>'+
+'</tr>'+
+'</thead>'+
+'<tbody>'+
+order_nominees+
+'</tbody>'+
+'</table>'+
 '</div>'+
 '</div>'+
+'</div>'+
+'</div>'+
+'</div>'+
+'<div class="col-md-5 d-flex flex-column justify-content-between" id="file_upload_area">'+
+file_upload_area+
 '</div>'+
 '</div>'+
 '</div>'+
@@ -968,6 +1195,7 @@ order.seller_first_name+' '+order.seller_last_name+
 }
 
         $(document).ready(function() {
+
 
     $("body").on('click','.seat_category_check_box,.order_status_check_box,.seller_status_check_box',function(e){
     //    alert('dd');
@@ -1029,7 +1257,40 @@ $(".seat_category_check_box").change(function() {
         } else {
             // Open this row
             row.child(format(row.data()),'').show();
+
+              $("#content_1").mCustomScrollbar({
+                scrollButtons:{
+                  enable:true
+                }
+              });
+      $("#content_2").mCustomScrollbar({
+                scrollButtons:{
+                  enable:true
+                }
+              });
+
+        $("#TopAirLine_new").owlCarousel({
+ 
+                        autoPlay: 500, //Set AutoPlay to 3 seconds
+                   
+                        items : 3,
+                        itemsDesktop : [1199,2],
+                        itemsDesktopSmall : [979,2],
+                        nav:true,
+                        pagination:false,
+                        dots: false
+                    });
+                   $( ".owl-prev").html('<i class="fas fa-arrow-left"></i>');
+                   $( ".owl-next").html('<i class=" fas fa-arrow-right"></i>');
+
             tr_parents.next().addClass("tbl-collapsed-row child even show");
+            scroll_bg_id=row.data().order_data.bg_id;
+            $("#ticket_holder_"+scroll_bg_id).mCustomScrollbar({
+                scrollButtons:{
+                  enable:true
+                }
+              });
+
         } 
          $(".tbl-collapsed-row.show").not(that.parent('tr').next()).removeClass('show');
     });
@@ -1116,6 +1377,8 @@ $(".seat_category_check_box").change(function() {
     complete: function() {
       // Hide the overlay after the AJAX call is complete (regardless of success or error)
       overlay.hide();
+
+
     }
          
          /*
@@ -1220,13 +1483,13 @@ $(".dataTables_paginate > .pagination").addClass("flat-rounded-pagination "), $(
          // onSelect: function (datesel) {
          //    $('#MyTextbox2').trigger('change')
          // }, maxDate: new Date()
-          dateFormat: 'dd-mm-yy' ,
+          dateFormat: 'dd/mm/yy' ,
          changeMonth:true,
          changeYear:true,
       }
       );
       $(to_datepicker).datepicker(
-         { dateFormat: 'dd-mm-yy' ,
+         { dateFormat: 'dd/mm/yy' ,
          changeMonth:true,
          changeYear:true,}
       );
@@ -1630,7 +1893,7 @@ $(".seat_category_check_box input[type='checkbox'], .check_box input[type='check
          $('.seller_status_btn').text(seller.length + " Selected");
       }
 
-      Dtable.ajax.reload()
+//Dtable.ajax.reload()
   }
 
 
@@ -1662,7 +1925,7 @@ $(".seat_category_check_box input[type='checkbox'], .check_box input[type='check
         });
     
 
-function OrderFilter(){ alert();
+function OrderFilter(){ 
         
 
      }
@@ -1693,5 +1956,387 @@ function OrderFilter(){ alert();
   return md5Hash;
 }
 
+function copy_data(id, element){
+   console.log(id);
+   console.log(element);
+    element.classList.add('highlighted');
+   var copyText = document.getElementById(id);
+   var textArea = document.createElement("textarea");
+  textArea.value = ((copyText.textContent).trim());
+  document.body.appendChild(textArea);
+  textArea.select();
+  document.execCommand("Copy");
+  textArea.remove();
+  //alert("Copied Successfully.");
+
+  }
+//
+
+
+$("body").on("click",".edit_btnn_new",function(){
+
+   const datepicker = document.getElementsByClassName('deadline');
+  $(datepicker).datepicker({
+          dateFormat: 'dd/mm/yy' ,
+           changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:+0",
+      // maxDate:0
+
+      }
+      );
+
+         /*$(this).parents(".edit_tr_new").find(".edit_box_new").show();
+         $(this).parents(".edit_tr_new").find(".edit_text_new").hide();*/
+
+         var order_id = $(this).attr('data-bg-id');
+         $('#save_'+order_id).toggle();
+          $(this).parents(".edit_tr_new").find(".edit_box_new").toggle();
+         $(this).parents(".edit_tr_new").find(".edit_text_new").toggle();
+      });
+
+$("body").on("click",".edit_btnn",function(){
+
+   const datepicker = document.getElementsByClassName('attendee_date');
+  $(datepicker).datepicker({
+          dateFormat: 'dd/mm/yy' ,
+           changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:+0",
+      maxDate:0
+
+      }
+      );
+      
+         $(this).parents(".edit_tr").find(".edit_box").toggle();
+        $(this).parents(".edit_tr").find(".edit_text").toggle();
+
+         var order_id = $(this).attr('data-bg-id');
+         $('#save_nominee_'+order_id).toggle();
+      });
+
+      $("body").on("click", ".save_btnn", function () {
+  var order_id = $(this).data('bg-id');
+  var fields = ["name", "dob", "nationality"];
+  var errorMessage = "";
+
+  function validateField(field) {
+    var value = $("#nominee_" + field + "_" + order_id).val();
+    if (value === "") {
+      errorMessage += field + " is empty.\n";
+      $("#nominee_" + field + "_" + order_id).addClass('delivery_inpt_error');
+    } else {
+      $("#nominee_" + field + "_" + order_id).removeClass('delivery_inpt_error');
+    }
+  }
+
+  fields.forEach(validateField);
+
+  if (errorMessage !== "") {
+    return false;
+  }
+
+  var data = {
+    nominee_id: order_id,
+    nominee_name: $("#nominee_name_" + order_id).val(),
+    nominee_dob: $("#nominee_dob_" + order_id).val(),
+    nominee_nationality: $("#nominee_nationality_" + order_id).val()
+  };
+
+  $.ajax({
+    url: '<?php echo base_url(); ?>game/update_nominee',
+         type: 'POST',
+         dataType: "json",
+         data: data,
+         success: function (response) {
+            if (response.status == 0) {
+               swal('Updation Failed !', response.msg, 'error');
+            } else {
+               $('#nominee_name_show_' + order_id).text(data.nominee_name);
+               $('#nominee_dob_show_' + order_id).text(data.nominee_dob);
+               $('#nominee_nationality_show_' + order_id).text(data.nominee_nationality);
+               swal('Updated !', response.msg, 'success');
+            }
+         },
+         
+         error: function () {
+            console.log('Failed');
+         }
+      });
+
+      $(this).parents(".edit_tr").find(".edit_box").hide();
+      $(this).parents(".edit_tr").find(".edit_text").show();
+      $('#save_nominee_' + order_id).hide();
+   });
+      
+
+$("body").on("click", ".send_email", function () {
+var order_id = $(this).data('bg-id');
+var Email = $('#email_'+order_id).val();
+var ticket_id =$(this).data('bg-encrpty-id');
+if (Email == "") {
+  swal('Error!', "Emai ID Cannot be empty.", 'error');
+  return false;
+}
+swal({
+  title: 'Are you sure you want to Send a email ?',
+  text: "Send or Cancel",
+  type: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#0CC27E',
+  cancelButtonColor: '#FF586B',
+  confirmButtonText: 'Yes, Send!',
+  cancelButtonText: 'No, cancel!',
+  confirmButtonClass: 'button h-button is-primary btn btn-primary ',
+  cancelButtonClass: 'button h-button is-danger btn btn-danger',
+  buttonsStyling: false
+}).then(function (res) {
+
+
+  if (res.value == true) {
+    $.ajax({
+      url: '<?php echo base_url();?>game/send_email',
+      type: 'POST',
+      dataType: "json",
+      data: { email: Email, ticket_id: ticket_id },
+      success: function (response) {
+
+        // 
+        if (response.status == 0) {
+          swal('Updation Failed !', response.msg, 'error');
+        }
+        else {
+          swal('Updated !', response.msg, 'success');
+        }
+      },
+      error: function () {
+        console.log('Failed');
+      }
+    });
+  }
+}, function (dismiss) {
+
+});
+});
+
+
+     
+$("body").on("click", ".save_btnn_new", function () {
+  var order_id = $(this).data('bg-id');
+  var fields = ["method", "email", "name", "address", "postal", "check_in_out", "hotel_ref","deadline"];
+  var errorMessage = "";
+
+  function validateField(field) {
+    var value = $("#" + field + "_" + order_id).val();
+    if (value === "") {
+      errorMessage += field + " is empty.\n";
+      $("#" + field + "_" + order_id).addClass('delivery_inpt_error');
+    } else {
+      $("#" + field + "_" + order_id).removeClass('delivery_inpt_error');
+    }
+  }
+
+  fields.forEach(validateField);
+
+  var country = $("#country_" + order_id + " option:selected");
+  var city = $("#city_" + order_id + " option:selected");
+
+  validateField('country_' + order_id);
+  validateField('city_' + order_id);
+
+  if (errorMessage !== "") {
+    return false;
+  }
+
+  var data = {
+    order_id: order_id,
+    delivery_method: $("#method_" + order_id).val(),
+    delivery_deadline: $("#deadline_" + order_id).val(),
+    email: $("#email_" + order_id).val(),
+    address: $("#address_" + order_id).val(),
+    name: $("#name_" + order_id).val(),
+    postal: $("#postal_" + order_id).val(),
+    check_in_out: $("#check_in_out_" + order_id).val(),
+    hotel_ref: $("#hotel_ref_" + order_id).val(),
+    country: country.val(),
+    city: city.val(),
+  };
+
+  $.ajax({
+    url: '<?php echo base_url(); ?>game/save_billing_information',
+         type: 'POST',
+         dataType: "json",
+         data: data,
+         success: function (response) {
+            if (response.status == 0) {
+               swal('Updation Failed !', response.msg, 'error');
+            } else {
+               $('#show_method_' + order_id).text(data.delivery_method);
+               $('#show_email_' + order_id).text(data.email);
+               $('#show_name_' + order_id).text(data.name);
+               $('#show_address_' + order_id).text(data.address);
+               $('#show_postal_' + order_id).text(data.postal);
+               $('#show_city_' + order_id).text(city.text());
+               $('#show_country_' + order_id).text(country.text());
+               $('#show_check_in_' + order_id).text(data.check_in_out);
+               $('#show_hotel_ref_' + order_id).text(data.hotel_ref);
+               $('#inpt_delivery_date_' + order_id).text(response.deadline);
+
+               swal('Updated !', response.msg, 'success');
+            }
+         },
+         error: function () {
+            console.log('Failed');
+         }
+      });
+
+      $(this).parents(".edit_tr_new").find(".edit_box_new").hide();
+      $(this).parents(".edit_tr_new").find(".edit_text_new").show();
+      $('#save_' + order_id).hide();
+   });
+      
+$(document).on('click', '.copyTicketHolder', function () {
+    $(this).addClass('highlighted');
+
+    var bg_id = $(this).attr('data-bg-id');
+    var table = $("#ticket_holder_" + bg_id);
+
+    // Create a textarea element
+    var textarea = document.createElement("textarea");
+
+    // Extract and format the table data for copying
+    var tableData = "";
+    table.find('tbody tr').each(function () {
+        var rowData = [];
+        //$(this).find('td').each(function () {
+         $(this).find('td:lt(3)').each(function () {
+            rowData.push($(this).text());
+        });
+        tableData += rowData.join('\t\t\t') + '\n';
+    });
+
+    // Set the textarea's value to the table data
+    textarea.value = tableData;
+
+    // Append the textarea to the document body
+    document.body.appendChild(textarea);
+
+    // Select the textarea content
+    textarea.select();
+
+    try {
+        // Execute the "Copy" command to copy the selected text to the clipboard
+        document.execCommand("Copy");
+        console.log('Table data copied to clipboard');
+    } catch (e) {
+        console.error('Unable to copy table data to clipboard');
+    } finally {
+        // Remove the dynamically created textarea from the document's body
+        document.body.removeChild(textarea);
+    }
+});
+//
+$(document).on('click', '.copyDeliveryDetails', function () {
+   $(this).addClass('highlighted');
+   var bg_id = $(this).attr('data-bg-id');
+   var deliveryDetails = [
+       'method', 'inpt_delivery_date', 'email', 'name', 'address','city',
+       'postal', 'country','check_in_out', 'hotel_ref'
+   ];
+   var copiedText = "";
+
+   deliveryDetails.forEach(function (detail) {
+       var element = $('#' + detail + '_' + bg_id);
+       var value;
+
+       if (element.is('select')) {
+           value = element.find('option:selected').text();
+       } else {
+           value = element.val() || element.text();
+       }
+
+       if (detail === 'check_in_out') {
+            detail = 'Check In/Out';
+        } else if (detail === 'hotel_ref') {
+            detail = 'Hotel Ref';
+        } else if (detail === 'postal') {
+            detail = 'Postal/Zip Code';
+        } else if (detail === 'inpt_delivery_date') {
+            detail = 'Delivery Deadline';
+        }
+
+       copiedText += detail.charAt(0).toUpperCase() + detail.slice(1) + ": " + value + "\n";
+   });
+
+   var textarea = document.createElement("textarea");
+   textarea.value = copiedText;
+
+   document.body.appendChild(textarea);
+   textarea.select();
+   document.execCommand("Copy");
+   document.body.removeChild(textarea);
+});
+
+$(document).on('click', '.copyBuyerButton', function(){ 
+      
+      $(this).addClass('highlighted');
+      var bg_id = $(this).attr('data-bg-id');
+
+      // Select the elements whose text you want to copy
+      var buyer_name_ip=$("#buyer_name_"+bg_id).text();
+      var buyer_name = "Buyer Name : "+buyer_name_ip;
+      var buyer_email_ip=$("#buyer_email_"+bg_id).text();
+      var buyer_email = "Buyer Email : "+buyer_email_ip;
+      var buyer_mobile_ip=$("#buyer_mobile_"+bg_id).text();
+      var buyer_mobile = "Phone Number : "+buyer_mobile_ip;
+      var buyer_mobile_alter_ip=$("#buyer_mobile_alter_"+bg_id).text();
+      var buyer_mobile_alter = "Alternative Phone : "+buyer_mobile_alter_ip;
+      var buyer_billing_ip=$("#buyer_billing_"+bg_id).text();
+      var buyer_billing = "Billing Address : "+buyer_billing_ip;
+      
+      var buyer_city_ip=$("#buyer_city_"+bg_id).text();
+      var buyer_city = "City : "+buyer_city_ip;
+
+      var buyer_postal_ip=$("#buyer_postal_"+bg_id).text();
+      var buyer_postal = "Post / Zip Code : "+buyer_postal_ip;
+
+      var buyer_country_ip=$("#buyer_country_"+bg_id).text();
+      var buyer_country = "Country : "+buyer_country_ip;
+
+      var buyer_source_ip=$("#buyer_source_"+bg_id).text();
+      var buyer_source = "Partners : "+buyer_source_ip;
+         
+      var textarea = document.createElement("textarea");
+      textarea.value = buyer_name + "\n" + buyer_email+ "\n" + buyer_mobile+ "\n" + buyer_mobile_alter+ "\n" + buyer_billing+ "\n"  + buyer_city+ "\n" + buyer_postal+ "\n" + buyer_country+ "\n"+ buyer_source;
+   
+      // Append the textarea element to the body
+      document.body.appendChild(textarea);
+
+      // Select the text in the textarea
+      textarea.select();
+
+      // Execute the copy command
+      document.execCommand("Copy");
+
+      // Remove the textarea element
+      document.body.removeChild(textarea);
+    });
+
 //'<button type="button" class="btn btn-tbl-card-action">Save</button>'+
        </script>
+   <script>
+
+      $(document).ready(function(){
+    
+
+    //     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    // e.target // newly activated tab
+    // e.relatedTarget // previous active tab
+    // $(".owl-carousel").trigger('refresh.owl.carousel');
+    // });
+  
+             
+                  });
+
+            
+   </script>
