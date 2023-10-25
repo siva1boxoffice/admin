@@ -2390,18 +2390,18 @@ public function get_order_status(){
 					$post_data = array("bg_id" => $tickets->bg_id,'email_address' => $email);
 					
 					//echo "<pre>";print_r($post_data);exit;
-					// $handle = curl_init();
-					// $url = API_CRON_URL.'admin-approve-notfication';
-					// curl_setopt($handle, CURLOPT_HTTPHEADER, array(
-					// 'domainkey: https://www.1boxoffice.com/en/'
-					// ));
-					// curl_setopt($handle, CURLOPT_URL, $url);
-					// curl_setopt($handle, CURLOPT_POST, 1);
-					// curl_setopt($handle, CURLOPT_POSTFIELDS,$post_data);
-					// curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
-					// $output = curl_exec($handle);
-					// //echo "<pre>";print_r($output);exit;
-					// curl_close($handle);			
+					$handle = curl_init();
+					$url = API_CRON_URL.'admin-approve-notfication';
+					curl_setopt($handle, CURLOPT_HTTPHEADER, array(
+					'domainkey: https://www.1boxoffice.com/en/'
+					));
+					curl_setopt($handle, CURLOPT_URL, $url);
+					curl_setopt($handle, CURLOPT_POST, 1);
+					curl_setopt($handle, CURLOPT_POSTFIELDS,$post_data);
+					curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+					$output = curl_exec($handle);
+					//echo "<pre>";print_r($output);exit;
+					curl_close($handle);			
 
 						//echo $this->db->last_query();exit;
 				$response = array('status' => 1, 'msg' => "Email Sent Successfully.");
