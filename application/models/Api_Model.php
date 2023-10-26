@@ -160,11 +160,16 @@ class Api_Model extends CI_Model
 		return $query;
 	}
 
-	public function isRecordExists($table, $criteria) {
+	public function isRecordExists($table, $criteria,$id="") {
         $this->db->where($criteria);
+		if(isset($id))
+				$this->db->where_not_in('id', $id);
+		
         $query = $this->db->get($table);
+		//echo $this->db->last_query();exit;
         return $query->num_rows() > 0;
     }
+
 
 }
 ?>

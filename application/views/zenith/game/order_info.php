@@ -5,6 +5,9 @@ color: #ffffff !important;
 .highlighted {
 color: #00a3ed !important;
 }
+#on_hold{
+	height:40px;
+}
 </style>
 <?php $this->load->view(THEME.'/common/header'); ?>
 
@@ -579,10 +582,29 @@ color: #00a3ed !important;
 						{*/
 						?>
 						<div class="col-lg-12">
-							<div class="form-group mt-3 mb-0">
-								<label for="simpleinput">Hold Price</label>
-								<input type="text" class="form-control reference" placeholder="Enter Hold Price" name="on_hold"  id="on_hold"  value="<?php echo $orderData->on_hold; ?>" required>
-							</div>
+							<div class="form-group">
+							<label for="simpleinput">Hold Price</label>
+                                 <div class="input-group">
+                                    <div class="input-group-prepend">
+                                       <span class="input-group-text rounded-0" id="basic-addon1">
+											<?php
+												if (strtoupper($orderData->currency_type) == "GBP") { ?>
+														£
+													<?php } ?>
+													<?php if (strtoupper($orderData->currency_type) == "EUR") { ?>
+														€
+													<?php }
+													if (strtoupper($orderData->currency_type) != "GBP" && strtoupper($orderData->currency_type) != "EUR") {
+														echo strtoupper($orderData->currency_type);
+													}
+											?>
+									   </span>
+                                    </div>
+									<input type="text" class="form-control" placeholder="Enter Hold Price" name="on_hold"  id="on_hold"  value="<?php echo $orderData->on_hold; ?>" required>
+                                 </div>                                                    
+                                 <label id="coupon_value-error" class="error" for="coupon_value"></label>
+                              </div>
+
 						</div>
 						<div class="signed_upload mt-3 mb-4">
 							<div class="form-group mb-0">

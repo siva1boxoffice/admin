@@ -432,13 +432,6 @@ class Api extends CI_Controller {
           //  $this->form_validation->set_rules('status', 'Status', 'required');
             if ($this->form_validation->run() !== false) {
                 $settings_id = $_POST['settings_id'];
-                
-                if($_POST['partners']!="" && $_POST['partners']!==0)
-                        $_POST['seller']=0;
-
-                if($_POST['seller']!="" && $_POST['seller']!==0)
-                        $_POST['partners']=0;
-
                 if ($settings_id == '') {
                     $_POST['status'] = ($_POST['status'] == "") ? 0 : $_POST['status'];
                     $insertData = array(
@@ -453,9 +446,11 @@ class Api extends CI_Controller {
                     // exit;
 $table = 'api_key_settings';
 if($_POST['partners']!==0)
+{
     $criteria = array('partner_id' => $_POST['partners']);
-else if($_POST['seller']!==0)
+} else  if($_POST['seller']!==0){
     $criteria = array('seller_id' => $_POST['seller']);
+}
 
                     if (!$this->Api_Model->isRecordExists($table, $criteria)) {
                 $this->General_Model->insert_data('api_key_settings', $insertData);
@@ -463,7 +458,7 @@ else if($_POST['seller']!==0)
                    // if ($this->General_Model->insert_data('api_key_settings', $insertData)) {
                         $response = array('msg' => 'API settings added successfully.', 'redirect_url' => base_url() . 'api/api_key_settings/', 'status' => 1);
                     } else {
-                        $response = array('msg' => 'Failed to Add API settings.', 'redirect_url' => base_url() . 'api/api_key_settings/add_setting/', 'status' => 0);
+                        $response = array('msg' =>' API settings already Available', 'redirect_url' => base_url() . 'api/api_key_settings/add_setting/', 'status' => 0);
                     }
                 }else{
                     $updateData = array(
@@ -473,11 +468,16 @@ else if($_POST['seller']!==0)
                         'api_type' => $_POST['api_type'],
                         'api_url' => $_POST['api_url'],
                         'status' => $_POST['status']);
-                    
-                    if ($this->General_Model->update_table('api_key_settings','id',$settings_id, $updateData)) {
+
+                        $table = 'api_key_settings';
+                            $criteria = array('partner_id' => $_POST['partners'],'seller_id' => $_POST['seller']);
+                        
+                    if (!$this->Api_Model->isRecordExists($table, $criteria,$settings_id)) {
+                        $this->General_Model->update_table('api_key_settings','id',$settings_id, $updateData);
+                  //  if ($this->General_Model->update_table('api_key_settings','id',$settings_id, $updateData)) {
                         $response = array('msg' => 'API settings Updated successfully.', 'redirect_url' => base_url() . 'api/api_key_settings/', 'status' => 1);
                     } else {
-                        $response = array('msg' => 'Failed to Update API settings.', 'redirect_url' => base_url() . 'api/api_key_settings/add_setting/', 'status' => 0);
+                        $response = array('msg' =>'API settings already Available', 'redirect_url' => base_url() . 'api/api_key_settings/add_setting/', 'status' => 0);
                     }
                 }
             }else {
