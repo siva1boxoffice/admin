@@ -9250,7 +9250,7 @@ public function get_country_name(){
 						$insertData['status'] = $this->input->post('status') ? 1 : 0;	
 						$insertData['store_id'] = $this->session->userdata('storefront')->admin_id	;	
 						$insertData['added_by'] = $this->session->userdata('admin_id');
-						$insertData['banner_description'] = $this->input->post('banner_description');					
+						//$insertData['banner_description'] = $this->input->post('banner_description');					
 						// $insertData['long_descrption_title'] = $this->input->post('long_descrption_title');					
 						// $insertData['long_descrption'] = $this->input->post('long_descrption');					
 						$p_id = $this->General_Model->insert_data('promotion_banner', $insertData);	
@@ -9260,8 +9260,9 @@ public function get_country_name(){
 							$insertData_lang = array();
 							$insertData_lang['promotion_id'] = $p_id;
 							$insertData_lang['language'] = $l_code->language_code;
-							$insertData_lang['long_descrption_title'] = trim($this->input->post('name'));
-							$insertData_lang['long_descrption'] = $insertData['country_image'];							
+							$insertData_lang['long_descrption_title'] = "";
+							$insertData_lang['long_descrption_title'] = "";
+							$insertData_lang['banner_description'] = "";							
 							$this->General_Model->insert_data('promotion_banner_lang', $insertData_lang);
 						}	
 
@@ -9342,19 +9343,19 @@ public function get_country_name(){
 						$updateData['status'] = !empty($status) ? trim($status) : 0;
 
 
-						$banner_description = $this->input->post('banner_description');
-						if (!empty($banner_description)) {
-							$updateData['banner_description'] = trim($banner_description);
-						}
+						// $banner_description = $this->input->post('banner_description');
+						// if (!empty($banner_description)) {
+						// 	$updateData['banner_description'] = trim($banner_description);
+						// }
 
-						$long_descrption_title = $this->input->post('long_descrption_title');
-						if (!empty($long_descrption_title)) {
-							$updateData['long_descrption_title'] = trim($long_descrption_title);
-						}
-						$long_descrption = $this->input->post('long_descrption');
-						if (!empty($long_descrption)) {
-							$updateData['long_descrption'] = trim($long_descrption);
-						}
+						// $long_descrption_title = $this->input->post('long_descrption_title');
+						// if (!empty($long_descrption_title)) {
+						// 	$updateData['long_descrption_title'] = trim($long_descrption_title);
+						// }
+						// $long_descrption = $this->input->post('long_descrption');
+						// if (!empty($long_descrption)) {
+						// 	$updateData['long_descrption'] = trim($long_descrption);
+						// }
 						
 						$updateData['store_id'] = $this->session->userdata('storefront')->admin_id	;	
 						$updateData['added_by'] = $this->session->userdata('admin_id');
@@ -9402,9 +9403,15 @@ public function get_country_name(){
 					   if (!empty($long_descrption_title)) {
 						   $updateData_lang['long_descrption_title'] = trim($long_descrption_title);
 					   }
+					  
 					   $long_descrption = $this->input->post('long_descrption');
 					   if (!empty($long_descrption)) {
 						   $updateData_lang['long_descrption'] = trim($long_descrption);
+					   }
+
+					   $banner_description = $this->input->post('banner_description');
+					   if (!empty($banner_description)) {
+						   $updateData_lang['banner_description'] = trim($banner_description);
 					   }
 
 					   //$this->General_Model->update('promotion_banner_lang', array('p_id' => $promotion_id), $updateData);	

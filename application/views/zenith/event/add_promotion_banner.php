@@ -95,16 +95,7 @@ $this->load->view(THEME . 'common/header'); ?>
                                                                class="form-control" placeholder="Enter Banner URL" value="<?php
                                                                echo isset($tournaments->banner_url) ? $tournaments->banner_url : ''; ?>">
                                                          </div>
-                                                      </div>
-
-                                                      <div class="col-lg-6">
-                                                      <div class="form-group">
-                                                         <label for="example-textarea"> Description *</label>
-                                                         <textarea class="form-control height_auto " id="example-textarea"
-                                                            rows="5" name="banner_description"
-                                                            placeholder="Enter Description" required><?php echo isset($tournaments->banner_description) ? $tournaments->banner_description : ''; ?></textarea>
-                                                      </div>
-                                                   </div>
+                                                      </div>                                                      
 
                                                       <!-- <div class="col-lg-6">
                                                          <div class="form-group">
@@ -225,8 +216,8 @@ $this->load->view(THEME . 'common/header'); ?>
                                              } ?>">
                                              <input type="hidden" name="flag" value="content">
                                              <div class="row column_modified"> 
-                                                
-                                          <div class="col-lg-6">
+                                             
+                                          <div class="col-lg-12">
                                              <div class="form-group">
                                                 <label for="simpleinput">Section Title</label>
                                                 <input  type="text" id="section_title" name="long_descrption_title"
@@ -243,6 +234,15 @@ $this->load->view(THEME . 'common/header'); ?>
                                                 placeholder="Enter Section Description" required><?php echo isset($tournaments->long_descrption) ? $tournaments->long_descrption : ''; ?></textarea>
                                           </div>
                                        </div>
+
+                                       <div class="col-lg-6">
+                                                      <div class="form-group">
+                                                         <label for="example-textarea">Banner Description *</label>
+                                                         <textarea class="form-control height_auto " id="example-textarea"
+                                                            rows="5" name="banner_description"
+                                                            placeholder="Enter Description" required><?php echo isset($tournaments->banner_description) ? $tournaments->banner_description : ''; ?></textarea>
+                                                      </div>
+                                                   </div>
                                              
                                                 <div class="col-lg-12">
                                                    <div class="tick_details border-top">

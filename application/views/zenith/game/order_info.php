@@ -557,6 +557,50 @@ color: #00a3ed !important;
 												<div class="save_btn">
 												<button type="submit" id="seller_order_status" class="btn btn-info waves-effect waves-light is-raised" data-effect="wave">Save</button>
 												</div>
+												<div class="save_btn">
+												<button type="button" id="set_on_hold" class="btn btn-info waves-effect waves-light is-raised" data-effect="wave" data-toggle="modal"                           data-target="#tracking_number">Set On Hold</button>
+												</div>
+
+												<div class="modal fade" id="tracking_number" tabindex="-1" role="dialog"
+	aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="myCenterModalLabel">Set On Hold</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			</div>
+			<form id="ticket_tracking" novalidate="novalidate"
+				action="#" class="name" method="post">
+				
+				<div class="modal-body">
+					<div class="signed_cnct">
+						<?php
+						/* if ($tracking_data[0]->tracking_id != "")
+						{*/
+						?>
+						<div class="col-lg-12">
+							<div class="form-group mt-3 mb-0">
+								<label for="simpleinput">Hold Price</label>
+								<input type="text" class="form-control reference" placeholder="Enter Hold Price" name="on_hold"  id="on_hold"  value="<?php echo $orderData->on_hold; ?>" required>
+							</div>
+						</div>
+						<div class="signed_upload mt-3 mb-4">
+							<div class="form-group mb-0">
+								<div class="input-group">
+									<div class="custom-file">
+										<button type="button"
+											form-id="ticket_tracking"
+											class="on_hold_submit custom-file-label" for="inputGroupFile04">Save</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 									</form>
 								<?php
 
@@ -2034,6 +2078,37 @@ $('#seller_order_status').on('click',function (e){
 	// 	return false;		
 	// }
   });
+
+  $('.on_hold_submit').click(function () {
+
+var on_hold = $('#on_hold').val(); 
+var order_id = '<?php echo $eticketDatas[0]->booking_id; ?>';
+if (on_hold == "") {
+   swal('Error!', "Hold Price Cannot be empty.", 'error');
+   return false;
+}
+
+      $.ajax({
+         url: '<?php echo base_url();?>game/hold_price',
+         type: 'POST',
+         dataType: "json",
+         data: { on_hold: on_hold, order_id: order_id },
+         success: function (response) {
+            // 
+            if (response.status == 0) {
+               swal('Updation Failed !', response.msg, 'error');
+            }
+            else {
+               swal('Updated !', response.msg, 'success');
+               $('.close').trigger('click');
+            }
+            //setTimeout(window.location.reload(),300);
+         },
+         error: function () {
+            console.log('Failed');
+         }
+      });
+});  
   
 	$('#savenominee').on('click',function (e){
 		var nominees= '<?php echo count($nominees);?>';
