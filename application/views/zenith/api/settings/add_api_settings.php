@@ -173,10 +173,14 @@
             case '1':
                 $('.seller').css('display', 'block');
                 $('.partner').css('display', 'none');
+                $("#partners").prop("selected", false);
+                $('#partners').val('');
                 break;
             case '2':
                 $('.partner').css('display', 'block');
                 $('.seller').css('display', 'none');
+                $("#seller").prop("selected", false);
+                $('#seller').val('');
                 break;
             default:
                 break;
