@@ -7648,4 +7648,34 @@ if ($dateObj !== false) {
 
 }
 
+public function hold_price()
+{			
+			
+		$on_hold 			= $_POST["on_hold"];
+		$order_id 	= $_POST["order_id"];
+		if($on_hold != "" && $order_id != ""){
+		$updateData = array(
+							'on_hold'		=> $_POST['on_hold'], 
+					);
+	
+		if ($this->General_Model->update_table('booking_global', 'bg_id', $order_id, $updateData)) {
+			$response = array('status' => 1, 'msg' => 'Hold Price Updated Successfully.');
+			echo json_encode($response);
+			exit;
+		} else {
+			$response = array('status' => 1, 'msg' => 'Error while Updating record.');
+			echo json_encode($response);
+			exit;
+		}
+
+
+		}
+		else{
+			$response = array('status' => 0, 'msg' => 'Invalid details.');
+			echo json_encode($response);
+			exit;
+		}
+	
+}
+
 }
