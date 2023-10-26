@@ -1426,7 +1426,7 @@ if($record->delivery_status != 0)
 		
 		//echo "<pre>";print_r($_POST);exit;
 		//$config["upload_path"] = UPLOAD_PATH_PREFIX.'uploads/ticket_instruction';
-		$config["upload_path"] = FCPATH.'/uploads/e_tickets';
+		$config["upload_path"] = UPLOAD_PATH_PREFIX.'/uploads/e_tickets';
 		//$config["destination_dir"] = 'uploads/e_tickets/temp';
 		$config['allowed_types'] = 'pdf|jpeg|jpg|png';
 		$config['max_size'] = 2048;
@@ -2390,20 +2390,20 @@ public function get_order_status(){
 					$post_data = array("bg_id" => $tickets->bg_id,'email_address' => $email);
 					
 					//echo "<pre>";print_r($post_data);exit;
-					// $handle = curl_init();
-					// $url = API_CRON_URL.'admin-approve-notfication';
-					// curl_setopt($handle, CURLOPT_HTTPHEADER, array(
-					// 'domainkey: https://www.1boxoffice.com/en/'
-					// ));
-					// curl_setopt($handle, CURLOPT_URL, $url);
-					// curl_setopt($handle, CURLOPT_POST, 1);
-					// curl_setopt($handle, CURLOPT_POSTFIELDS,$post_data);
-					// curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
-					// $output = curl_exec($handle);
-					// //echo "<pre>";print_r($output);exit;
-					// curl_close($handle);			
+					$handle = curl_init();
+					$url = API_CRON_URL.'admin-approve-notfication';
+					curl_setopt($handle, CURLOPT_HTTPHEADER, array(
+					'domainkey: https://www.1boxoffice.com/en/'
+					));
+					curl_setopt($handle, CURLOPT_URL, $url);
+					curl_setopt($handle, CURLOPT_POST, 1);
+					curl_setopt($handle, CURLOPT_POSTFIELDS,$post_data);
+					curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+					$output = curl_exec($handle);
+					//echo "<pre>";print_r($output);exit;
+					curl_close($handle);			
 
-						//echo $this->db->last_query();exit;
+						//echo $this->db->last_query();exit;s
 				$response = array('status' => 1, 'msg' => "Email Sent Successfully.");
 
 			echo json_encode($response);
@@ -7572,7 +7572,7 @@ if ($dateObj !== false) {
 
 				if($_FILES["file"]["name"] != ""){
 					
-				$config["upload_path"] = FCPATH.'uploads/pod/';
+				$config["upload_path"] = UPLOAD_PATH_PREFIX.'uploads/pod/';
 				$config["allowed_types"] = 'pdf|jpg|jpeg|png';
 				$this->load->library('upload', $config);
 				$this->upload->initialize($config);

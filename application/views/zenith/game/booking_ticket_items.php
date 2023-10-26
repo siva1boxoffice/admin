@@ -327,53 +327,9 @@ color: #0037D5 !important;
                            <div class="file_s mt-2">
                               <div class="input-icons">
                                   <i class="">
-                                     <img src="<?php echo base_url(); ?>assets/zenith_assets/img/file_ipload.png">
+                                     <img src="<?php echo base_url(); ?>assets/zenith_assets/img/file_ipload.png" class="email_submit">
                                   </i>
-                                  <input class="input-field resend_email" type="text" data-booking-id="<?php echo $eticketDatas[0]->booking_id;?>" placeholder="Resend Ticket" data-toggle="modal"                           data-target="#tracking_number">
-
-                                  <div class="modal fade" id="tracking_number" tabindex="-1" role="dialog"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="myCenterModalLabel">Resend Email</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-      </div>
-      <form id="ticket_tracking" novalidate="novalidate"
-        action="#" class="name" method="post">
-        <input type="hidden" name="bg_id" id="bg_id" value="<?php echo md5("1BX".$eticketDatas[0]->booking_id); ?>">
-        <div class="modal-body">
-          <div class="signed_cnct">
-            <?php
-            /* if ($tracking_data[0]->tracking_id != "")
-            {*/
-            ?>
-            <div class="col-lg-12">
-              <div class="form-group mt-3 mb-0">
-                <label for="simpleinput">Email</label>
-                <input type="text" class="form-control reference" placeholder="Enter Email"
-                  name="email"  id="email" data-id="<?php echo $orderData->email; ?>"  value="<?php echo $orderData->email; ?>" required>
-              </div>
-            </div>
-            <div class="signed_upload mt-3 mb-4">
-              <div class="form-group mb-0">
-                <div class="input-group">
-                  <div class="custom-file">
-                    <button type="button"
-                      form-id="ticket_tracking"
-                      class="email_submit custom-file-label" for="inputGroupFile04">Send</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-                                       
-
+                                  <input class="input-field resend_email" type="text" data-booking-id="<?php echo $eticketDatas[0]->booking_id;?>" placeholder="Resend Ticket" value="<?php echo $orderData->email;?>" id="send_mail_<?php echo $eticketDatas[0]->booking_id;?>">
 
                               </div>
                            </div>
@@ -665,15 +621,30 @@ $.ajax({
       });
    });
 
-   $('.email_submit').click(function () {
+   $("body").on("click", ".email_submit", function () {
 
-var Email = $('#email').val(); // Get the value of the textbox
-//var email_status= '<?php //echo $orderData->ticket_email_status == 1 ? "Resend" : "Send"; ?>'; '+email_status+'
 var ticket_id = '<?php echo $eticketDatas[0]->booking_id; ?>';
+var Email = $('#send_mail_'+ticket_id).val(); // Get the value of the textbox
+
 if (Email == "") {
    swal('Error!', "Emai ID Cannot be empty.", 'error');
    return false;
 }
+
+swal({
+  title: 'Are you sure you want to Send a email ?',
+  text: "Send or Cancel",
+  type: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#0CC27E',
+  cancelButtonColor: '#FF586B',
+  confirmButtonText: 'Yes, Send!',
+  cancelButtonText: 'No, cancel!',
+  confirmButtonClass: 'button h-button is-primary btn btn-primary ',
+  cancelButtonClass: 'button h-button is-danger btn btn-danger',
+  buttonsStyling: false
+}).then(function (res) {
+   if (res.value == true) {
 
       $.ajax({
          url: '<?php echo base_url();?>game/resend_email',
@@ -697,6 +668,10 @@ if (Email == "") {
             console.log('Failed');
          }
       });
+   }
+}, function (dismiss) {
+
+});
 });  
 
  
