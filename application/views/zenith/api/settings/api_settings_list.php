@@ -65,7 +65,7 @@
                                                    <div id="view_project_list_filter" class="dataTables_filter"><label
                                                          class="search-box d-inline-flex position-relative">Search:<input
                                                             type="search" class="form-control form-control-sm"
-                                                            id="api_key" placeholder="Search in Filters..."
+                                                            id="partner_name" placeholder="Search in Filters..."
                                                             aria-controls="view_project_list"></label></div>
                                                 </div>
                                                 <div class="reset_btn">
@@ -73,6 +73,35 @@
                                                          class="btn btn-info split_reset">Reset</button></div>
                                                    <div class="reset_ok"><button
                                                          class="btn btn-info search_ok">Search</button></div>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </li>
+
+                                    <li class="sort_list">
+                                       <div class="btn-group">
+                                          <div class="dropdown">
+                                             <button class="btn btn-light dropdown-toggle seller_search_filter" type="button"
+                                                id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false">
+                                                Seller <i class="mdi mdi-chevron-down"></i>
+                                             </button>
+                                             <div class="dropdown-menu dropdown-menu-custom"
+                                                aria-labelledby="dropdownMenuButton">
+                                                <div id="view_project_list_wrapper"
+                                                   class="dataTables_wrapper dt-bootstrap4 no-footer">
+                                                   <div id="view_project_list_filter" class="dataTables_filter"><label
+                                                         class="search-box d-inline-flex position-relative">Search:<input
+                                                            type="search" class="form-control form-control-sm"
+                                                            id="seller_name" placeholder="Search in Filters..."
+                                                            aria-controls="view_project_list"></label></div>
+                                                </div>
+                                                <div class="reset_btn">
+                                                   <div class="reset_txt"><button
+                                                         class="btn btn-info split_seller_reset">Reset</button></div>
+                                                   <div class="reset_ok"><button
+                                                         class="btn btn-info search_seller_ok">Search</button></div>
                                                 </div>
                                              </div>
                                           </div>
@@ -124,7 +153,8 @@
                      <table style='width:100% !important' id="api-list" class="table table-hover table-nowrap mb-0 tournament">
                         <thead class="thead-light">
                            <tr>
-                              <th>Partner</th>                              
+                              <th>Partner Name</th>                              
+                              <th>Seller Name</th>                              
                               <th>API Key</th>
                               <th>Status</th>
                               <th>Action</th>
@@ -157,7 +187,10 @@
          "ajax": {
             url: base_url + 'api/get_api_list',
             data: function (d) {
-				var ticket_type = $("#ticket_type").val();
+				//var ticket_type = $("#ticket_type").val();
+            var partner_name = $("#partner_name").val();
+            var seller_name = $("#seller_name").val();
+            
 				var statuss= '';
                      $('.status').each(function(i,e) {
                         if ($(e).is(':checked')) {
@@ -168,7 +201,8 @@
                         }
                      });
 
-				d.ticket_type = ticket_type;
+            d.partner_name = partner_name;
+            d.seller_name = seller_name;
 				d.status=statuss;
             
             },
@@ -194,6 +228,7 @@
          },
          'columns': [
             { data: 'partner_name' },
+            { data: 'seller_name' },
             { data: 'api_key' },
             { data: 'status' },
 			{ data: 'action' },			
@@ -230,7 +265,9 @@
           $('.status_search_filter').removeClass("filter_active");
           $('.status_search_filter ').text("Status");  
 		  $('.api_search_filter').removeClass("filter_active");
-		  $('#api_key').val('');
+		  $('.seller_search_filter').removeClass("filter_active");
+		  $('#partner_name').val('');
+		  $('#seller_name').val('');
           //$(".check_box").prop('checked', false);
           $('.check_box input:checked').prop('checked', false);
           $(".status").prop('checked', false);
@@ -296,11 +333,24 @@
 			applyFilters();
 			//Dtable.ajax.reload();
        });
+		 
+       $("body").on("click",".search_seller_ok",function(){
+			$('.seller_search_filter').addClass("filter_active");
+			applyFilters();
+			//Dtable.ajax.reload();
+       });
 
 	   $("body").on("click",".split_reset",function(){
          $('.api_search_filter').removeClass("filter_active");
-		 $('#api_key').val('');
-          updateFilters("api_key");
+		 $('#partner_name').val('');
+          updateFilters("partner_name");
+            Dtable.ajax.reload();
+         });
+	   
+         $("body").on("click",".split_seller_reset",function(){
+         $('.seller_search_filter').removeClass("filter_active");
+		 $('#seller_name').val('');
+          updateFilters("seller_name");
             Dtable.ajax.reload();
          });
 
@@ -311,11 +361,13 @@
                   checkedIds.push(ID);
                });
 
-            const api_key=document.getElementById('api_key').value;         
+               const partner_name=document.getElementById('partner_name').value;         
+               const seller_name=document.getElementById('seller_name').value;         
             const status=checkedIds;
 
             var filters = {
-                api_key: api_key,
+               partner_name: partner_name,
+               seller_name: seller_name,
                status: checkedIds
             // ... Add other filters
             };
@@ -328,7 +380,8 @@
          function resetFilters() {
                // Save the filter values in session storage
                      var filters = {
-                        api_key: "",
+                        partner_name: "",
+                        seller_name: "",
                         status: ""
                      // ... Add other filters
                      };
@@ -341,7 +394,8 @@ var storedFilters = sessionStorage.getItem('API');
   if (storedFilters) {
       var filters = JSON.parse(storedFilters);     
      
-      var api_key = filters.api_key;
+      var partner_name = filters.partner_name;
+      var seller_name = filters.seller_name;
       var status =filters.status;
       
 $(".check_box input[type='checkbox']").each(function() {
@@ -357,11 +411,16 @@ $(".check_box input[type='checkbox']").each(function() {
   } 
 });
 
-   
-      $('#api_key').val(api_key);
-	  if(api_key)
+$('#partner_name').val(partner_name);
+	  if(partner_name)
       {
 		$('.api_search_filter').addClass("filter_active");
+      }
+
+      $('#seller_name').val(seller_name);
+	  if(seller_name)
+      {
+		$('.seller_search_filter').addClass("filter_active");
       }
 
 	  
@@ -383,7 +442,8 @@ $(".check_box input[type='checkbox']").each(function() {
     // Clear the remaining values while keeping the existing ticket_type_seller_name value
     filters[argName] = "";
     filters = {
-        api_key: filters.api_key,
+      partner_name: filters.partner_name,
+      seller_name: filters.seller_name,
         status: filters.status,
     };
   }

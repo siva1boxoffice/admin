@@ -43,12 +43,42 @@
                             ?>
                             <input type="hidden" name="settings_id" value="<?php echo $api_id;?>">
                          <div class="dashboard-title is-main">
-                         <div class="row column_modified">                            
-                            <div class="col-lg-3">
+                         <div class="row column_modified">    
+                            
+                         <div class="col-lg-6">
                                  <div class="form-group">
-                                 <label for="name" >Choose Partners</label>
+                                 <label for="name" >Choose User</label>
+                                 <select class="form-control" id="users" name="users" required>
+                                    <option value="" selected>-Select User-</option>                                    
+                                    <option value="1" <?php echo $settings->partner_id == "0" ? 'selected' : ''; ?>>Seller</option>
+    <option value="2" <?php echo $settings->seller_id == "0" ? 'selected' : ''; ?>>Partner</option>
+                                </select>
+                                </div>
+                               </div> 
+
+
+                            <div class="col-lg-6 seller">
+                                 <div class="form-group">
+                                 <label for="name" >Choose Seller</label>
+                                 <select class="form-control" id="seller" name="seller" required>
+                                    <option value="">-Select Seller-</option>
+                                    <?php 
+                                        if(!empty($sellers)){
+                                         foreach($sellers as $seller){ ?>
+                                            <option <?php if (in_array($seller->admin_id, explode(',',$settings->seller_id)))
+                                                { ?> selected <?php } ?> value="<?php echo $seller->admin_id;?>"><?php echo $seller->admin_name;?> <?php echo $seller->admin_last_name;?> (<?php echo $seller->admin_email;?>)
+                                            </option>
+                                            <?php } }?>
+                                </select>
+                                </div>
+                               </div>   
+
+
+                               <div class="col-lg-6 partner">
+                                 <div class="form-group">
+                                 <label for="name" >Choose Partner</label>
                                  <select class="form-control" id="partners" name="partners" required>
-                                    <option value="">-Select Partners-</option>
+                                    <option value="">-Select Partner-</option>
                                     <?php 
                                         if(!empty($partners)){
                                          foreach($partners as $partner){ ?>
@@ -58,21 +88,21 @@
                                             <?php } }?>
                                 </select>
                                 </div>
-                               </div>   
+                               </div> 
                                
-                               <div class="col-lg-3">
+                               <div class="col-lg-6">
                                     <div class="form-group">
-                                    <label for="simpleinput">Url Key </label>
+                                    <label for="simpleinput">API Key </label>
                                     <input type="text" value="<?=$settings->api_key?>"id="api_key" onKeyress="return false" readonly name="api_key" class="form-control" required>
-                                    <button type="button" class="button h-button is-primary is-raised" onClick="generateAPIkey()">Generate</button>
+                                    <button type="button" class="btn btn-primary mb-2 mt-3" onClick="generateAPIkey()">Generate</button>
                                     </div> 
                                 </div>
 
-                                <div class="col-lg-3">
+                                <div class="col-lg-6">
                                     <div class="form-group">
                                     <label for="simpleinput">Mode</label>
                                     <select class="form-control" id="api_type" name="api_type" required>
-                                    <option value="">-Select Partners-</option>                                       
+                                    <option value="">-Select Mode-</option>                                       
                                     <option value="TEST" <?php if($settings->api_type =="TEST"){ echo "selected";}?>>TEST</option>
                                     <option value="LIVE"<?php if($settings->api_type =="LIVE"){ echo "selected";}?>>LIVE</option>
                                             
@@ -80,14 +110,14 @@
                                     </div> 
                                 </div>
 
-                                <div class="col-lg-3">
+                                <div class="col-lg-6">
                                     <div class="form-group">
                                     <label for="simpleinput">End Point </label>
                                     <input type="text" value="<?=$settings->api_url?>" id="api_url" name="api_url" class="form-control" required placeholder="Enter End Point">
                                     </div> 
                                 </div>
 
-                               <div class="col-lg-3">
+                               <div class="col-lg-6">
                                 <div class="form-group">
                                    <label for="sellers">Status</label>
                                    <div class="custom-control custom-switch">
@@ -124,7 +154,36 @@
 
 <?php $this->load->view(THEME.'common/footer'); ?>
 <script type="text/javascript">
+ $(document).ready(function () {
     
+    $('.seller,.partner').css('display','none');
+
+    var selectedValue = parseInt($('#users').val());
+    if (selectedValue === 1) {
+        $('.seller').css('display', 'block');
+        $('.partner').css('display', 'none');
+    } else if (selectedValue === 2) {
+        $('.partner').css('display', 'block');
+        $('.seller').css('display', 'none');
+    }
+
+    $('#users').change(function() {
+        var selectedValue = $(this).val();
+        switch (selectedValue) {
+            case '1':
+                $('.seller').css('display', 'block');
+                $('.partner').css('display', 'none');
+                break;
+            case '2':
+                $('.partner').css('display', 'block');
+                $('.seller').css('display', 'none');
+                break;
+            default:
+                break;
+            }
+        });
+
+     });
     function generateAPIkey() {
                         var keylist="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
                         temp=''

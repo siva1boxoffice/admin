@@ -427,14 +427,23 @@ class Api extends CI_Controller {
     {
         $segment = $this->uri->segment(3);
         if($segment == "save"){
-            $this->form_validation->set_rules('partners', 'Partner', 'required');
+          //  $this->form_validation->set_rules('partners', 'Partner', 'required');
             $this->form_validation->set_rules('api_key', 'API Key', 'required');
           //  $this->form_validation->set_rules('status', 'Status', 'required');
             if ($this->form_validation->run() !== false) {
                 $settings_id = $_POST['settings_id'];
+                
+                if($_POST['partners']!="" && $_POST['partners']!==0)
+                        $_POST['seller']=0;
+
+                if($_POST['seller']!="" && $_POST['seller']!==0)
+                        $_POST['partners']=0;
+
                 if ($settings_id == '') {
+                    $_POST['status'] = ($_POST['status'] == "") ? 0 : $_POST['status'];
                     $insertData = array(
                     'partner_id' => $_POST['partners'],
+                    'seller_id' => $_POST['seller'],
                     'api_key' => $_POST['api_key'],
                     'api_type' => $_POST['api_type'],
                     'api_url' => $_POST['api_url'],
@@ -442,7 +451,16 @@ class Api extends CI_Controller {
                     // echo '<pre/>';
                     // print_r($insertData );
                     // exit;
-                    if ($this->General_Model->insert_data('api_key_settings', $insertData)) {
+$table = 'api_key_settings';
+if($_POST['partners']!==0)
+    $criteria = array('partner_id' => $_POST['partners']);
+else if($_POST['seller']!==0)
+    $criteria = array('seller_id' => $_POST['seller']);
+
+                    if (!$this->Api_Model->isRecordExists($table, $criteria)) {
+                $this->General_Model->insert_data('api_key_settings', $insertData);
+
+                   // if ($this->General_Model->insert_data('api_key_settings', $insertData)) {
                         $response = array('msg' => 'API settings added successfully.', 'redirect_url' => base_url() . 'api/api_key_settings/', 'status' => 1);
                     } else {
                         $response = array('msg' => 'Failed to Add API settings.', 'redirect_url' => base_url() . 'api/api_key_settings/add_setting/', 'status' => 0);
@@ -450,6 +468,7 @@ class Api extends CI_Controller {
                 }else{
                     $updateData = array(
                         'partner_id' => $_POST['partners'],
+                        'seller_id' => $_POST['seller'],
                         'api_key' => $_POST['api_key'],                        
                         'api_type' => $_POST['api_type'],
                         'api_url' => $_POST['api_url'],
@@ -475,9 +494,11 @@ class Api extends CI_Controller {
                
             }
             $this->data['partners']   = $this->General_Model->get_admin_details_by_role_v1(2, 'status');
+            $this->data['sellers']   = $this->General_Model->get_admin_details_by_role_v1(1, 'status');
             //echo "<pre>"; print_r($this->data);die;
             $this->load->view(THEME.'api/settings/add_api_settings', $this->data);
         }else if ($segment == 'delete_api_settings') {
+           
             $segment4 = $this->uri->segment(4);
             $delete = $this->General_Model->delete_data('api_key_settings','id',$segment4);
             if ($delete == 1) {
@@ -874,13 +895,12 @@ class Api extends CI_Controller {
 		$row_per_page = 50;
         $rowno = $_POST['start'];$where_array=[];$draw = $_POST['draw'];$data = [];
              
-		if ( (isset($_POST['status']) && $_POST['status']!="") || !empty($_POST['ticket_type'])  ) 
+		if ( (isset($_POST['status']) && $_POST['status']!="") || !empty($_POST['partner_name']) || !empty($_POST['seller_name'])  ) 
 		{
 			$search['status']=$_POST['status'];
-			$search['name']=$_POST['ticket_type'];
-
-			// $allcount = $this->General_Model->get_ticket_type_by_limit('', '', '', '', '', $search)->num_rows();
-			// $records = $this->General_Model->get_ticket_type_by_limit($rowno, $row_per_page, "name", 'asc', '', $search)->result();		
+			$search['name']=$_POST['partner_name'];
+			$search['seller_name']=$_POST['seller_name'];
+			//$search['seller_name']="Jason";
 
             $allcount = $this->Api_Model->api_key_settings('', '',$search)->num_rows();
             // Get records
@@ -889,19 +909,11 @@ class Api extends CI_Controller {
 		}
 		else
 		{	
-			// $allcount = $this->General_Model->get_ticket_type_by_limit('', '', '', '', '', "")->num_rows();
-			// $records = $this->General_Model->get_ticket_type_by_limit($rowno, $row_per_page, "name", 'asc', '', "")->result();
 
             $allcount = $this->Api_Model->api_key_settings()->num_rows();
             // Get records
             $records = $this->Api_Model->api_key_settings($row_per_page, $rowno)->result();
 		}
-
-		// echo $this->db->last_query();
-		// exit;
-		// echo '<pre/>';
-		// print_r($records);
-		// exit;
 
 		foreach($records as $record ){
 			
@@ -913,7 +925,7 @@ class Api extends CI_Controller {
 											</a>
 											<div class="dropdown-menu dropdown-menu-right">
 												<a href="'.$edit_url.'" class="dropdown-item">Edit </a>
-												<a href="javascript:void(0)" class="dropdown-item" id="branch_'.$record->admin_id.'" data-href="'.base_url().'home/users/delete_user/'.$record->admin_id.'" onclick="delete_data(\''.$record->admin_id.'\');">Delete </a>
+												<a href="javascript:void(0)" class="dropdown-item" id="branch_'.$record->id.'" data-href="'.base_url().'api/api_key_settings/delete_api_settings/'.$record->id.'" onclick="delete_data(\''.$record->id.'\');">Delete </a>
 											</div>
 										</div>';
 				if ($record->status == 0) {
@@ -923,8 +935,13 @@ class Api extends CI_Controller {
 						$status= '<div class="bttns"><span class="badge badge-success">Active</span></div>';
 					}
 
+             $partner_name = $record->admin_name !== "" ? $record->admin_name . " " . $record->admin_last_name : "";
+            
+             $seller_name = $record->seller_name !== "" ? $record->seller_name . " " . $record->seller_last_name : "";
+
 			$data[] = array( 
-                "partner_name"				=> $record->admin_name." ".$record->admin_last_name, 
+                "partner_name"				=> $partner_name, 
+                "seller_name"				=> $seller_name, 
                 "api_key"                   => $record->api_key,
 				"status"				=> $status,
 				"action"				=> $action

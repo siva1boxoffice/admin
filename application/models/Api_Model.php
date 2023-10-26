@@ -81,17 +81,54 @@ class Api_Model extends CI_Model
 		// }
 	}
 
-	function api_key_settings($row_per_page="", $row_no="")
+	// function api_key_settings($row_per_page="", $row_no="")
+	// {
+	// 	$this->db->select('api_key_settings.*,admin_details.admin_name, admin_details.admin_email, admin_details.company_name, admin_details.admin_last_name');
+	// 	$this->db->from('api_key_settings');
+	// 	$this->db->join('admin_details', 'admin_details.admin_id = api_key_settings.partner_id','LEFT');
+	// 	$this->db->order_by('api_key_settings.id', 'DESC');
+	// 	if ($row_per_page != '' && $row_no >= 0) {
+	// 		$this->db->limit($row_per_page, $row_no);
+	// 	}
+	// 	$qry = $this->db->get();
+	// 	echo $this->db->last_query();exit;
+
+	// 	return $qry;
+	// }
+	public function api_key_settings($row_per_page="", $row_no="",$search="")
 	{
-		$this->db->select('api_key_settings.*,admin_details.admin_name, admin_details.admin_email, admin_details.company_name, admin_details.admin_last_name');
-		$this->db->from('api_key_settings');
-		$this->db->join('admin_details', 'admin_details.admin_id = api_key_settings.partner_id','LEFT');
-		$this->db->order_by('api_key_settings.id', 'DESC');
-		if ($row_per_page != '' && $row_no >= 0) {
-			$this->db->limit($row_per_page, $row_no);
-		}
-		$qry = $this->db->get();
-		return $qry;
+			$this->db->select('api_key_settings.*');
+			$this->db->select('admin_details.admin_name,admin_details.admin_last_name, admin_details.admin_email, admin_details.company_name');
+			$this->db->select('seller_details.admin_name AS seller_name, seller_details.admin_last_name AS seller_last_name');
+			$this->db->from('api_key_settings');
+			$this->db->join('admin_details as seller_details', 'seller_details.admin_id = api_key_settings.seller_id', 'left');
+			$this->db->join('admin_details', 'admin_details.admin_id = api_key_settings.partner_id', 'left');
+			$this->db->order_by('api_key_settings.id', 'desc');
+
+			if (isset($search['status']) &&  $search['status'] != '') {
+				$this->db->where_in('api_key_settings.status', $search['status']);
+			}
+			if (isset($search['name']) && $search['name'] != '') {
+				$this->db->group_start();
+				$this->db->like('admin_details.admin_name', $search['name']);
+				$this->db->or_like('admin_details.admin_last_name', $search['name']);
+				$this->db->group_end();
+			}
+			if (isset($search['seller_name']) && $search['seller_name'] != '') {
+				$this->db->group_start();
+				$this->db->like('seller_details.admin_name', $search['name']);
+				$this->db->or_like('seller_details.admin_last_name', $search['name']);
+				$this->db->group_end();
+			}
+
+			if ($row_per_page != '' && $row_no >= 0) {
+				$this->db->limit($row_per_page, $row_no);
+			}
+
+			$query = $this->db->get();
+			//echo $this->db->last_query();exit;
+			return $query;
+
 	}
 
 	function api_ip_patching($row_per_page="", $row_no="")
@@ -122,6 +159,12 @@ class Api_Model extends CI_Model
 		$query = $this->db->get();
 		return $query;
 	}
+
+	public function isRecordExists($table, $criteria) {
+        $this->db->where($criteria);
+        $query = $this->db->get($table);
+        return $query->num_rows() > 0;
+    }
 
 }
 ?>
