@@ -1293,7 +1293,7 @@ $(".seat_category_check_box").change(function() {
           var overlay = $('#overlay');
           var Dtable =  $('#all-orders').DataTable({
 
-         scrollX: !0,
+         //scrollX: !0,
 
           'info' : false,
       //    'processing': true,
