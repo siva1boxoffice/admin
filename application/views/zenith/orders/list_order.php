@@ -1,32 +1,12 @@
 <style>
-   .ticket_table {
-      color:#1A1919 !important;
-      display: block;
-    overflow-x: auto;
-   }
-   .delivery_inpt_error
-   {
-      border-color: #ff5c75 !important;
-   }
+   .ticket_table {color:#1A1919 !important;display: block;overflow-x: auto;}
+   .delivery_inpt_error {border-color: #ff5c75 !important;}
    .edit_hide,.edit_hide_nominee{display: none;}
-   .save_btnn_new,.save_btnn{display: none;}
-.order_status_check_box {
-    padding: 0 15px;
-    margin-top: 15px;
-    margin-bottom: 15px;
-}
-.seller_status_check_box {
-    padding: 0 15px;
-    margin-top: 15px;
-    margin-bottom: 15px;
-}
-.check_box, .seat_category_check_box, .order_status_check_box, .seller_status_check_box {
-    max-height: 250px;
-    overflow-y: auto;
-}
-.highlighted {
-color: #0037D5 !important;
-}
+   .save_btnn {display: none;}
+   .order_status_check_box {padding: 0 15px;margin-top: 15px;margin-bottom: 15px;}
+   .seller_status_check_box {padding: 0 15px;margin-top: 15px;margin-bottom: 15px;}
+   .check_box, .seat_category_check_box, .order_status_check_box, .seller_status_check_box {max-height: 250px;overflow-y: auto;}
+   .highlighted {color: #0037D5 !important;}
 </style>
 <?php  $this->load->view('zenith/common/header'); ?>
 <div id="overlay">
@@ -282,24 +262,24 @@ color: #0037D5 !important;
                            </div>
                         </div>
                         <div class="table-responsive booking_file_page">
-                              <table style='width:100% !important' id="all-orders" class="table table-responsive bo-table w-100 dataTable no-footer">
+                              <table style='width:100% !important' id="all-orders" class="table bo-table w-100 dataTable no-footer">
                                  <thead class="thead-light">
                                     <tr>
                                        <th>&nbsp;</th>
                                        <th>Order ID</th>
-                                       <th>Event name</th>
-                                       <th>Event date</th>
-                                       <th>Buyer</th>
-                                       <th>Ticket type</th>
+                                       <th class="wid_50">Event Name</th>
+                                       <th class="wid_50">Event Date</th>
+                                       <th class="wid_50">Buyer</th>
+                                       <th>Ticket Type</th>
                                        <th>Tickets</th>
                                        <th>Category</th>
                                        <th>Total Ticket(s) Price</th>
                                        <th>Total Buyer Value</th>
-                                       <th>Purchase date</th>
-                                       <th>Seller</th>
-                                       <th>Delivery date</th>
-                                       <th class="wid_50">Shipping status</th>
-                                       <th class="wid_50">Order status</th>
+                                       <th>Purchase Date</th>
+                                       <th>Seller Name</th>
+                                       <th class="wid_50">Delivery Date</th>
+                                       <th class="wid_50">Shipping Status</th>
+                                       <th class="wid_50">Admin Status</th>
                                      
                                     </tr>
                                  </thead>
@@ -521,7 +501,7 @@ color: #0037D5 !important;
 
         if(order.seller_notes?.length !== 0){
             $.each(order.seller_notes, function (key, val) {
-                order_seller_notes += val.ticket_name+'<br>';
+                order_seller_notes += val.ticket_name+', ';
             });
         }
         else{
@@ -531,15 +511,18 @@ color: #0037D5 !important;
         else{
         order_seller_notes = 'NA';
         }
+        
+        if(order_seller_notes!='NA')
+          order_seller_notes = order_seller_notes.replace(/,\s*$/, '.');
 
         if(order.ticket_block != ""){
             order_block_row = order.ticket_block;
             if(order.row != ""){
-                order_block_row += order_block_row+','+order.row;
+                order_block_row += ','+order.row;
             }
         }
         else{
-        order_block_row = 'NA';
+        order_block_row = 'Any';
         }
 
         if(order.discount_amount != "" && order.discount_amount != null){
@@ -709,9 +692,7 @@ color: #0037D5 !important;
                     '<td><span class="edit_text" id="nominee_name_show_'+val.id+'">'+fullname+'</span> <span class="edit_box edit_hide" ><input type="text" class="form-control"  value="'+fullname+'" placeholder="Name" id="nominee_name_'+val.id+'"></span>'+
                     '<td><span class="edit_text" id="nominee_dob_show_'+val.id+'">'+dob+'</span> <span class="edit_box edit_hide" ><input type="text" class="form-control attendee_date"  value="'+dob+'" placeholder="Date of Birth" id="nominee_dob_'+val.id+'"></span>  </td>'+
                     '<td><span class="edit_text" id="nominee_nationality_show_'+val.id+'">'+nationality+'</span>  <span class="edit_box edit_hide" ><input type="text" class="form-control"  value="'+nationality+'" placeholder="Nationality" id="nominee_nationality_'+val.id+'"></span></td>'+
-                    '<td>'+nominee_action_edit+"<br/>"+nominee_action_save+'</td>'+
-                  //   '<td>'+nominee_action_save+'</td>'+
-                    '</tr>';
+                    '<td>'+nominee_action_edit+'</td><td>'+nominee_action_save+'</td></tr>';
 
                   //   order_nominees += '<tr class="edit_tr">'+
                   //   '<td>'+val.first_name+' '+val.last_name+'<span class="edit_box edit_hide_nominee" ><input type="text" class="form-control"  value="" placeholder="18/12/1992"></span></td>'+
@@ -759,11 +740,11 @@ if(team_array[0] != null){
    
     // `d` is the original data object for the row
     return (
-'<div class="row ms-0">'+
+'<div class="row ml-0">'+
 '<div class="col-md-8">'+
 '<div class="row">'+
 '<div class="col mr-3 card">'+
-'<div class="card-body">'+
+'<div class="card-body all_height">'+
 '<h5>Buyer Info</h5>'+
 '<div class="copy_all">'+
 '   <div class="copy_icons">'+
@@ -771,87 +752,87 @@ if(team_array[0] != null){
 '   </div>'+
 '</div>'+
 '<div class="row">'+
-'<label class="col-md-5">'+
+'<label class="col-md-6">'+
 'Buyer Name:'+
 '</label>'+
-'<div class="col-md-5" id="buyer_name_' + order.bg_id + '">' +order.customer_first_name + ' ' + order.customer_last_name +'</div>'+
-'<div class="col-md-2">'+
+'<div class="col-md-5 nopad" id="buyer_name_' + order.bg_id + '"><span class="buyer_infor">' +order.customer_first_name + ' ' + order.customer_last_name +'</span></div>'+
+'<div class="col-md-1 nopad">'+
    '<a href="javascript:void(0);"><i class="far fa-copy" onclick="copy_data(\'buyer_name_' + order.bg_id + '\', this)"></i></a>'+
 '</div>'+                              
 '</div>'+
 '<div class="row">'+
-'<label class="col-md-5">'+
+'<label class="col-md-6">'+
 'Buyer Email:'+
 '</label>'+
-'<div class="col-md-5" id="buyer_email_' + order.bg_id + '">'+order.email+'</div>'+
-'<div class="col-md-2">'+
+'<div class="col-md-5 nopad" id="buyer_email_' + order.bg_id + '"><span class="buyer_infor">'+order.email+'</span></div>'+
+'<div class="col-md-1 nopad">'+
    '<a href="javascript:void(0);"><i class="far fa-copy" onclick="copy_data(\'buyer_email_' + order.bg_id + '\', this)"></i></a>'+
 '</div>'+
 '</div>'+
 '<div class="row">'+
-'<label class="col-md-5">'+
+'<label class="col-md-6">'+
 'Phone Number:'+
 '</label>'+
-'<div class="col-md-5" id="buyer_mobile_' + order.bg_id + '">'+order.dialing_code+" "+order.mobile_no+'</div>'+
-'<div class="col-md-2">'+
+'<div class="col-md-5 nopad" id="buyer_mobile_' + order.bg_id + '"><span class="buyer_infor">'+order.dialing_code+" "+order.mobile_no+'</span></div>'+
+'<div class="col-md-1 nopad">'+
    '<a href="javascript:void(0);"><i class="far fa-copy" onclick="copy_data(\'buyer_mobile_' + order.bg_id + '\', this)"></i></a>'+
 '</div>'+
 '</div>'+
 '<div class="row">'+
-'<label class="col-md-5">'+
+'<label class="col-md-6">'+
 'Alternative Phone:'+
 '</label>'+
-'<div class="col-md-5" id="buyer_mobile_alter_' + order.bg_id + '">'+order.dialing_code+" "+order.mobile_no+'</div>'+
-'<div class="col-md-2">'+
+'<div class="col-md-5 nopad" id="buyer_mobile_alter_' + order.bg_id + '"><span class="buyer_infor">'+order.dialing_code+" "+order.mobile_no+'</span></div>'+
+'<div class="col-md-1 nopad">'+
    '<a href="javascript:void(0);"><i class="far fa-copy" onclick="copy_data(\'buyer_mobile_alter_' + order.bg_id + '\', this)"></i></a>'+
 '</div>'+
 '</div>'+
 '<div class="row">'+
-'<label class="col-md-5">'+
+'<label class="col-md-6">'+
 'Billing Address:'+
 '</label>'+
-'<div class="col-md-5" id="buyer_billing_' + order.bg_id + '">'/*+
-order.billing_first_name+" "+order.billing_last_name+"<br>"*/+order.billing_address+"<br>"+'</div>'+
-'<div class="col-md-2">'+
+'<div class="col-md-5 nopad" id="buyer_billing_' + order.bg_id + '"><span class="buyer_infor">'/*+
+order.billing_first_name+" "+order.billing_last_name+"<br>"*/+order.billing_address+"<br>"+'</span></div>'+
+'<div class="col-md-1 nopad">'+
    '<a href="javascript:void(0);"><i class="far fa-copy" onclick="copy_data(\'buyer_billing_' + order.bg_id + '\', this)"></i></a>'+
 '</div>'+
 '</div>'+
 '<div class="row">'+
-'<label class="col-md-5">'+
+'<label class="col-md-6">'+
 'City:'+
 '</label>'+
-'<div class="col-md-5" id="buyer_city_' + order.bg_id + '">'+
-order.city_name+'</div>'+
+'<div class="col-md-6 nopad" id="buyer_city_' + order.bg_id + '"><span class="buyer_infor">'+
+order.city_name+'</span></div>'+
 /*'<div class="col-md-2">'+
    '<a href="javascript:void(0);"><i class="far fa-copy" onclick="copy_data(\'buyer_city_' + order.bg_id + '\', this)"></i></a>'+
 '</div>'+*/
 '</div>'+
 '<div class="row">'+
-'<label class="col-md-5">'+
+'<label class="col-md-6">'+
 'Post / Zip Code:'+
 '</label>'+
-'<div class="col-md-5" id="buyer_postal_' + order.bg_id + '">'+
-order.billing_postal_code+'</div>'+
+'<div class="col-md-6 nopad" id="buyer_postal_' + order.bg_id + '"><span class="buyer_infor">'+
+order.billing_postal_code+'</span></div>'+
 /*'<div class="col-md-2">'+
    '<a href="javascript:void(0);"><i class="far fa-copy" onclick="copy_data(\'buyer_postal_' + order.bg_id + '\', this)"></i></a>'+
 '</div>'+*/
 '</div>'+
 '<div class="row">'+
-'<label class="col-md-5">'+
+'<label class="col-md-6">'+
 'Country:'+
 '</label>'+
-'<div class="col-md-5" id="buyer_country_' + order.bg_id + '">'+
-order.country_name+'</div>'+
+'<div class="col-md-6 nopad" id="buyer_country_' + order.bg_id + '"><span class="buyer_infor">'+
+order.country_name+'</span></div>'+
 /*'<div class="col-md-2">'+
    '<a href="javascript:void(0);"><i class="far fa-copy" onclick="copy_data(\'buyer_country_' + order.bg_id + '\', this)"></i></a>'+
 '</div>'+*/
 '</div>'+
 '<div class="row">'+
-'<label class="col-md-5">'+
+'<label class="col-md-6">'+
 'Partners:'+
 '</label>'+
-'<div class="col-md-5" id="buyer_source_' + order.bg_id + '">'+
-order.source_type+'</div>'+
+'<div class="col-md-6 nopad" id="buyer_source_' + order.bg_id + '"><span class="buyer_infor">'+
+order.source_type+'</span></div>'+
 /*'<div class="col-md-2">'+
    '<a href="javascript:void(0);"><i class="far fa-copy" onclick="copy_data(\'buyer_source_' + order.bg_id + '\', this)"></i></a>'+
 '</div>'+*/
@@ -859,92 +840,92 @@ order.source_type+'</div>'+
 '</div>'+
 '</div>'+
 '<div class="col mr-3 card">'+
-'<div class="card-body">'+
+'<div class="card-body all_height">'+
 '<h5>Payment Details</h5>'+
 '<div class="row">'+
-'<label class="col-md-5">'+
+'<label class="col-md-7">'+
 'Price/Ticket:'+
 '</label>'+
-'<div class="col-md-7">'+currency_icon+' '+
+'<div class="col-md-5"><span class="buyer_infor">'+currency_icon+' '+
 order.price+/*' '+order.currency_type+*/
-'</div>'+
+'</span></div>'+
 '</div>'+
 '<div class="row">'+
-'<label class="col-md-5">'+
+'<label class="col-md-7">'+
 'Quantity:'+
 '</label>'+
-'<div class="col-md-6">'+
-order.quantity+' '+order.ticket_type+
-'</div>'+
+'<div class="col-md-5"><span class="buyer_infor">'+
+order.quantity+
+'</span></div>'+
 '</div>'+
 '<div class="row">'+
-'<label class="col-md-5">'+
+'<label class="col-md-7">'+
 'Sub Total:'+
 '</label>'+
-'<div class="col-md-7">'+currency_icon+' '+
+'<div class="col-md-5"><span class="buyer_infor">'+currency_icon+' '+
 order.ticket_amount+/*' '+order.currency_type+*/
-'</div>'+
+'</span></div>'+
 '</div>'+
 '<div class="row">'+
-'<label class="col-md-5">'+
+'<label class="col-md-7">'+
 'Partner Fee:'+
 '</label>'+
-'<div class="col-md-7">'+currency_icon+' '+
+'<div class="col-md-5"><span class="buyer_infor">'+currency_icon+' '+
 partner_amount+/*' '+order.currency_type+*/
-'</div>'+
+'</span></div>'+
 '</div>'+
 '<div class="row">'+
-'<label class="col-md-5">'+
+'<label class="col-md-7">'+
 'Store Fee:'+
 '</label>'+
-'<div class="col-md-7">'+currency_icon+' '+
+'<div class="col-md-5"><span class="buyer_infor">'+currency_icon+' '+
 order.store_fee+/*+' '+order.currency_type+*/
-'</div>'+
+'</span></div>'+
 '</div>'+
 '<div class="row">'+
-'<label class="col-md-5">'+
+'<label class="col-md-7">'+
 'Delivery Fee:'+
 '</label>'+
-'<div class="col-md-7">'+currency_icon+' '+
+'<div class="col-md-5"><span class="buyer_infor">'+currency_icon+' '+
 order.delivery_fee+/*+' '+order.currency_type+*/
-'</div>'+
+'</span></div>'+
 '</div>'+
 '<div class="row">'+
-'<label class="col-md-5">'+
+'<label class="col-md-7">'+
 'Booking Protect Fee:'+
 '</label>'+
-'<div class="col-md-7">'+currency_icon+' '+
+'<div class="col-md-5"><span class="buyer_infor">'+currency_icon+' '+
 order.premium_price+/*+' '+order.currency_type+*/
-'</div>'+
+'</span></div>'+
 '</div>'+
 '<div class="row">'+
-'<label class="col-md-5">'+
+'<label class="col-md-7">'+
 'Total Discount:'+
 '</label>'+
-'<div class="col-md-7">'+currency_icon+' '+
+'<div class="col-md-5"><span class="buyer_infor">'+currency_icon+' '+
 discount_amount+/*+' '+order.currency_type+*/
-'</div>'+
+'</span></div>'+
 '</div>'+
 '<div class="row">'+
-'<label class="col-md-5">'+
+'<label class="col-md-7">'+
 'Total Selling Amount:'+
 '</label>'+
-'<div class="col-md-7">'+currency_icon+' '+
+'<div class="col-md-5"><span class="buyer_infor">'+currency_icon+' '+
 order.total_amount+/*+' '+order.currency_type+*/
-'</div>'+
+'</span></div>'+
 '</div>'+
 '<div class="row">'+
-'<label class="col-md-5">'+
+'<label class="col-md-7">'+
 'Buyer Currency:'+
 '</label>'+
-'<div class="col-md-7">'+
+'<div class="col-md-5"><span class="buyer_infor">'+
 order.currency_type+
+'</span></div>'+
 '</div>'+
 '</div>'+
 '</div>'+
-'</div>'+
-'<div class="col mr-3 card">'+
-                     '<div class="card-body">'+
+'<div class="col-md-3 mr-3 card">'+
+                     '<div class="card-body all_height">'+
                         '<div class="row">'+
                         ' <div class="col-md-12 delivery-select">'+
                         '     <h5>Delivery Status</h5>'+Delivery_Status_selectBox+
@@ -962,7 +943,7 @@ order.currency_type+
                         '</div>'+
                         '<div class="row">'+
                         '  <div class="col-md-12 delivery-select">'+
-                        '     <div class="bo-checkbox mt-3">'+
+                        '     <div class="bo-checkbox mt-3 ml-2">'+
                         '     <input type="checkbox" class="bo-checkbox-input send_email_'+order.booking_id+'" checked="checked" id="checkbox-signin" >'+
                         '     <label class="bo-checkbox-label" for="checkbox-sendmail">Send Mail</label>'+
                         ' </div>'+
@@ -974,97 +955,97 @@ order.currency_type+
 '</div>'+
 '<div class="col-md-4 ps-0 d-flex flex-column justify-content-between">'+
 '<div class="card">'+
-'<div class="card-body">'+
+'<div class="card-body all_height">'+
 '<h5>Event and Ticket Info</h5>'+
 '<div class="row">'+
 '<label class="col-md-5">'+
 'Event Name: '+
 '</label>'+
-'<div class="col-md-7">'+
+'<div class="col-md-7"><span class="buyer_infor">'+
 order.match_name+
-'</div>'+
+'</span></div>'+
 '</div>'+
 '<div class="row">'+
 '<label class="col-md-5">'+
 'Event Date &amp; Time:'+
 '</label>'+
-'<div class="col-md-7">'+
+'<div class="col-md-7"><span class="buyer_infor">'+
 order.formated_match_time+
-'</div>'+
+'</span></div>'+
 '</div>'+
 '<div class="row">'+
 '<label class="col-md-5">'+
 'Tournament:'+
 '</label>'+
-'<div class="col-md-7">'+
+'<div class="col-md-7"><span class="buyer_infor">'+
 order.tournament_name+
-'</div>'+
+'</span></div>'+
 '</div>'+
 '<div class="row">'+
 '<label class="col-md-5">'+
 'Venue:'+
 '</label>'+
-'<div class="col-md-7">'+
+'<div class="col-md-7"><span class="buyer_infor">'+
 order.stadium_name+','+order.city_name+
-'</div>'+
+'</span></div>'+
 '</div>'+
 '<div class="row">'+
 '<label class="col-md-5">'+
 'Ticket Type:'+
 '</label>'+
-'<div class="col-md-7">'+
+'<div class="col-md-7"><span class="buyer_infor">'+
 order.ticket_type+
-'</div>'+
+'</span></div>'+
 '</div>'+
 '<div class="row">'+
 '<label class="col-md-5">'+
 'Category:'+
 '</label>'+
-'<div class="col-md-7">'+
+'<div class="col-md-7"><span class="buyer_infor">'+
 order.seat_category+
-'</div>'+
+'</span></div>'+
 '</div>'+
 '<div class="row">'+
 '<label class="col-md-5">'+
 'Quantity:'+
 '</label>'+
-'<div class="col-md-7">'+
+'<div class="col-md-7"><span class="buyer_infor">'+
 order.quantity+
-'</div>'+
+'</span></div>'+
 '</div>'+
 '<div class="row">'+
 '<label class="col-md-5">'+
 'Block &amp; Row:'+
 '</label>'+
-'<div class="col-md-7">'+
+'<div class="col-md-7"><span class="buyer_infor">'+
 order_block_row+
-'</div>'+
+'</span></div>'+
 '</div>'+
 '<div class="row">'+
 '<label class="col-md-5">'+
 'Sellers Notes:'+
 '</label>'+
-'<div class="col-md-7">'+
+'<div class="col-md-7"><span class="buyer_infor">'+
 order_seller_notes+
-'</div>'+
+'</span></div>'+
 '</div>'+
 '<div class="row">'+
 '<label class="col-md-5">'+
 'Team Area:'+
 '</label>'+
-'<div class="col-md-7">'+
+'<div class="col-md-7"><span class="buyer_infor">'+
 team_area+
-'</div>'+
+'</span></div>'+
 '</div>'+
 '<div class="row">'+
 '<label class="col-md-5">'+
-'<b>Seller Name:</b>'+
+'<span class="sell_name">Seller Name:</span>'+
 '</label>'+
-'<div class="col-md-7"><b>'+
+'<div class="col-md-7"><span class="sell_name">'+
 order.seller_first_name+' '+order.seller_last_name+
-'</b></div>'+
+'</span></div>'+
 '</div>'+
-'<div class="d-flex justify-content-end mt-5">'+
+// '<div class="d-flex justify-content-end mt-5">'+
 /*'<button type="button" class="btn btn-primary-outline me-3 mr-2 upload_ticket" data-booking="'+order.bg_id+'" data-org-id='+order.bg_id+' >Upload E-Ticket</button>'
 +
 '<button type="button" class="btn btn-primary-outline me-3 mr-2 download_e_ticket"  data-booking-id="'+download_id+'" >Download</button>'+*/
@@ -1078,21 +1059,21 @@ order.seller_first_name+' '+order.seller_last_name+
  '        <div class="col-md-7">'+
 '<div class="row">'+
  '<div class="col mr-3 mb-0 card">'+
-'<div class="card-body edit_tr_new">'+'<h5>Delivery Details</h5>'+
+'<div class="card-body edit_tr_new all_height_down">'+'<h5>Delivery Details</h5>'+
    '<div class="edit_save "> <span class="edit_btnn_new" data-bg-id="'+order.booking_id+'"><a href="javascript:void(0)"   id="edit_'+order.booking_id+'">Edit</a></span> <span class="save_btnn_new" data-bg-id="'+order.booking_id+'" id="save_'+order.booking_id+'"><a href="javascript:void(0)">Save</a></span> </div>'+
-   '<div class="copy_arrow">'+
+   /*'<div class="copy_arrow">'+
    '<div class="arrow_up">'+
-   '<div class="image-upload" style="margin-bottom:8px;"> <label for="file-input" class="send_email" id="send_email_'+order.booking_id+'" data-bg-id="'+order.booking_id+'" data-bg-encrpty-id="'+encrpty_bg_id+'"> <img src="<?php echo base_url(); ?>assets/zenith_assets/img/file_ipload.png"> </label>  </div>'+
+   '<div class="image-upload" style="margin-bottom:8px;"> <label for="file-input" class="send_email" id="send_email_'+order.booking_id+'" data-bg-id="'+order.booking_id+'" data-bg-encrpty-id="'+encrpty_bg_id+'"> <img src="<?php //echo base_url(); ?>assets/zenith_assets/img/file_ipload.png"> </label>  </div>'+
    '<a href="javascript:void(0);" class="copyDetails"><i class="far fa-copy copyDeliveryDetails" data-bg-id="'+order.bg_id+'"></i></a> '+
    '</div>'+
+   '</div>'+*/
+   '<div class="row mt-1">'+
+   '<label class="col-md-5"> Method: </label> '+
+   '<div class="col-md-6 "> <span class="edit_text_new" id="show_method_'+order.booking_id+'">'+ order.ticket_type+'</span> <span class="edit_box_new edit_hide" > <input id="method_'+order.booking_id+'" type="text" class="form-control" value="'+ order.ticket_type+'" placeholder="Pickup" required></span> </div>'+
+   '<div class="col-md-1"></div>'+
    '</div>'+
    '<div class="row mt-1">'+
-   '<label class="col-md-4"> Method: </label> '+
-   '<div class="col-md-6 "> <span class="edit_text_new" id="show_method_'+order.booking_id+'">'+ order.delivery_method+'</span> <span class="edit_box_new edit_hide" > <input id="method_'+order.booking_id+'" type="text" class="form-control" value="'+ order.delivery_method+'" placeholder="Pickup" required></span> </div>'+
-   '<div class="col-md-2"></div>'+
-   '</div>'+
-   '<div class="row mt-1">'+
-   '<label class="col-md-4"> <span style="color:#B00505;display: block;">Delivery Deadline:</span> </label>'+'<div class="col-md-6"> <span class="edit_text_new" style="color:#B00505;display: block;" id="inpt_delivery_date_'+order.booking_id+'">'+ order.delivery_date+'</span>'+ '<span class="edit_box_new edit_hide" >'+
+   '<label class="col-md-5"> <span style="color:#B00505;display: block;">Delivery Deadline:</span> </label>'+'<div class="col-md-6"> <span class="edit_text_new" style="color:#B00505;display: block;" id="inpt_delivery_date_'+order.booking_id+'">'+ order.details_tab_delivery_date+'</span>'+ '<span class="edit_box_new edit_hide" >'+
    
    
    // <span class="edit_box_new edit_hide" style="color:#B00505;" id="delivery_'+order.booking_id+'">'+ order.delivery_date+'</span>
@@ -1100,51 +1081,61 @@ order.seller_first_name+' '+order.seller_last_name+
    '<input type="text" class="form-control deadline"  value="'+order.inpt_delivery_dead_line+'" placeholder="Delivery Deadline" id="deadline_'+order.booking_id+'"></span>'+
    
    '</div>'+
-   '<div class="col-md-2"></div>'+
+    '<div class="col-md-1"></div>'+
    '</div>'+
    '<div class="row mt-1">'+
-   '<label class="col-md-4"> Email: </label> '+
+   '<label class="col-md-5"> Email: </label> '+
    '<div class="col-md-6"> <span class="edit_text_new" id="show_email_'+order.booking_id+'">'+ order.email+'</span> <span class="edit_box_new edit_hide" > <input type="text" id="email_'+order.booking_id+'" class="form-control" value="'+ order.email+'" placeholder="Email"></span> </div>'+
-        '<div class="col-md-2"></div>'+
+        '<div class="col-md-1 nopad">'+        
+          ' <div class="image-upload">'+
+               ' <label for="file-input" class="send_email" id="send_email_'+order.booking_id+'" data-bg-id="'+order.booking_id+'" data-bg-encrpty-id="'+encrpty_bg_id+'">'+
+' <img src="<?php echo base_url(); ?>assets/zenith_assets/img/file_ipload.png">'+
+'</label>'+
+       ' </div>'+
+       '</div>'+
          '</div>'+
          '<div class="row mt-1">'+
-         '<label class="col-md-4"> Name: </label> '+
+         '<label class="col-md-5"> Name: </label> '+
          '<div class="col-md-6"> <span class="edit_text_new" id="show_name_'+order.booking_id+'"> '+ order.billing_first_name+" "+order.billing_last_name+'</span> <span class="edit_box_new edit_hide" > <input id="name_'+order.booking_id+'" type="text" class="form-control" value="'+ order.billing_first_name+" "+order.billing_last_name+'" placeholder=" Name"></span> </div>'+
-         '<div class="col-md-2"></div>'+
+         '<div class="col-md-1 nopad">'+
+         '<div class="details_copy">'+
+         '<a href="javascript:void(0);" class="copyDetails"><i class="far fa-copy copyDeliveryDetails" data-bg-id="'+order.bg_id+'"></i></a>'+
+         '</div>'+
+         '</div>'+
          '</div>'+
          '<div class="row mt-1">'+
-         '<label class="col-md-4"> Address: </label> '+
+         '<label class="col-md-5"> Address: </label> '+
          '<div class="col-md-6"> <span class="edit_text_new" id="show_address_'+order.booking_id+'">'+order.billing_postal_code+","+order.billing_address+'</span> <span class="edit_box_new edit_hide" > <input id="address_'+order.booking_id+'" type="text" class="form-control" value="'+order.billing_postal_code+","+order.billing_address+'" placeholder="Address"></span> </div>'+
-         '<div class="col-md-2"></div>'+
+         '<div class="col-md-1"></div>'+
          '</div>'+
          '<div class="row mt-1">'+
-         '<label class="col-md-4"> City: </label> '+
+         '<label class="col-md-5"> City: </label> '+
          '<div class="col-md-6"> <span class="edit_text_new" id="show_city_'+order.booking_id+'">'+order.city_name+'</span> <span class="edit_box_new edit_hide" >'+City_selectBox+'</span> </div>'+
-         '<div class="col-md-2"></div>'+
+         '<div class="col-md-1"></div>'+
          '</div>'+
          '<div class="row mt-1">'+
-         '<label class="col-md-4"> Postal/Zip Code: </label> '+
+         '<label class="col-md-5"> Postal/Zip Code: </label> '+
          '<div class="col-md-6"> <span class="edit_text_new" id="show_postal_'+order.booking_id+'">'+order.billing_postal_code+'</span> <span class="edit_box_new edit_hide" > <input  id="postal_'+order.booking_id+'" type="text" class="form-control" value="'+order.billing_postal_code+'" placeholder="Postal Code"></span> </div>'+
-         '<div class="col-md-2"></div>'+
+         '<div class="col-md-1"></div>'+
          '</div>'+
          '<div class="row mt-1">'+
-         '<label class="col-md-4"> Country: </label> '+
+         '<label class="col-md-5"> Country: </label> '+
          '<div class="col-md-6"> <span class="edit_text_new" id="show_country_'+order.booking_id+'">'+order.country_name+'</span> <span class="edit_box_new edit_hide" >'+Country_selectBox+'</span> </div>'+
-         '<div class="col-md-2"></div>'+
+         '<div class="col-md-1"></div>'+
          '</div>'+
          '<div class="row mt-1">'+
-         '<label class="col-md-4"> Check In / Out: </label> '+
+         '<label class="col-md-5"> Check In / Out: </label> '+
          '<div class="col-md-6"> <span class="edit_text_new" id="show_check_in_'+order.booking_id+'">'+order.check_in_out+'</span> <span class="edit_box_new edit_hide" > <input type="text" id="check_in_out_'+order.booking_id+'" class="form-control" value="'+order.check_in_out+'" placeholder="Check In / Out"></span> </div>'+
-         '<div class="col-md-2"></div>'+
+         '<div class="col-md-1"></div>'+
          '</div>'+
          '<div class="row mt-1">'+
-         '<label class="col-md-4"> Hotel Ref: </label> '+
+         '<label class="col-md-5"> Hotel Ref: </label> '+
          '<div class="col-md-6"> <span class="edit_text_new" id="show_hotel_ref_'+order.booking_id+'">'+order.hotel_ref+'</span> <span class="edit_box_new edit_hide" > <input type="text" id="hotel_ref_'+order.booking_id+'" class="form-control" value="'+order.hotel_ref+'" placeholder="Hotel Ref"></span> </div>'+
-         '<div class="col-md-2"></div>'+
+         '<div class="col-md-1"></div>'+
          '</div>'+
          '</div>'+
-         '</div><div class="col me-3 mb-0 card">'+
-'<div class="card-body">'+
+         '</div><div class="col me-3 mb-0 card all_height_down">'+
+'<div class="card-body all_height_down">'+
 '<h5>Ticket Holder Details</h5>'+
 '<div class="copy_all">'+
 ' <div class="copy_icons">'+
@@ -1155,11 +1146,11 @@ order.seller_first_name+' '+order.seller_last_name+
 '<table class="ticket_table" >'+
 '<thead>'+
 '<tr>'+
-'<th style="color:#1A1919 !important;">NAME:</th>'+
-'<th style="color:#1A1919 !important;">DOB:</th>'+
-'<th style="color:#1A1919 !important;">Nationality:</th>'+
-'<th></th>'+
-// '<th></th>'+
+'<th class="wid_60" style="color:#000 !important;font-weight:600;">Name:</th>'+
+'<th class="wid_60" style="color:#000 !important;font-weight:600;">DOB:</th>'+
+'<th class="wid_60" style="color:#000 !important;font-weight:600;">Nationality:</th>'+
+'<th class="wid_60"></th>'+
+'<th class="wid_60"></th>'+
 '</tr>'+
 '</thead>'+
 '<tbody>'+
@@ -1258,12 +1249,14 @@ $(".seat_category_check_box").change(function() {
             // Open this row
             row.child(format(row.data()),'').show();
 
-              $("#content_1").mCustomScrollbar({
+              scroll_bg_id=row.data().order_data.bg_id;
+           console.log("scroll_bg_id : "+scroll_bg_id);
+              $("#content_"+scroll_bg_id).mCustomScrollbar({
                 scrollButtons:{
                   enable:true
                 }
               });
-      $("#content_2").mCustomScrollbar({
+      $("#content_ticket_upload_"+scroll_bg_id).mCustomScrollbar({
                 scrollButtons:{
                   enable:true
                 }
@@ -1299,6 +1292,8 @@ $(".seat_category_check_box").change(function() {
             
           var overlay = $('#overlay');
           var Dtable =  $('#all-orders').DataTable({
+
+         scrollX: !0,
 
           'info' : false,
       //    'processing': true,
@@ -1990,8 +1985,8 @@ $("body").on("click",".edit_btnn_new",function(){
          $(this).parents(".edit_tr_new").find(".edit_text_new").hide();*/
 
          var order_id = $(this).attr('data-bg-id');
-         $('#save_'+order_id).toggle();
-          $(this).parents(".edit_tr_new").find(".edit_box_new").toggle();
+         // $('#save_'+order_id).toggle();
+         $(this).parents(".edit_tr_new").find(".edit_box_new").toggle();
          $(this).parents(".edit_tr_new").find(".edit_text_new").toggle();
       });
 
@@ -2008,11 +2003,11 @@ $("body").on("click",".edit_btnn",function(){
       }
       );
       
-         $(this).parents(".edit_tr").find(".edit_box").toggle();
+          $(this).parents(".edit_tr").find(".edit_box").toggle();
         $(this).parents(".edit_tr").find(".edit_text").toggle();
 
          var order_id = $(this).attr('data-bg-id');
-         $('#save_nominee_'+order_id).toggle();
+        $('#save_nominee_'+order_id).toggle();
       });
 
       $("body").on("click", ".save_btnn", function () {
@@ -2064,8 +2059,8 @@ $("body").on("click",".edit_btnn",function(){
          }
       });
 
-      $(this).parents(".edit_tr").find(".edit_box").hide();
-      $(this).parents(".edit_tr").find(".edit_text").show();
+        $(this).parents(".edit_tr").find(".edit_box").toggle();
+      $(this).parents(".edit_tr").find(".edit_text").toggle();
       $('#save_nominee_' + order_id).hide();
    });
       
@@ -2123,7 +2118,7 @@ swal({
      
 $("body").on("click", ".save_btnn_new", function () {
   var order_id = $(this).data('bg-id');
-  var fields = ["method", "email", "name", "address", "postal", "check_in_out", "hotel_ref","deadline"];
+  var fields = ["method", "email", "name", "address", "postal", "deadline"];
   var errorMessage = "";
 
   function validateField(field) {
@@ -2192,7 +2187,7 @@ $("body").on("click", ".save_btnn_new", function () {
 
       $(this).parents(".edit_tr_new").find(".edit_box_new").hide();
       $(this).parents(".edit_tr_new").find(".edit_text_new").show();
-      $('#save_' + order_id).hide();
+      // $('#save_' + order_id).hide();
    });
       
 $(document).on('click', '.copyTicketHolder', function () {

@@ -21,33 +21,33 @@ color: #0037D5 !important;
 }
    </style>
 <div class="card">
-               <div class="card-body">
-                  <h5>Tickets Upload</h5>
+               <div class="card-body all_height_down">
+                  <h5>Tickets Uploaded</h5>
                   <div class="new_tabs">
                      <div class="row">
                         <div class="col-sm-8">
                            <div class="tab-content pt-0" id="v-pills-tabContent">
                               <div class="tab-pane fade active show" id="v-pills-home2_<?php echo $eticketDatas[0]->booking_id; ?>" role="tabpanel"
                               aria-labelledby="v-pills-home-tab2">
-                                 <div class="ticket_scroll" id="content_2">
+                                 <div class="ticket_scroll" id="content_<?php echo $eticketDatas[0]->booking_id; ?>">
                                     <div class="row">
                                        <div class="col-lg-8">
                                           <div class="tick_upload_form">
                                              <div class="form-group mt-2 mb-0">
                                                 <label for="simpleinput" class="mb-1">Delivery Provider</label>
-                                                <input type="text" class="form-control" name="qr_link" placeholder="Enter Delivery Provider" value="<?php echo trim($tracking_details->delivery_provider);?>" id="tracking_provider_<?php echo $eticketDatas[0]->booking_id;?>">                       
+                                                <input type="text" class="form-control" name="qr_link" placeholder="Enter Delivery Provider" value="<?php echo trim($tracking_details->delivery_provider);?>" id="tracking_provider_<?php echo $eticketDatas[0]->booking_id;?>" autocomplete="off">                       
                                              </div>
                                           </div>
                                           <div class="tick_upload_form">
                                              <div class="form-group mt-2 mb-0">
                                                 <label for="simpleinput" class="mb-1">Tracking Link</label>
-                                                <input type="text" class="form-control" name="qr_link" placeholder="Enter Tracking Link" value="<?php echo trim($tracking_details->tracking_link);?>" id="tracking_link_<?php echo $eticketDatas[0]->booking_id;?>">                       
+                                                <input type="text" class="form-control" name="qr_link" placeholder="Enter Tracking Link" value="<?php echo trim($tracking_details->tracking_link);?>" id="tracking_link_<?php echo $eticketDatas[0]->booking_id;?>" autocomplete="off">                       
                                              </div>
                                           </div>
                                           <div class="tick_upload_form">
                                              <div class="form-group mt-2 mb-0">
                                                 <label for="simpleinput" class="mb-1">Tracking Number</label>
-                                                <input type="text" class="form-control" name="qr_link" placeholder="Enter Tracking Number" value="<?php echo trim($tracking_details->tracking_number);?>" id="tracking_number_<?php echo $eticketDatas[0]->booking_id;?>">                       
+                                                <input type="text" class="form-control" name="qr_link" placeholder="Enter Tracking Number" value="<?php echo trim($tracking_details->tracking_number);?>" id="tracking_number_<?php echo $eticketDatas[0]->booking_id;?>" autocomplete="off">                       
                                              </div>
                                           </div>
                                            <div class="tick_upload_form">
@@ -73,7 +73,7 @@ color: #0037D5 !important;
                                        
                                          
                                        </div>
-                                       <div class="col-lg-4">
+                                       <div class="col-lg-4 padfive">
                                           <div class="tick_upload_lists">
                                              <label for="simpleinput">&nbsp;</label>
                                              <ul>
@@ -109,7 +109,7 @@ color: #0037D5 !important;
                                              <label for="simpleinput">&nbsp;</label>
                                              <ul>
                                                 <li>&nbsp;</li>
-                                                <li><div class="copy_icon" id="view_pod_instrn_<?php echo $eticketDatas[0]->booking_id;?>"><a target="_blank" href="javascript:void(0);" onclick="return popitup('<?php echo TICKET_UPLOAD_PATH.'/uploads/pod/'.$tracking_details->pod;?>')"><i class="far fa-eye"></i></a></div></li>                                                
+                                                <li><div class="copy_icon" id="view_pod_instrn_<?php echo $eticketDatas[0]->booking_id;?>"><a target="_blank" href="javascript:void(0);" onclick="return popitup('<?php echo TICKET_UPLOAD_PATH.'uploads/pod/'.$tracking_details->pod;?>')"><i class="far fa-eye"></i></a></div></li>                                                
                                                 <li>
                                                 <div class="trash_icon delete_pod_ticket" id="delete_pod_instrn_<?php echo $eticketDatas[0]->booking_id;?>" data-tracking="delete_pod" data-booking-id="<?php echo $eticketDatas[0]->booking_id;?>"><a href="javascript:void(0);"><i class="far fa-trash-alt"></i></a></div>
                                              </li>
@@ -122,7 +122,7 @@ color: #0037D5 !important;
                               </div>
                               <div class="tab-pane fade " id="v-pills-profile2_<?php echo $eticketDatas[0]->booking_id; ?>" role="tabpanel"
                               aria-labelledby="v-pills-profile-tab2">
-                                    <div class="ticket_scroll" id="content_1">
+                                    <div class="ticket_scroll" id="content_ticket_upload_<?php echo $eticketDatas[0]->booking_id; ?>">
                                        <div class="row">
                                           <div class="col-lg-8">
                                           <?php //if ($quantity > 0) {
@@ -134,7 +134,7 @@ color: #0037D5 !important;
                                                 <div class="tick_upload_form">
                                                    <div class="form-group mt-2 mb-0">
                                                       <label for="simpleinput" class="mb-1">Ticket <?=$j?> Link Android</label>
-                                                      <input type="text" class="form-control" name="qr_link" placeholder="Enter Delivery Provider" value="<?php echo $ticket_value->qr_link;?>" id="ANDROID_<?php echo $ticket_value->id;?>">
+                                                      <input type="text" class="form-control" name="qr_link" placeholder="Enter Delivery Provider" value="<?php echo $ticket_value->qr_link;?>" id="ANDROID_<?php echo $ticket_value->id;?>" autocomplete="off">
                                                    </div>
                                                 </div>
                                           
@@ -142,14 +142,14 @@ color: #0037D5 !important;
                                                 <div class="tick_upload_form">
                                                    <div class="form-group mt-2 mb-0">
                                                       <label for="simpleinput" class="mb-1">Ticket <?=$j?> Link Apple</label>
-                                                      <input type="text" class="form-control" name="qr_link_ios" placeholder="Enter Delivery Provider" value="<?php echo $ticket_value->qr_link_ios;?>" id="IOS_<?php echo $ticket_value->id;?>">
+                                                      <input type="text" class="form-control" name="qr_link_ios" placeholder="Enter Delivery Provider" value="<?php echo $ticket_value->qr_link_ios;?>" id="IOS_<?php echo $ticket_value->id;?>" autocomplete="off">
                                                    </div>
                                                 </div>
                                              <?php $j++; }
                                        // } ?>
                                           </div>
 
-                                          <div class="col-lg-4">
+                                          <div class="col-lg-4 padfive">
                                           <?php //if ($quantity > 0) {
                                                 //for ($i = 0; $i < $quantity; $i++) {
                                                    foreach($eticketDatas as $ticket_save__key=>$ticket_save_value){ ?>
@@ -206,19 +206,19 @@ color: #0037D5 !important;
                                           <div class="form-group mb-20">
                                              <div class="input-group">
                                                <div class="custom-file">
-                                                 <input type="file" name="ticket_instruction" class="custom-file-input ticket-instruction" id="inputGroupFile04" data-id="1BX<?php echo $eticketDatas[0]->booking_id; ?>" accept="image/jpeg,image/png,application/pdf">
-                                                 <label class="custom-file-label" for="inputGroupFile04">Upload Ticket Instruction</label>
+                                                 <input type="file" name="ticket_instruction" class="custom-file-input ticket-instruction" id="inputGroupFile_<?php echo $eticketDatas[0]->booking_id; ?>" data-id="1BX<?php echo $eticketDatas[0]->booking_id; ?>" accept="image/jpeg,image/png,application/pdf">
+                                                 <label class="custom-file-label" for="inputGroupFile_<?php echo $eticketDatas[0]->booking_id; ?>">Upload Ticket Instruction</label>
                                                </div>
                                              </div>
                                           </div>
-                                           <div class="upload_inst_trash">
+                                           <div class="upload_inst_trash" id="upload_inst_trash_<?php echo $eticketDatas[0]->booking_id; ?>">
                                  <p><span style="color:#00A3ED;"><?php if($booking_global->instruction_file!="") 
                                  echo $booking_global->instruction_file; ?></span></p>
                                  <ul>
                                  <?php if($booking_global->instruction_file!="")  { ?>
                                     <li><div class="remove_ico"><i class=" far fa-trash-alt delete_ticket_instruction" data-delete-id='<?php echo $eticketDatas[0]->booking_id; ?>' ></i></div></li>  
                       
-                      <li><div class="view_ico"><a target="_blank" href="javascript:void(0);" onclick="return popitup('<?php echo TICKET_UPLOAD_PATH.'/uploads/e_tickets/'.$booking_global->instruction_file;?>')" class="view_bg"><i class=" far fa-eye"></i></a></div></li>
+                      <li><div class="view_ico"><a target="_blank" href="javascript:void(0);" onclick="return popitup('<?php echo TICKET_UPLOAD_PATH.'uploads/e_tickets/'.$booking_global->instruction_file;?>')" class="view_bg"><i class=" far fa-eye"></i></a></div></li>
 
                                     <?php } ?>
                                  </ul>
@@ -239,16 +239,18 @@ color: #0037D5 !important;
                               <div class="tab-pane fade" id="v-pills-sett2_<?php echo $eticketDatas[0]->booking_id; ?>" role="tabpanel"
                               aria-labelledby="v-pills-sett-tab2">
 
-                                 <?php  if($eticketDatas[0]->ticket_file!=""){ ?>
+                              
+                                 <?php 
+                                 if($eticketDatas[0]->ticket_file!=""){ ?>
                                  <div id="TopAirLine_new" class="topAirSlider_new owl-carousel owl-theme">
 
                                     <?php 
-                                    
+                                    $i=1;
                                     foreach ($eticketDatas as $eticketData) {
                                       // echo "<pre>";print_r($eticketData);
                                       if($eticketData->ticket_file!=""){
                                      ?>
-                                    <div class="item">
+                                    <div class="item" id="upload_eticket_<?php echo $eticketDatas[$i-1]->ticketid; ?>" >
                                        <div class="uploads_imgg mt-5">
                                           <div class="imag_view">
                                           <embed  class="d-block img-fluid embed_file" src="<?php echo TICKET_UPLOAD_PATH."uploads/e_tickets/".$eticketData->ticket_file;?>"  />
@@ -258,14 +260,14 @@ color: #0037D5 !important;
 
                                        <div class="icon_hover">
                                           <ul>
-                                            <li><div class="remove_ico"><i class=" far fa-trash-alt delete_ticket" data-delete-id='<?php echo $eticketDatas[0]->ticketid; ?>' ></i></div></li>  
+                                            <li><div class="remove_ico"><i class=" far fa-trash-alt delete_ticket" data-delete-id='<?php echo $eticketDatas[$i-1]->ticketid; ?>' data-bg-id="<?php echo $eticketDatas[0]->booking_id; ?>" ></i></div></li>  
                       
                                                    <li><div class="view_ico"><a target="_blank" href="javascript:void(0);" onclick="return popitup('<?php echo TICKET_UPLOAD_PATH.'uploads/e_tickets/'.$eticketData->ticket_file;?>')" class="view_bg"><i class=" far fa-eye"></i></a></div></li>
                                           </ul>
                                        </div>
                                        </div>
                                     </div>
-                                    <?php }} ?>
+                                    <?php } $i++;} ?>
                                    
                                  </div>
                                      <?php }else{
@@ -327,7 +329,7 @@ color: #0037D5 !important;
                            <div class="file_s mt-2">
                               <div class="input-icons">
                                   <i class="">
-                                     <img src="<?php echo base_url(); ?>assets/zenith_assets/img/file_ipload.png" class="email_submit">
+                                     <img src="<?php echo base_url(); ?>assets/zenith_assets/img/file_green.png" class="email_submit">
                                   </i>
                                   <input class="input-field resend_email" type="text" data-booking-id="<?php echo $eticketDatas[0]->booking_id;?>" placeholder="Resend Ticket" value="<?php echo $orderData->email;?>" id="send_mail_<?php echo $eticketDatas[0]->booking_id;?>">
 
@@ -356,7 +358,50 @@ color: #0037D5 !important;
          });
 
 
-            $("body").on("click", ".copy_ticket", function () {
+         $('body').on('click', '.delete_ticket', function(e) {
+//$(".delete_ticket").click(function () {   
+   var data_id = $(this).attr('data-delete-id');
+   var bg_id = $(this).attr('data-bg-id');
+   swal({
+          title: 'Are you sure you want to delete this ticket?',
+          text: "Yes or No",
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#0CC27E',
+          cancelButtonColor: '#FF586B',
+          confirmButtonText: 'Yes!',
+          cancelButtonText: 'No!',
+          confirmButtonClass: 'button h-button is-primary btn btn-primary ',
+          cancelButtonClass: 'button h-button is-danger btn btn-danger',
+          buttonsStyling: false
+        }).then(function (res) {
+
+
+    if (res.value == true) {    
+      $.ajax({
+         url: '<?php echo base_url();?>game/delete_upload_single_ticket',
+         type: 'POST',
+         dataType: "json",
+         data: {  ticket_id: data_id   },
+         success: function (response) {               
+               swal('Updated !', response.msg, 'success');
+               $('#upload_eticket_'+data_id).remove();
+               reload_upload_area(bg_id);
+              // setTimeout(window.location.reload(),300);
+         },
+         error: function () {
+         console.log('Failed');
+         }
+      });
+    }   
+  }, function (dismiss) {
+
+  });
+
+   });
+
+            //$("body").on("click", ".copy_ticket", function () {
+               $(".copy_ticket").on("click",  function (e) {
                var ticket_id = $(this).data('ticket-id');
                var os = $(this).data('os'); 
                var qr_link=$('#'+os+"_"+ticket_id).val();    
@@ -369,7 +414,8 @@ color: #0037D5 !important;
                textArea.remove();
             });
 
-            $("body").on("click", ".copy_tracking", function () {
+          //  $("body").on("click", ".copy_tracking", function () {
+               $(".copy_tracking").on("click",  function (e) {
                var tracking_id = $(this).data('tracking-id');
                var tracking = $(this).data('tracking'); 
                var qr_link=$('#tracking_'+tracking+"_"+tracking_id).val();    
@@ -404,7 +450,8 @@ color: #0037D5 !important;
                });
             }
 
-            $("body").on("click", ".save_ticket_btnn", function () {
+            //$("body").on("click", ".save_ticket_btnn", function () {
+            $(".save_ticket_btnn").on("click",  function (e) {
                var ticket_id = $(this).data('ticket-id');
                var os = $(this).data('os');
                var qr_link = $('#' + os + '_' + ticket_id).val();
@@ -415,13 +462,15 @@ color: #0037D5 !important;
                }
             });
 
-            $("body").on("click", ".ticket_trash", function () {
+            //$("body").on("click", ".ticket_trash", function () {
+            $(".ticket_trash").on("click",  function (e) {
                var ticket_id = $(this).data('ticket-id');
                var os = $(this).data('os');
                updateQRLink(ticket_id, os, '', 1);
             });
 
-            $("body").on("click", ".tracking_trash", function () {
+            //$("body").on("click", ".tracking_trash", function () {
+            $(".tracking_trash").on("click",  function (e) {
                var tracking = $(this).data('tracking');
                var booking_id = $(this).data('booking-id');
                var inpt_tracking_value = $('#tracking_' + tracking + '_' + booking_id).val();
@@ -436,7 +485,7 @@ color: #0037D5 !important;
                         if (response.status == 0) {
                            swal('Updation Failed !', response.msg, 'error');
                         } else {
-                           swal('Updated !', "Success", 'success');
+                           swal('Updated !', response.msg, 'success');
                            $('#tracking_' + tracking + '_' + booking_id).val('');
                         }
                      },
@@ -454,7 +503,7 @@ color: #0037D5 !important;
 
            
                $("body").on("change", ".fileInput", function (e) {
-                 / // e.preventDefault();
+                 e.preventDefault();
                
     // Create a FormData object to store the file
 
@@ -498,7 +547,8 @@ color: #0037D5 !important;
     });
   });
 
-            $("body").on("click", ".save_tracking_btnn", function () {
+            //$("body").on("click", ".save_tracking_btnn", function (e) {
+               $(".save_tracking_btnn").on("click",  function (e) {
                var tracking = $(this).data('tracking');
                var booking_id = $(this).data('booking-id');
                var inpt_tracking_value = $('#tracking_' + tracking + '_' + booking_id).val();
@@ -584,6 +634,7 @@ $.ajax({
 
                if(response.status == 1){ 
                reload_upload_area(response.bg_id);
+              //$('#upload_inst_trash_'+data_id).remove();
                }               
                swal('Updated !', response.msg, 'success');
              //  setTimeout(window.location.reload(),300);
@@ -621,7 +672,8 @@ $.ajax({
       });
    });
 
-   $("body").on("click", ".email_submit", function () {
+   //$("body").on("click", ".email_submit", function () {
+   $(".email_submit").on("click",  function (e) {
 
 var ticket_id = '<?php echo $eticketDatas[0]->booking_id; ?>';
 var Email = $('#send_mail_'+ticket_id).val(); // Get the value of the textbox
@@ -702,8 +754,25 @@ swal({
           async: false,  
           success:function(data) {
             if(data.response != ""){
-               $("#file_upload_area").html(data.response);
+               $("#file_upload_area").html(data.response);              
             }
+            $("#content_"+bg_id).mCustomScrollbar({
+                scrollButtons:{
+                  enable:true
+                }
+              });
+      $("#content_ticket_upload_"+bg_id).mCustomScrollbar({
+                scrollButtons:{
+                  enable:true
+                }
+              });
+ $("#ticket_holder_"+bg_id).mCustomScrollbar({
+                scrollButtons:{
+                  enable:true
+                }
+              });
+              $('.owl-carousel').css('display', 'block');
+
              //file_upload_area = data.response; 
               
           }

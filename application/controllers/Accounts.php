@@ -1070,7 +1070,7 @@ return true;
             if($Insert != ''){
                  $saved_proof = $this->save_payout_proof($_POST['payment_reference'],$order_data);
                  foreach($order_info as $order_in){
-                    $update_data = array('payout_status' => '1','seller_status' => '1');
+                    $update_data = array('payout_status' => '1','seller_status' => '1','payout_id' => $Insert);
                     $this->General_Model->update('booking_global', array('bg_id' => $order_in['bg_id']), $update_data);
                  }
 
