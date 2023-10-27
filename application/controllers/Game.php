@@ -131,15 +131,15 @@ public function update_tracking_data(){
 				
 				if ($this->General_Model->update_table('booking_ticket_tracking', 'tracking_id', $tracking_id, $tracking_data)) {
 
-						$response = array('msg' => 'Ticket Tracking Details updated Successfully.','status' => 1);
+						$response = array('msg' => 'Ticket Tracking Details Updated Successfully.','status' => 1);
 					} else {
-						$response = array('msg' => 'Failed to update Ticket Tracking Details.','status' => 0);
+						$response = array('msg' => 'Failed to Update Ticket Tracking Details.','status' => 0);
 					}
 					echo json_encode($response);
 					exit;
 				}
 				else{
-					$response = array('msg' => 'Failed to update Ticket Tracking Details.','status' => 0);
+					$response = array('msg' => 'Failed to Update Ticket Tracking Details.','status' => 0);
 					echo json_encode($response);
 					exit;
 				}
@@ -6438,8 +6438,8 @@ error_reporting(E_ALL);*/
 					$record->ticket_type = "Season cards";
 					break;
 				case 2:
-					$ticket_type = "E-Tickets";
-					$record->ticket_type = "E-Tickets";
+					$ticket_type = "E-Ticket";
+					$record->ticket_type = "E-Ticket";
 					break;
 				case 3:
 					$ticket_type = "Paper";
@@ -6476,12 +6476,23 @@ error_reporting(E_ALL);*/
 			else
 				$order_status = "";
 
+			// $total = strtoupper($record->currency_type). " " . number_format($record->total_amount, 2);
+			// $total = number_format($record->total_amount, 2) . " " . strtoupper($record->currency_type);
 
-			$total = number_format($record->total_amount, 2) . " " . strtoupper($record->currency_type);
+			if (strtoupper($record->currency_type) == "GBP") { 
+				$total="£". " " . number_format($record->total_amount, 2);
+			 } 
+			if (strtoupper($record->currency_type) == "EUR") { 
+				
+				$total="€". " " . number_format($record->total_amount, 2);
+			 }
+			if (strtoupper($record->currency_type) != "GBP" && strtoupper($record->currency_type) != "EUR") {
+				$total=strtoupper($record->currency_type). " " . number_format($record->total_amount, 2);
+			}
 
-			$match_time = " <br> <span class='tr_date'>" . date('d/m/Y', strtotime($record->match_date)) . "</span><br>  <span class='tr_date'>" . date('H:i A', strtotime($record->match_time)) . "</span>";
+			$match_time=date('D d M Y',strtotime($record->match_date))." <span class='time_center'>".date('H:i A',strtotime($record->match_time))."</span>";
 
-			$formated_match_time = date('D d F Y', strtotime($record->match_date)) . "," . date('H:i A', strtotime($record->match_time));
+			$formated_match_time = date('l d F Y', strtotime($record->match_date)) . " - " . date('H:i', strtotime($record->match_time));
 			$record->formated_match_time = $formated_match_time;
 
 			if ($record->listing_note != '') {
@@ -6522,10 +6533,9 @@ error_reporting(E_ALL);*/
 				$delivery_date = date('D j F Y', strtotime($record->match_date . ' -3 days')) . "<br/>" . date('H:i', strtotime($record->match_time));
 			}
 				*/
-				
+
 					$delivery_date = date('D j F Y', strtotime($record->match_date . ' -3 days')) . "<br/>" . date('H:i', strtotime($record->match_time));
 					$record->delivery_date = $delivery_date;
-
 
 					$record->inpt_delivery_dead_line = "";
 					if ($record->delivery_dead_line != "" && $record->delivery_dead_line != "0000-00-00") {
@@ -6537,12 +6547,16 @@ error_reporting(E_ALL);*/
 
 			$delivery_dead_line="";
 			$delivery_dead_line = ($record->delivery_dead_line != "" && $record->delivery_dead_line != "0000-00-00") 
-				? date('l j F Y', strtotime($record->delivery_dead_line))
-				: date('l j F Y', strtotime($record->match_date . ' -3 days'));
+				? date('d F Y', strtotime($record->delivery_dead_line))
+				: date('d F Y', strtotime($record->match_date . ' -3 days'));
 
 			$record->delivery_date = $delivery_dead_line;
-			$delivery_date =$delivery_dead_line;
+			$delivery_date =$delivery_dead_line."<span class='time_center'>".date('H:i', strtotime($record->match_time))."</span>";
 
+			$record->details_tab_delivery_date="";
+			$record->details_tab_delivery_date = ($record->delivery_dead_line != "" && $record->delivery_dead_line != "0000-00-00") 
+				? date('l d F Y', strtotime($record->delivery_dead_line))
+				: date('l d F Y', strtotime($record->match_date . ' -3 days'));
 
 			$countries = $this->General_Model->getAllItemTable('countries')->result();
 			$cityArray ="";
@@ -6552,6 +6566,12 @@ error_reporting(E_ALL);*/
 			// echo '<pre/>';
 			// print_r($cityArray);
 			// exit;
+			
+
+			$seller_notes="";
+				$seller_notes=$this->General_Model->get_seller_notes($record->listing_note);
+
+				$record->seller_notes=$seller_notes;
 
 			$encrpty_bg_id = md5($record->bg_id);
 
@@ -6560,14 +6580,14 @@ error_reporting(E_ALL);*/
 				"booking_no" => $booking_no,
 				"match_name" => $record->match_name,
 				"match_date" => $match_time,
-				"buyer" => $record->customer_first_name . " " . $record->customer_last_name,
+				"buyer" => "<span class='buyer_details'>".$record->customer_first_name . " " . $record->customer_last_name."</span>",
 				"ticket_type" => $ticket_type,
 				"tickets" => '(' . $record->quantity . ')',
 				"category" => $category,
 				"total_ticket_price" => $total,
 				"buyer_value" => $total,
 				//"purchase_date"			=> date('d F Y',strtotime($record->payment_date))."<br/>".date('H:i',strtotime($record->payment_date)),
-				"purchase_date" => date('d/m/Y', strtotime($record->payment_date)),
+				"purchase_date" => date('d/m/y', strtotime($record->payment_date)),
 				"seller" => $record->seller_first_name . " " . $record->seller_last_name,
 				"delivery_date" =>  $delivery_date,
 				"delivery_dead_line" =>  $delivery_dead_line,
@@ -7527,6 +7547,8 @@ if ($dateObj !== false) {
 
 	public function update_nominee()
 	{
+		
+		
 		$id = $this->input->post('nominee_id');
 		if ($_POST["nominee_name"] != '') {
 			$this->db->where(array('id' => $id));
@@ -7534,6 +7556,8 @@ if ($dateObj !== false) {
 			$query = $this->db->get('booking_etickets');	
 			$resultTest = $query->row();				
 			if (!empty($resultTest)) {
+				$_POST['nominee_dob']=str_replace('/', '-', $_POST['nominee_dob']);
+				
 				$nameParts = explode(" ", $_POST['nominee_name']);
 				$updateData['first_name'] 			= 		count($nameParts) >= 2 ? $nameParts[0] : $_POST['nominee_name'];
 				$updateData['last_name'] 			= 		count($nameParts) >= 2 ? implode(" ", array_slice($nameParts, 1)) : '';
@@ -7604,9 +7628,9 @@ if ($dateObj !== false) {
 				
 				if ($this->General_Model->update_table('booking_ticket_tracking', 'tracking_id', $booking_ticket_tracking->tracking_id, $tracking_data)) {
 
-						$response = array('msg' => 'Ticket Tracking Details updated Successfully.','status' => 1,'bg_id' => $booking_ticket_tracking->booking_id);
+						$response = array('msg' => 'Ticket Tracking Details Updated Successfully.','status' => 1,'bg_id' => $booking_ticket_tracking->booking_id);
 					} else {
-						$response = array('msg' => 'Failed to update Ticket Tracking Details.','status' => 0,'bg_id' => $booking_ticket_tracking->booking_id);
+						$response = array('msg' => 'Failed to Update Ticket Tracking Details.','status' => 0,'bg_id' => $booking_ticket_tracking->booking_id);
 					}
 					echo json_encode($response);
 					exit;
@@ -7638,9 +7662,9 @@ if ($dateObj !== false) {
 
 		if ($this->General_Model->update_table('booking_ticket_tracking', 'tracking_id', $booking_ticket_tracking->tracking_id, $tracking_data)) {
 
-				$response = array('msg' => 'Ticket Tracking Details updated Successfully.','status' => 1);
+				$response = array('msg' => 'Ticket Tracking Details Updated Successfully.','status' => 1);
 			} else {
-				$response = array('msg' => 'Failed to update Ticket Tracking Details.','status' => 0);
+				$response = array('msg' => 'Failed to Update Ticket Tracking Details.','status' => 0);
 			}
 			echo json_encode($response);
 			exit;
