@@ -700,8 +700,8 @@ var allChecked = true;
 
       function ajax_update_pending_orders(id,status){
 
-var data_title = "Are you sure want to change Ticket Status ?";
-var data_sub_title = "Approve or Reject Ticket !";
+var data_title = "Are you sure want to change Order Status ?";
+var data_sub_title = "Approve or Reject Order !";
 var data_yes = "Yes, Change it!";
 var data_no = "No, cancel!";
 var data_btn = "approve_reject";
