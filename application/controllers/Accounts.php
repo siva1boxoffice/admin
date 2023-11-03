@@ -1,8 +1,8 @@
 <?php
 if (!defined('BASEPATH')) exit('No direct script access allowed');
-require 'vendor/autoload.php';
+/*require 'vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;*/
 error_reporting(0);
 class Accounts extends CI_Controller {
     public function __construct() {
@@ -1065,6 +1065,9 @@ return true;
                 $pay_out_info['currency'] = $payable_orders[0]->currency_type;
                 $pay_out_info['total_orders'] = count($order_info);
                 $pay_out_info['paid_date_time'] = date('Y-m-d h:i:s');
+                if($_POST['seller_account'] != ""){
+                 $pay_out_info['paid_account'] = $_POST['seller_account'];   
+                }
                 $Insert = $this->General_Model->insert_data('payouts', $pay_out_info);
             }
             if($Insert != ''){
@@ -2050,6 +2053,23 @@ $encode_id = base64_encode(json_encode($record->match_id));
    echo json_encode($result);
    exit();
        
+    }
+
+
+    public function get_seller_bank_accounts(){
+         $seller_id = $_POST['seller_id'];
+         $currency  = $_POST['currency'];
+         if($seller_id != "" && $currency != ""){
+             $bank_accounts = $this->General_Model->bank_accounts($seller_id,$currency)->result();
+             $response = array('status' => 1, 'bank_accounts' => $bank_accounts);
+             echo json_encode($response);exit;
+         }
+         else{
+            $response = array('status' => 0, 'response' => "Invalid Seller Id.");
+             echo json_encode($response);exit;
+         }
+        
+        
     }
 
    

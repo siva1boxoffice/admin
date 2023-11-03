@@ -27,7 +27,7 @@
 
                 
 
-                  <div class="">
+                  <div class="" id="content_1">
                       <?php if(isset($payout_histories)){?>
                      <table style='width:100% !important' id="sales-datatable"
                         class="table table-hover table-nowrap mb-0 sales-summary-class">
@@ -40,6 +40,7 @@
                             <th>Total Orders</th>
                             <th>Amount</th>
                             <th>Payout Txn Id</th>
+                            <th>Payout Acc.</th>
                             <th>Txn Receipt</th>
                             <th>Description</th>
                             <!--     <th>&nbsp;</th> -->
@@ -68,6 +69,17 @@
                                     <?php } ?> 
                                     <?php echo $payout_history->total_payable;?></td>
                                     <td data-label="Tournament:"><a target="_blank" href="<?php echo base_url();?>accounts/payout_details/<?php echo $payout_history->payout_id;?>"><?php echo $payout_history->payout_no;?></a></td>
+                                    <td data-label="Acc:">
+                                      <?php 
+                                      if($payout_history->beneficiary_name != ""){
+                                        echo 'Beneficiary name :'.@$payout_history->beneficiary_name;echo "<br>";
+                                        echo 'Account No :'.@$payout_history->account_number;
+                                        echo "<br>";
+                                        echo 'Bank :'.@$payout_history->bank_name.','.@  $payout_history->bank_address;
+                                        echo "<br>";
+                                        echo 'Currency :'.@$payout_history->currency;
+                                      }
+                                      ?> </td>
                                     <td data-label="Stadium:"><a href="javascript:void(0);" onclick="popitup('<?php echo UPLOAD_PATH;?>uploads/payout_receipt/<?php echo $payout_history->receipt;?>');"><?php echo $payout_history->receipt;?></a></td>
                                     <td data-label="City:">Payout #<?php echo $payout_history->payout_id;?> </td>
                                  </tr>
@@ -95,4 +107,16 @@
       if (window.focus) {newwindow.focus()}
       return false;
    }
+
+    $(document).ready(function() {
+
+
+         $("#content_1").mCustomScrollbar({
+            scrollButtons:{
+            enable:true
+            }
+         });
+
+    });
+
 </script>
