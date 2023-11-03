@@ -561,14 +561,14 @@ public function update_tracking_data(){
 
   		$booking_tickets            = 		$this->General_Model->getAllItemTable_Array('booking_tickets', array('booking_id' => $bg_id))->row();
   		$this->datas['eticketDatas'] = "";
-  		if($booking_tickets->ticket_type == 2 || $booking_tickets->ticket_type == 4){
+  		//if($booking_tickets->ticket_type == 2 || $booking_tickets->ticket_type == 4){
 
   			$this->datas['eticketDatas'] = 		$this->General_Model->getAllItemTable_Array('booking_etickets', array('booking_id' => $bg_id))->result();
 
-  		}
-  		else if($booking_tickets->ticket_type == 1 || $booking_tickets->ticket_type == 3){
+  		// }
+  		// else if($booking_tickets->ticket_type == 1 || $booking_tickets->ticket_type == 3){
 
-  		}
+  		// }
   		
 		  $this->datas['tracking_details'] = $this->General_Model->getAllItemTable_Array('booking_ticket_tracking', array('booking_id' => $_POST['bg_id']))->row();
 
