@@ -273,14 +273,14 @@ public function get_items()
 
 				if($segment4 == "pending"){
 					$approve_or_reject = ' <div class="reject_btn">
-														<button type="button" class="btn btn-info waves-effect waves-light" data-effect="wave">
-														<a class="button is-danger" href="javascript:void(0);" onclick="update_ticket_status(\''.md5($record->booking_id).'\',6,'. $record->ticket_type.')">
+														<button type="button" class="btn btn-info waves-effect waves-light" data-effect="wave" onclick="update_ticket_status(\''.md5($record->booking_id).'\',6,'. $record->ticket_type.')">
+														<a class="button is-danger" href="javascript:void(0);" >
 														Reject
 														</a>
 														</button>
 													</div>
 													<div class="approve_btn">
-														<button type="button" class="btn btn-info waves-effect waves-light" data-effect="wave"><a class="button is-success" href="javascript:void(0);" onclick="update_ticket_status(\''.md5($record->booking_id).'\',2,'. $record->ticket_type.')">
+														<button type="button" class="btn btn-info waves-effect waves-light" data-effect="wave" onclick="update_ticket_status(\''.md5($record->booking_id).'\',2,'. $record->ticket_type.')"><a class="button is-success" href="javascript:void(0);" >
 														Approve
 														</a>
 														</button>
