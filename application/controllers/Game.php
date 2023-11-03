@@ -3343,7 +3343,7 @@ public function get_order_status(){
 						}
 					
 					} else {
-						$response = array('status' => 0, 'msg' => "Failed to update E-Ticket status.Invalid Ticket id.");
+						$response = array('status' => 0, 'msg' => "Failed to update Ticket status.Invalid Ticket id.");
 						echo json_encode($response);
 						exit;
 					}
@@ -3494,7 +3494,7 @@ public function get_order_status(){
 						}
 					
 					} else {
-						$response = array('status' => 0, 'msg' => "Failed to update E-Ticket status.Invalid Ticket id.");
+						$response = array('status' => 0, 'msg' => "Failed to update Ticket status.Invalid Ticket id.");
 						$update_cnt++;
 						// echo json_encode($response);
 						// exit;
@@ -3541,7 +3541,7 @@ public function get_order_status(){
 				}
 
 						//echo $this->db->last_query();exit;
-				$response = array('status' => 1, 'msg' => "Success.E-Ticket Status Updated Successfully.");
+				$response = array('status' => 1, 'msg' => "Success.Ticket Status Updated Successfully.");
 				$update_cnt++;
 			// echo json_encode($response);
 			// exit;
@@ -3639,13 +3639,13 @@ public function get_order_status(){
 
 							$sendMail = $this->sendCurlMail($order->bg_id);
 
-							$response = array('status' => 0, 'msg' => "Booking status successfully changed.");
+							$response = array('status' => 0, 'msg' => "Ticket Status successfully changed.");
 							++$update_cnt;
 						//	echo json_encode($response);
 							// exit;
 
 						} else {
-							$response = array('status' => 1, 'msg' => "Oops. Unable to change the booking status.");
+							$response = array('status' => 1, 'msg' => "Oops. Unable to change the Ticket status.");
 							++$failed_update_cnt;
 							//echo json_encode($response);
 							//exit;
@@ -3660,13 +3660,13 @@ public function get_order_status(){
 						$this->General_Model->update('booking_global', $cond, $updateData);
 						$sendMail = $this->sendCurlMail($order->bg_id);
 
-						$response = array('status' => 0, 'msg' => "Booking status successfully changed.");
+						$response = array('status' => 0, 'msg' => "Ticket Status successfully changed.");
 						++$update_cnt;
 						//echo json_encode($response);
 						// exit;
 					} else {
 
-						$response = array('status' => 1, 'msg' => "Oops. Unable to change the booking status.");
+						$response = array('status' => 1, 'msg' => "Oops. Unable to change the Ticket status.");
 						++$failed_update_cnt;
 						// echo json_encode($response);
 						// exit;
@@ -3697,13 +3697,13 @@ public function get_order_status(){
 							$cond = array('bg_id' => $order->bg_id);
 							$this->General_Model->update('booking_global', $cond, $updateData);
 
-							 $response = array('status' => 0, 'msg' => "Success.Your Booking Cancelled Successfully.");
+							 $response = array('status' => 0, 'msg' => "Success.Your Ticket Cancelled Successfully.");
 							 ++$update_cnt;
 							// echo json_encode($response);
 							// exit;
 
 						} else {
-							$response = array('status' => 1, 'msg' => "Oops. Unable to change the booking status.");
+							$response = array('status' => 1, 'msg' => "Oops. Unable to change the Ticket status.");
 							++$update_cnt;
 						//	echo json_encode($response);
 						//	exit;
@@ -3724,19 +3724,19 @@ public function get_order_status(){
 						$cond = array('bg_id' => $order->bg_id);
 						$this->General_Model->update('booking_global', $cond, $updateData);
 
-						 $response = array('status' => 1, 'msg' => "Success.Your Booking Cancelled Successfully.");
+						 $response = array('status' => 1, 'msg' => "Success.Your Ticket Cancelled Successfully.");
 						 ++$update_cnt;
 						// echo json_encode($response);
 						// exit;
 					} else {
 
-						$response = array('status' => 1, 'msg' => "Oops. Unable to change the booking status.");
+						$response = array('status' => 1, 'msg' => "Oops. Unable to change the Ticket status.");
 						//echo json_encode($response);
 						//exit;
 						++$failed_update_cnt;
 					}
 				} else {
-					$response = array('status' => 1, 'msg' => "Oops. Unable to change the booking status.");
+					$response = array('status' => 1, 'msg' => "Oops. Unable to change the Ticket status.");
 					++$failed_update_cnt;
 					// echo json_encode($response);
 					// exit;
@@ -3781,7 +3781,7 @@ public function get_order_status(){
 				
 
 						//echo $this->db->last_query();exit;
-				$response = array('status' => 1, 'msg' => "Success.E-Ticket Status Updated Successfully.");
+				$response = array('status' => 1, 'msg' => "Success.Ticket Status Updated Successfully.");
 
 			echo json_encode($response);
 			exit;
