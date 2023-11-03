@@ -225,6 +225,10 @@
       </div>
       <!-- main content End -->
 
+      <div id="modal_content_ajax">
+				<!-- modal content here -->
+				</div>
+
 <?php $this->load->view(THEME . '/common/footer'); ?>
 <script type="text/javascript">
    $(document).ready(function () {
@@ -474,12 +478,9 @@
                      $('.request_status_type_btn').text("Request Sent");  
             
          });
-   // $(".send_review_request_mail").click(function() { 
-      $(document).on('click', '.send_review_request_mail', function() {
 
-         ///////////////////
-      
-       count=0;
+         $("body").on('click',' #approve_all_orders',function(e){
+            count=0;
          $('table tbody input[type="checkbox"]').each(function() {
             if($(this).is(":checked")) {
               count++;               
@@ -530,6 +531,98 @@
          else 
             swal('Failed !', 'Please choose any one of the order list', 'error');
             return false;
+         });
+   // $(".send_review_request_mail").click(function() { 
+      $(document).on('click', '.send_review_request_mail', function() {
+
+         count=0;
+         $('table tbody input[type="checkbox"]').each(function() {
+            if($(this).is(":checked")) {
+              count++;               
+            }
+         });      
+         if(count>0) 
+         {
+            var data_title = "Are you sure you want to semd a email ?";
+		var data_sub_title = "Send or Cancel";
+		var data_yes = "Yes";
+		var data_no = "No";
+		var data_btn = "approve_all_orders";
+		var data_target = "approve_orders_target";
+		var data_bg_id = "";
+		var data_status = "";
+		var data_ticket_type = "";
+	$.ajax({
+			url: '<?php echo base_url();?>game/call_modal',
+			type: "POST",
+			data: {  "data_title": data_title ,"data_sub_title":data_sub_title, "data_yes":data_yes,"data_no":data_no,"data_btn":data_btn,"data_target":data_target ,"data_bg_id":data_bg_id,"data_status":data_status,"data_ticket_type":data_ticket_type},
+			success: function (response) {  
+				$("#modal_content_ajax").html(response); 
+				 $('#'+data_target).modal("show");  
+				//$("#").modal('show');
+			},
+			error: function () {
+			}
+		});
+         }
+         else 
+         {
+            swal('Failed !', 'Please choose any one of the order list', 'error');
+            return false;
+         }
+         ///////////////////
+      
+     /*  count=0;
+         $('table tbody input[type="checkbox"]').each(function() {
+            if($(this).is(":checked")) {
+              count++;               
+            }
+         });
+         ///////////////////
+
+      var checkedCount = $('.request_order:checkbox:checked').length;
+      
+         if(count>0) 
+         {
+            var requestIds = [];
+            // $(".request_order:checkbox:checked").each(function() {
+            //    requestIds.push($(this).val());
+            // });
+
+
+            $('table tbody input[type="checkbox"]').each(function() {
+            if($(this).is(":checked")) {
+               requestIds.push($(this).val());
+               
+            }
+         });
+
+               if(requestIds.length>0) 
+            { 
+                $.ajax({
+                        url: base_url + 'game/send_review_request',
+                        type: "POST",
+                        dataType:'json',
+                        data: { requestIds: requestIds }, // Pass the search text to the PHP script
+                        success: function(response) {
+                        Dtable.draw();
+                        if (response.status == 1) {
+
+                        swal('Updated !', response.msg, 'success');
+
+                        }
+                        else {
+                        swal('Updation Failed !', response.msg, 'error');
+
+                        }
+                        }
+                    });   
+            }
+           
+         } 
+         else 
+            swal('Failed !', 'Please choose any one of the order list', 'error');
+            return false;*/
       
     }); 
 

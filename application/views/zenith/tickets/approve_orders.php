@@ -334,6 +334,9 @@
          </div>
       </div>
       <!-- main content End -->
+      <div id="modal_content_ajax">
+				<!-- modal content here -->
+				</div>
 <?php 
 
 $this->load->view(THEME.'/common/footer'); ?>
@@ -733,10 +736,8 @@ if (colMd5Element.find('.float-left.pagination-detail').length === 0) {
          Dtable.draw();
       });
 
-
-    //  $('#approve_all_order').click(function (event) {
-         $(document).on('click', '#approve_all_order', function() {
-
+      
+      $("body").on('click',' #approve_tkt_orders',function(e){
 
          const order_id = [];
          const org_order_id = [];
@@ -796,12 +797,165 @@ if (colMd5Element.find('.float-left.pagination-detail').length === 0) {
                swal('Updation Failed !', "Please Choose any one of the Order", 'error');
             }
       });
+    //  $('#approve_all_order').click(function (event) {
+         $(document).on('click', '#approve_all_order', function() {
+            const inpt_order_id = [];
+            const inpt_org_order_id = [];
+            $('table tbody input[type="checkbox"]').each(function() {
+            if($(this).is(":checked")) {
+               var inpt_order_id = $(this).attr('data-org-order-id');
+               inpt_org_order_id.push(inpt_order_id);
+               
+            }
+         });
+         if(inpt_org_order_id.length >0)
+         {
+        
+
+            var data_title = "Are you sure want to Approve All Orders ?";
+		var data_sub_title = "Approve Orders !";
+		var data_yes = "Yes, Change it!";
+		var data_no = "No, cancel!";
+		var data_btn = "approve_tkt_orders";
+		var data_target = "approve_orders_target";
+		var data_bg_id = "";
+		var data_status = "";
+		var data_ticket_type = "";
+	$.ajax({
+			url: '<?php echo base_url();?>game/call_modal',
+			type: "POST",
+			data: {  "data_title": data_title ,"data_sub_title":data_sub_title, "data_yes":data_yes,"data_no":data_no,"data_btn":data_btn,"data_target":data_target ,"data_bg_id":data_bg_id,"data_status":data_status,"data_ticket_type":data_ticket_type},
+			success: function (response) {  
+				$("#modal_content_ajax").html(response); 
+				 $('#'+data_target).modal("show");  
+				//$("#").modal('show');
+			},
+			error: function () {
+			}
+		});
+
+}
+         else
+         {
+            swal('Updation Failed !', "Please Choose any one of the Order", 'error');
+         }
+
+        /* const order_id = [];
+         const org_order_id = [];
+       
+         $('table tbody input[type="checkbox"]').each(function() {
+            if($(this).is(":checked")) {
+               var ID = $(this).attr('data-order-id');
+               order_id.push(ID);
+               var org_id = $(this).attr('data-org-order-id');
+               org_order_id.push(org_id);
+               
+            }
+         });
+         if(org_order_id.length >0)
+         {
+
+         
+                     $.ajax({
+                  url: base_url + 'game/orders/ajax_update_ticket_status',
+                  method: "POST",
+                  data : {"ticket_id" : order_id,"status" : 2,"org_order_id" : org_order_id},
+                  dataType: 'json',
+                  beforeSend: function() {
+               // Show loader before sending the request
+               $("body").append("<div id='overlay'></div>");
+            },
+
+            complete: function() {
+               // Hide loader after receiving the response
+               //$("#loader").hide();
+               // console.log('dddddddddd');
+            },
+                  success: function (result) {
+                     $("#overlay").remove();
+
+                              if (result) {
+
+                     swal('Updated !', result.msg+" <br/>"+result.update_cnt+" <br/>"+result.failed_update_cnt, 'success');
+
+                     }
+                     else {
+                     swal('Updation Failed !', result.msg+" <br/>"+result.update_cnt+" <br/>"+result.failed_update_cnt, 'error');
+
+                     }
+
+                     setTimeout(function () { window.location.reload(); }, 2000);
+                  
+                  },
+                  error: function(xhr) {
+                     // Remove overlay if the AJAX request fails
+                     $("#overlay").remove();
+                     // Handle the error here
+                  }
+               });
+            }
+            else{
+               swal('Updation Failed !', "Please Choose any one of the Order", 'error');
+            }*/
+      });
       
 
 	});
 
+   $("body").on('click',' #approve_reject',function(e){
+
+var bg_id = $(this).attr('data-bg-id');
+var status = $(this).attr('data-ticket-status');
+var data_close_modal = $(this).attr('data-close-modal');
+var ticket_type =$(this).attr('data-ticket-type');
+var reason = "";
+         if (status == 6) {
+            reason = prompt("Please Enter the reason for Rejection ", "Invalid File Format.");
+         }
+         $.ajax({
+            url: base_url + 'game/orders/update_ticket_status',
+	         method: "POST",
+	        data : {"ticket_id" : bg_id,"status" : status,"ticket_type" : ticket_type,"reason" : reason},          
+              dataType: 'json',
+             success: function(result) {
+
+                 if (result) {
+
+                     swal('Updated !', result.msg, 'success');
+
+                 } else {
+                     swal('Updation Failed !', result.msg, 'error');
+
+                 }					
+            $('#'+data_close_modal).modal("hide");  
+             }
+         });
+});
+
 	function update_ticket_status(id,status,ticket_type){
-swal({
+
+      var data_title = "Are you sure want to change Ticket Status ?";
+		var data_sub_title = "Approve or Reject Ticket !";
+		var data_yes = "Yes, Change it!";
+		var data_no = "No, cancel!";
+		var data_btn = "approve_reject";
+		var data_target = "approve_reject_target";
+		var data_bg_id = id;
+		var data_status = status;
+		var data_ticket_type = ticket_type;
+	$.ajax({
+			url: '<?php echo base_url();?>game/call_modal',
+			type: "POST",
+			data: {  "data_title": data_title ,"data_sub_title":data_sub_title, "data_yes":data_yes,"data_no":data_no,"data_btn":data_btn,"data_target":data_target ,"data_bg_id":data_bg_id,"data_status":data_status,"data_ticket_type":data_ticket_type},
+			success: function (response) {  
+				$("#modal_content_ajax").html(response); 
+				 $('#'+data_target).modal("show");  
+				//$("#").modal('show');
+			},
+			error: function () {
+			}
+		});
+/*swal({
    title: 'Are you sure want to change E-Ticket Status ?',
    text: "Approve or Reject E-Ticket !",
    type: 'warning',
@@ -851,7 +1005,7 @@ swal({
 
  }, function (dismiss) {
 
- });
+ });*/
 
 
  
