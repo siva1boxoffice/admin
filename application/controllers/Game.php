@@ -7681,6 +7681,9 @@ public function hold_price()
 		$updateData = array(
 							'on_hold'		=> $_POST['on_hold'], 
 					);
+		if($_POST['on_hold'] != 0 && $_POST['on_hold'] != ""){
+			$updateData['payout_status'] = '2';
+		}
 	
 		if ($this->General_Model->update_table('booking_global', 'bg_id', $order_id, $updateData)) {
 			$response = array('status' => 1, 'msg' => 'Hold Price Updated Successfully.');

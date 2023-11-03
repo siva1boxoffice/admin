@@ -7333,4 +7333,20 @@ public function get_seat_category_main()
 		}*/
 	}
 
+	function bank_accounts($admin_id,$currency)
+	{ 
+
+		
+
+		$this->db->select('admin_bank_details.*,countries.name as country_name');
+		$this->db->from('admin_bank_details');
+		$this->db->join('countries', 'countries.id = admin_bank_details.country','LEFT');
+		$this->db->where('admin_bank_details.admin_id',$admin_id);
+		$this->db->where('admin_bank_details.currency',$currency);
+		$query = $this->db->get();
+		return $query;
+
+	}
+
+
 }

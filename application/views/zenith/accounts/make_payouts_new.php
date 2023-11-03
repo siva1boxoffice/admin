@@ -132,7 +132,7 @@
                               <div class="clearfix"></div>
 
                               <div class="row">
-                                       <div class="col-lg-4">
+                                       <div class="col-lg-3">
                                           <div class="file_uplo mt-3">
                                              <p class="mb-2">Upload Payout or Bank Deposit Receipt</p>
                                              <div class="form-group mb-0">
@@ -148,11 +148,19 @@
                                        </div>
                                        <div class="col-lg-3">
                                           <div class="form-group mt-3 mb-0 seller_info">
+                                              <label for="simpleinput">Seller Account</label>
+                                       <select class="custom-select" id="seller_account" name="seller_account">
+                                        <option value="">-Choose Account-</option>
+                                        </select>
+                                        </div>
+                                       </div>
+                                       <div class="col-lg-2">
+                                          <div class="form-group mt-3 mb-0 seller_info">
                                               <label for="simpleinput">Payment Reference *</label>
                                               <input type="text" name="payment_reference" class="form-control" placeholder="Reference#" required>
                                           </div>
                                        </div>
-                                       <div class="col-lg-3" id="afiliates_div">
+                                       <div class="col-lg-2" id="afiliates_div">
                                           <div class="total_amt mt-3">
                                              <p class="mb-3">Total Payable</p>
                                              <h5 id="payable_amount">0.00</h5>
@@ -314,6 +322,52 @@ $('body').on('click', '.payable_order', function() {
     })
 
     }
+})
+
+
+
+$('body').on('change', '#currency', function() {
+   
+   
+  var seller_id = $("#seller").val();
+  var currency  = $(this).val();
+  
+   if (seller_id != "" && seller_id != null){
+
+    var action = "<?php echo base_url();?>accounts/get_seller_bank_accounts";
+    $.ajax({
+      type: "POST",
+      url: action,
+      data: {'seller_id' : seller_id,'currency' : currency},
+      cache: false,
+      dataType: "json",
+
+      success: function(data) {
+        $("#seller_account").html("");
+        if(data.status == 1){
+                $("#seller_account").attr('disabled', false);
+                $.each(data.bank_accounts, function(index, value) {
+  $("#seller_account").append('<option value=' + value.bank_id + ' selected>Currency : ' + value.currency + ',Beneficiary name : ' + value.beneficiary_name + ',Account Number : ' + value.account_number + ',Bank Name : ' + value.bank_name + '</option>');
+});
+               
+               /* $.each(bank_accounts,function(key, value)
+                {  console.log(value);
+                  
+                    //$("#seller_account").append('<option value=' + key + '>' + value + '</option>');
+                });
+*/
+        
+        }
+        else{
+            $("#seller_account").attr('disabled', false);
+            $('#seller_account').html("");
+        }
+
+      }
+    })
+
+    }
+
 })
 
 
