@@ -74,7 +74,7 @@
  <script src="<?php echo base_url(); ?>assets/js/validate/custom.js?ver=2.4.9" async></script> -->
  <script src="<?php echo base_url(); ?>assets/js/select2.min.js" async></script>
  <script src="<?php echo base_url();?>assets/js/validate_v1/jquery.validate.js"></script>
- <script src="<?php echo base_url(); ?>assets/js/validate/custom.js?ver=3.2.3" async></script>
+ <script src="<?php echo base_url(); ?>assets/js/validate/custom.js?ver=3.2.4" async></script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.all.min.js"></script>
  
  <script src="<?php echo base_url(); ?>assets/js/ticket.js?v=12.3.2"></script>

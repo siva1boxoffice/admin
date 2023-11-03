@@ -7672,37 +7672,61 @@ if ($dateObj !== false) {
 
 }
 
-public function hold_price()
-{			
-			
-		$on_hold 			= $_POST["on_hold"];
-		$order_id 	= $_POST["order_id"];
-		if($on_hold != "" && $order_id != ""){
-		$updateData = array(
-							'on_hold'		=> $_POST['on_hold'], 
-					);
-		if($_POST['on_hold'] != 0 && $_POST['on_hold'] != ""){
-			$updateData['payout_status'] = '2';
-		}
-	
-		if ($this->General_Model->update_table('booking_global', 'bg_id', $order_id, $updateData)) {
-			$response = array('status' => 1, 'msg' => 'Hold Price Updated Successfully.');
-			echo json_encode($response);
-			exit;
+	public function hold_price()
+	{
+
+		$on_hold = $_POST["on_hold"];
+		$order_id = $_POST["order_id"];
+		if ($on_hold != "" && $order_id != "") {
+			$updateData = array(
+				'on_hold' => $_POST['on_hold'],
+			);
+
+			if ($this->General_Model->update_table('booking_global', 'bg_id', $order_id, $updateData)) {
+				$response = array('status' => 1, 'msg' => 'Hold Price Updated Successfully.');
+				echo json_encode($response);
+				exit;
+			} else {
+				$response = array('status' => 1, 'msg' => 'Error while Updating record.');
+				echo json_encode($response);
+				exit;
+			}
+
+
 		} else {
-			$response = array('status' => 1, 'msg' => 'Error while Updating record.');
-			echo json_encode($response);
-			exit;
-		}
-
-
-		}
-		else{
 			$response = array('status' => 0, 'msg' => 'Invalid details.');
 			echo json_encode($response);
 			exit;
 		}
-	
+	}
+
+
+public function call_modal()
+{
+	$_POST['data_title'] = ($_POST['data_title'] != "") ? $_POST['data_title'] : "";
+	$_POST['data_sub_title'] = ($_POST['data_sub_title'] != "") ? $_POST['data_sub_title'] : "";
+	$_POST['data_yes'] = ($_POST['data_yes'] != "") ? $_POST['data_yes'] : "";
+	$_POST['data_no'] = ($_POST['data_no'] != "") ? $_POST['data_no'] : "";
+	$_POST['data_btn'] = ($_POST['data_btn'] != "") ? $_POST['data_btn'] : "";
+	$_POST['data_target'] = ($_POST['data_target'] != "") ? $_POST['data_target'] : "";
+	$_POST['status'] = ($_POST['status'] != "") ? $_POST['status'] : "";
+	$_POST['data_bg_id'] = ($_POST['data_bg_id'] != "") ? $_POST['data_bg_id'] : "";
+	$_POST['data_status'] = ($_POST['data_status'] != "") ? $_POST['data_status'] : "";
+	$_POST['data_ticket_type'] = ($_POST['data_ticket_type'] != "") ? $_POST['data_ticket_type'] : "";
+	$_POST['data_form'] = ($_POST['data_form'] != "") ? $_POST['data_form'] : "";
+
+	$this->data['modal_title']=$_POST['data_title'];
+	$this->data['modal_sub_title']=$_POST['data_sub_title'];
+	$this->data['modal_yes']=$_POST['data_yes'];
+	$this->data['modal_cancel']=$_POST['data_no'];
+	$this->data['modal_btn_id']=$_POST['data_btn'];
+	$this->data['modal_target']=$_POST['data_target'];
+	$this->data['status']=$_POST['status'];
+	$this->data['data_bg_id']=$_POST['data_bg_id'];
+	$this->data['data_status']=$_POST['data_status'];
+	$this->data['data_ticket_type']=$_POST['data_ticket_type'];
+	$this->data['data_form']=$_POST['data_form'];
+	$this->load->view(THEME.'/common/popup',$this->data);
 }
 
 }

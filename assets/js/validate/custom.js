@@ -673,8 +673,30 @@ $('#onpage-content').validate({
     }
 });
 function update_ticket_status(id, status, ticket_type) {
+        var data_title = "Are you sure want to change E-Ticket Status ?";
+		var data_sub_title = "Approve or Reject E-Ticket !";
+		var data_yes = "Yes, Change it!";
+		var data_no = "No, cancel!";
+		var data_btn = "";
+		var data_target = "approve_reject_target";
+		var data_bg_id = id;
+        var data_status = status;
+		var data_ticket_type = ticket_type;
 
-    swal({
+	$.ajax({
+			url: '<?php echo base_url();?>game/call_modal',
+			type: "POST",
+			data: {  "data_title": data_title ,"data_sub_title":data_sub_title, "data_yes":data_yes,"data_no":data_no,"data_btn":data_btn,"data_target":data_target ,"data_bg_id":data_bg_id,"data_status":data_status,"data_ticket_type":data_ticket_type},
+			success: function (response) {  
+				$("#modal_content_ajax").html(response); 
+				 $('#'+data_target).modal("show");  
+				//$("#").modal('show');
+			},
+			error: function () {
+			}
+		});
+
+ /*   swal({
         title: 'Are you sure want to change E-Ticket Status ?',
         text: "Approve or Reject E-Ticket !",
         type: 'warning',
@@ -731,7 +753,7 @@ function update_ticket_status(id, status, ticket_type) {
 
     }, function(dismiss) {
 
-    });
+    });*/
 
 }
 
@@ -787,6 +809,88 @@ function update_partner_payment(bg_id, status) {
 
 }
 
+function update_booking_status_new(bg_id, status) {
+
+    var sendmail = $('#sendmail').is(":checked");
+    var mail_enable = 0;
+    if (sendmail == true) {
+        mail_enable = 1;
+    }
+    var title = "";
+    if (status == 1) {
+        title = "Are you sure want to Confirm this Booking ?";
+    } else if (status == 0) {
+        title = "Are you sure want to Confirm Failed ?";
+    } else if (status == 2) {
+        title = "Are you sure want to Confirm Pending ?";
+    } else if (status == 3) {
+        title = "Are you sure want to Confirm Cancelling ?";
+    } else if (status == 4) {
+        title = "Are you sure want to Confirm Shipping ?";
+    } else if (status == 5) {
+        title = "Are you sure want to Confirm Delivering ?";
+    } else if (status == 6) {
+        title = "Are you sure want to Confirm Downloading ?";
+    } else if (status == 7) {
+        title = "Are you sure want to Confirm Failed booking ?";
+    }
+    swal({
+        title: title,
+        text: "Email will go to user if status change !",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#0CC27E',
+        cancelButtonColor: '#FF586B',
+        confirmButtonText: 'Yes, Change it!',
+        cancelButtonText: 'No, cancel!',
+        confirmButtonClass: 'is-primary btn btn-primary',
+        cancelButtonClass: 'is-danger btn btn-danger',
+        buttonsStyling: false
+    }).then(function(res) {
+
+
+        if (res.value == true) {
+            var reason = "";
+            if (status == 3) {
+                reason = prompt("Please Enter the reason for Cancel ", "");
+            }
+            $.ajax({
+                url: base_url + 'game/orders/update_booking_status',
+                method: "POST",
+                data: {
+                    "bg_id": bg_id,
+                    "status": status,
+                    "mail_enable": mail_enable,
+                    "reason": reason
+                },
+                dataType: 'json',
+                success: function(result) {
+
+                    if (result) {
+
+                        swal('Updated !', result.msg, 'success');
+
+                    } else {
+                        swal('Updation Failed !', result.msg, 'error');
+
+                    }
+
+                     setTimeout(function() {
+                         window.location.reload();
+                     }, 2000);
+                }
+            });
+        } else {
+
+        }
+
+
+
+    }, function(dismiss) {
+
+    });
+
+}
 function update_booking_status(bg_id, status) {
 
     var sendmail = $('#sendmail').is(":checked");
@@ -812,7 +916,6 @@ function update_booking_status(bg_id, status) {
     } else if (status == 7) {
         title = "Are you sure want to Confirm Failed booking ?";
     }
-
     swal({
         title: title,
         text: "Email will go to user if status change !",
@@ -956,7 +1059,7 @@ function update_booking_all_order_status(bg_id, status,order_id) {
     
     }
 function ajax_update_pending_orders(bg_id, status) {
-
+return false;
     // var sendmail = $('#sendmail').is(":checked");
     // var mail_enable = 0;
     // if (sendmail == true) {
