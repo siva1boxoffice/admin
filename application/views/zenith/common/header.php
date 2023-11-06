@@ -72,7 +72,7 @@ if(!empty($branches))
       <link href="<?php echo base_url();?>assets/zenith_assets/libs/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
       <link href="<?php echo base_url();?>assets/zenith_assets/libs/bootstrap-touchspin/css/jquery.bootstrap-touchspin.css" rel="stylesheet" type="text/css" />
       <link rel="stylesheet" href="<?php echo base_url(); ?>assets/zenith_assets/css/bootstrap.css?V=1.10" />
-    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/zenith_assets/css/styles.css?v=2.6.1.52" />
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/zenith_assets/css/styles.css?v=2.6.1.55" />
     <style>
         embed {
         overflow: hidden !important;

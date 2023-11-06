@@ -66,7 +66,7 @@
  <script src="<?php echo base_url(); ?>assets/js/widgets.js" async></script>
  <!-- <script src="<?php echo base_url(); ?>assets/js/touch.js" async></script> -->
  <script src="<?php echo base_url(); ?>assets/js/syntax.js" async></script>
- <script src="<?php echo base_url(); ?>assets/js/custom.js?ver=2.4.9.4" async></script>
+ <script src="<?php echo base_url(); ?>assets/js/custom.js?ver=2.4.9.7" async></script>
  <script src="<?php echo base_url(); ?>assets/zenith_assets/js/bootstrap-multiselect.js?ver=2.4.91" async></script>
  <!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 <script src="<?php echo base_url();?>assets/js/validate_v1/jquery.validate.js"></script> -->
@@ -74,7 +74,7 @@
  <script src="<?php echo base_url(); ?>assets/js/validate/custom.js?ver=2.4.9" async></script> -->
  <script src="<?php echo base_url(); ?>assets/js/select2.min.js" async></script>
  <script src="<?php echo base_url();?>assets/js/validate_v1/jquery.validate.js"></script>
- <script src="<?php echo base_url(); ?>assets/js/validate/custom.js?ver=3.2.3" async></script>
+ <script src="<?php echo base_url(); ?>assets/js/validate/custom.js?ver=3.2.12" async></script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.all.min.js"></script>
  
  <script src="<?php echo base_url(); ?>assets/js/ticket.js?v=12.3.2"></script>
