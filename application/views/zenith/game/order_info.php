@@ -53,11 +53,13 @@ color: #00a3ed !important;
 			<div class="page-title-box">
 			   <div class="container-fluid">
 				  <div class="page-title dflex-between-center side_arrow">
-					 <h3 class="mb-1"> <div class="go_back_btn"><a href="<?php
-					 // echo base_url();
-					 echo $url = htmlspecialchars($_SERVER['HTTP_REFERER']);
-					  
-					  ?>"><i class="fas fa-arrow-left"></i></a></div>Order Info</h3>
+					 <h3 class="mb-1"> 
+						<div class="go_back_btn" data-click="<?php
+							echo $url = base_url() . "game/orders/list_order/all";
+							?>">
+					  <i class="fas fa-arrow-left"></i></a>
+					  </div>
+					  Order Info</h3>
 					 
 				  </div>
 			   </div>
@@ -1513,6 +1515,10 @@ color: #00a3ed !important;
 
 $(document).ready(function() {
 
+	$('.go_back_btn').click(function() {
+            window.location.href =  $(this).data("click");	
+        });
+
 	$("#updateNominee").click(function (e) {
 		// eticket_id
 		var editId = $(this).data("edit-id");	
@@ -1831,7 +1837,7 @@ $(".call_modals").change(function() {
 		var data_btn = $(this).attr('data-btn-id');
 		var data_target = $(this).attr('data-target');
 		var data_bg_id = $(this).attr('data-bg-id');
-		status="";
+		status=$(this).val();
 		data_title="Are you sure want to Change Status";
 		/*if (typeof data_bg_id !== "undefined") 
 		{			
