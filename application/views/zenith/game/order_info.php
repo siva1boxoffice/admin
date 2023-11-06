@@ -151,8 +151,9 @@ color: #00a3ed !important;
 										  <div class="form-group">
 											<?php 
 										
+
 											if ($this->session->userdata('role') == 6 || $this->session->userdata('role') == 11) { ?>
-		<!-- onchange="update_booking_status_new('<?php //echo md5($orderData->bg_id); ?>',this.value);"  -->
+
 												<select name="e-tickets" id="status" class="custom-select call_modals"
 													data-toggle="modal" data-target="update_booking_status"  data-title="Are you sure want to Confirm this Booking ?" data-sub-title="Email will go to user if status change !" data-yes="Yes, Change it!" data-no="No, Cancel!" data-btn-id="update_modal_booking_status" data-bg-id="<?php echo md5($orderData->bg_id); ?>" >
 													<?php if ($orderData->booking_status != 0 && $orderData->booking_status != 7 && $orderData->booking_status != 3) { ?>

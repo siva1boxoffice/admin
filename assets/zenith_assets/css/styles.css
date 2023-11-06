@@ -9203,3 +9203,15 @@ span.sell_name {font-weight: 600 !important;}
 .topAirSlider_new button.owl-prev .fa-arrow-left:hover{background: #00A3ED;}
 
 .wid_60 {width: 10% !important;}
+
+.confirm_delivery {padding: 20px;border-radius: 0px;}
+.confirm_delivery .modal-header {padding: 0px;}
+.confirm_delivery .modal-body {padding: 0px;}
+.confirm_delivery h5 {color: #0037D5;font-size: 28px;font-weight: 700;text-align: center;line-height: 39.2px;padding: 0 30px;margin-bottom: 15px;}
+.confirm_delivery p {color: #4C5271;font-size: 16px;font-weight: 400;line-height: 24px;text-align: center;margin-bottom: 15px;}
+.confirm_delivery .modal-footer {background: #F6F8FA;border-top: none;display: flex;align-items: center;justify-content: center;}
+.confirm_delivery .close {font-size: 40px !important;font-weight: 100;}
+.confirm_delivery .btn-primary {background: #039871;border: #039871;width: 163px;height: 35px;border-radius: 0px;font-size: 16px;font-weight: 700;display: flex;align-items: center;justify-content: center;}
+.confirm_delivery .btn-light {background: #ED1C24;border: #ED1C24;width: 163px;height: 35px;border-radius: 0px;color: #fff;font-size: 16px;font-weight: 700;display: flex;align-items: center;justify-content: center;}
+.confirm_delivery .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active {background-color: #039871;border: #039871;color: #fff;}
+.confirm_delivery .btn-light:not(:disabled):not(.disabled):active, .btn-light:not(:disabled):not(.disabled).active {background-color: #ED1C24;border: #ED1C24;color: #fff;}
