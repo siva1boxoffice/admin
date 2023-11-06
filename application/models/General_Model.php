@@ -977,6 +977,8 @@ class General_Model extends CI_Model
 			} else if ($group == 'privilege_title') {
 				$this->db->order_by('sorting_by', 'ASC');
 			} else {
+				$this->db->order_by('sorting_by', 'ASC');
+				$this->db->order_by('sorting_by_2', 'ASC');
 				$this->db->order_by('sorting_by_3', 'ASC');
 			}
 			$query = $this->db->get('admin_role_details');
@@ -1004,6 +1006,8 @@ class General_Model extends CI_Model
 			} else if ($group == 'privilege_title') {
 				$this->db->order_by('sorting_by', 'ASC');
 			} else {
+					$this->db->order_by('sorting_by', 'ASC');
+				$this->db->order_by('sorting_by_2', 'ASC');
 				$this->db->order_by('sorting_by_3', 'ASC');
 			}
 			$query = $this->db->get('privilege_functions');
