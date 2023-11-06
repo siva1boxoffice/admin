@@ -1,4 +1,38 @@
 <style>
+.swal2-popup .swal2-close:hover{
+  color: #ccc !important;
+}
+.swal2-popup .swal2-title{
+	/* margin-top: 30px !important; */
+	font-size: 28px !important;
+    font-weight: 700 !important;
+    text-align: center !important;
+    line-height: 39.2px !important;
+    padding: 0 30px !important;
+    margin-bottom: 15px !important;
+	color: #0037D5 !important;	
+}
+.swal2-popup .btn-primary{
+    background: #039871 !important;
+	background-color: #039871 !important;
+    color: #fff;
+    border-color: #039871 !important;
+}
+
+.swal2-popup .btn-light {
+    background: #ED1C24;
+    border: #ED1C24;
+    width: 163px;
+    height: 35px;
+    border-radius: 0px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .view_bg{
 color: #ffffff !important;
 }
@@ -28,6 +62,8 @@ color: #00a3ed !important;
 				  </div>
 			   </div>
 			</div>
+
+			
 			<!-- page content -->
 			<div class="page-content-wrapper mt--45 order_info">
 			   <div class="container-fluid">
@@ -116,8 +152,9 @@ color: #00a3ed !important;
 											<?php 
 										
 											if ($this->session->userdata('role') == 6 || $this->session->userdata('role') == 11) { ?>
-												<select name="e-tickets" id="status" class="custom-select"
-													onchange="update_booking_status('<?php echo md5($orderData->bg_id); ?>',this.value);">
+		<!-- onchange="update_booking_status_new('<?php //echo md5($orderData->bg_id); ?>',this.value);"  -->
+												<select name="e-tickets" id="status" class="custom-select call_modals"
+													data-toggle="modal" data-target="update_booking_status"  data-title="Are you sure want to Confirm this Booking ?" data-sub-title="Email will go to user if status change !" data-yes="Yes, Change it!" data-no="No, Cancel!" data-btn-id="update_modal_booking_status" data-bg-id="<?php echo md5($orderData->bg_id); ?>" >
 													<?php if ($orderData->booking_status != 0 && $orderData->booking_status != 7 && $orderData->booking_status != 3) { ?>
 														<option value="2" <?php if ($this->session->userdata('role') == 1 && $orderData->booking_status == 1) { ?>
 																disabled <?php } ?> 		<?php if ($orderData->booking_status == 2) { ?> selected <?php } ?>>Pending</option>
@@ -202,8 +239,8 @@ color: #00a3ed !important;
 										 <?php } else { ?>
 											<td style="cursor: pointer;">
 												<div class="receive_btn">
-													<button type="button" class="btn btn-info waves-effect waves-light fs-18" data-effect="wave"><a id='emailIcon_need_to_receive' 
-															class="button is-success send_ticket" href="javascript:void(0);">
+													<button type="button" class="btn btn-info waves-effect waves-light fs-18" data-effect="wave"><a id='' 
+															class="button is-success send_ticket call_modal" href="javascript:void(0);"  data-toggle="modal" data-target="centermodal1"  data-title="Are you sure you want to send a email ?" data-sub-title="Email will go to the user if there is a status change !" data-yes="Yes, Send!" data-no="No, Cancel!" data-btn-id="emailIcon_need_to_receive">
 															Need to Receive (
 															<?php echo $orderData->quantity; ?>)
 														</a></button>
@@ -228,8 +265,7 @@ color: #00a3ed !important;
 							  </table>
 						   </div>                  
 						</div>
-					 </div>
-
+					 </div>				   
 					 <div class="col-md-9 col-lg-9">
 						<div class="card">
 						   <div class="card-body">
@@ -1270,7 +1306,9 @@ color: #00a3ed !important;
 											
 											<input type="text" id="contact_number" class="form-control" placeholder="Contact Number" value="<?php echo $orderData->delivery_contact_number; ?>" data-num='<?php echo md5($orderData->bg_id); ?>'>
 											<div class="input-group-prepend">
-												<span class="input-group-text" id="mobile-icon">
+												<span class="input-group-text call_modal" id="" 
+												data-toggle="modal" data-target="centermodal_mobile_icon"  data-title="Are you sure you want to save this Contact Number." data-sub-title="Yes or No" data-yes="Yes" data-no="No" data-btn-id="mobile-icon"
+												>
 												<i class="fas fa-mobile-alt "></i>
 												</span>
 											</div>
@@ -1286,11 +1324,15 @@ color: #00a3ed !important;
 											
 											<input type="email" name="email_address" class="form-control" id="email_address" value="<?php echo $orderData->email; ?>">
 												<div class="input-group-append">
-													<span class="input-group-text clickable" id="emailIcon">
-													<i class="fa fa-envelope" aria-hidden="true"></i>
-													</span>
+												<!-- id="emailIcon" 
+											data-toggle="modal"                      data-target="#centermodal"
+											-->
+											<span class="input-group-text clickable call_modal" data-toggle="modal" data-target="centermodal"  data-title="Are you sure you want to send a email ?" data-sub-title="Email will go to the user if there is a status change !" data-yes="Yes, Send!" data-no="No, Cancel!" data-btn-id="emailIcon" >
+											<i class="fa fa-envelope" aria-hidden="true"></i>
+											</span>
 												</div>
 										</div>
+
 									   </td>
 									  
 									   <td>
@@ -1304,7 +1346,7 @@ color: #00a3ed !important;
 						</div>
 					 </div>
 				  </div>
-
+	
 				 <caption></caption>
 				 <div class="row">
 					 <div class="col-md-12 col-lg-12">
@@ -1457,8 +1499,14 @@ color: #00a3ed !important;
 		 </div>
  </div>
  <input type="hidden" id="source_type" name="source_type" value="<?php echo $orderData->source_type;?>">
+
+ <div id="modal_content_ajax">
+				<!-- Your modal content here -->
+				</div>
+
 <!-- main content End -->
 <?php $this->load->view(THEME.'/common/footer'); ?>
+
 
 <script>
 
@@ -1690,7 +1738,7 @@ $(document).ready(function() {
     }
   });
 
-	$('#mobile-icon').click(function() {
+/*	$('#mobile-icon').click(function() {
 
 				var contact_number = $('#contact_number').val(); // Get the value of the textbox
 				if(contact_number=="")
@@ -1698,7 +1746,7 @@ $(document).ready(function() {
 					swal('Error!', "Contact Number Cannot be empty.", 'error');
 					return false;
 				}
-				var ticket_id='<?php echo md5($orderData->bg_id); ?>';
+				var ticket_id='<?php //echo md5($orderData->bg_id); ?>';
 							swal({
 						title: 'Are you sure you want to save this Contact Number.',
 						text: "Yes or No",
@@ -1741,14 +1789,185 @@ $(document).ready(function() {
 			}, function (dismiss) {
 
 			});
+});*/
+		$("body").on('click','#mobile-icon',function(e){
+
+				var contact_number = $('#contact_number').val(); // Get the value of the textbox
+				if(contact_number=="")
+				{	
+					swal('Error!', "Contact Number Cannot be empty.", 'error');
+					return false;
+				}
+				var ticket_id='<?php echo md5($orderData->bg_id); ?>';
+				var data_close_modal = $(this).attr('data-close-modal');
+
+				$.ajax({
+						url: '<?php echo base_url();?>game/save_delivery_information ',
+						type: 'POST',
+						dataType: "json",
+						data: {  contact_number: contact_number ,ticket_id:ticket_id  },
+						success: function (response) { 
+								if(response.status==0)
+								{
+									swal('Updation Failed !', response.msg, 'error');
+								}
+								else
+								{
+									swal('Updated !', response.msg, 'success');
+								}
+								$('#'+data_close_modal).modal("hide");  
+								//setTimeout(window.location.reload(),300);
+						},
+						error: function () {
+						console.log('Failed');
+						}
+					});
+		});
+$(".call_modals").change(function() {
+		var data_sub_title = $(this).attr('data-sub-title');
+		var data_yes = $(this).attr('data-yes');
+		var data_no = $(this).attr('data-no');
+		var data_btn = $(this).attr('data-btn-id');
+		var data_target = $(this).attr('data-target');
+		var data_bg_id = $(this).attr('data-bg-id');
+		status="";
+		data_title="Are you sure want to Change Status";
+		/*if (typeof data_bg_id !== "undefined") 
+		{			
+			var status = $("#status option:selected").val();
+			if (status == 1) {
+				data_title = "Are you sure want to Confirm this Booking ?";
+			} else if (status == 0) {
+				data_title = "Are you sure want to Confirm Failed ?";
+			} else if (status == 2) {
+				data_title = "Are you sure want to Confirm Pending ?";
+			} else if (status == 3) {
+				data_title = "Are you sure want to Confirm Cancelling ?";
+			} else if (status == 4) {
+				data_title = "Are you sure want to Confirm Shipping ?";
+			} else if (status == 5) {
+				data_title = "Are you sure want to Confirm Delivering ?";
+			} else if (status == 6) {
+				data_title = "Are you sure want to Confirm Downloading ?";
+			} else if (status == 7) {
+				data_title = "Are you sure want to Confirm Failed booking ?";
+			}
+		}*/
+
+	$.ajax({
+			url: '<?php echo base_url();?>game/call_modal',
+			type: "POST",
+			data: {  "data_title": data_title ,"data_sub_title":data_sub_title, "data_yes":data_yes,"data_no":data_no,"data_btn":data_btn,"data_target":data_target ,"data_bg_id":data_bg_id,"status":status},
+			success: function (response) {  
+				$("#modal_content_ajax").html(response); 
+				 $('#'+data_target).modal("show");  
+				//$("#").modal('show');
+			},
+			error: function () {
+			}
+		});
+
+});
+	$(".call_modal").click(function() {
+		var data_title = $(this).attr('data-title');
+		var data_sub_title = $(this).attr('data-sub-title');
+		var data_yes = $(this).attr('data-yes');
+		var data_no = $(this).attr('data-no');
+		var data_btn = $(this).attr('data-btn-id');
+		var data_target = $(this).attr('data-target');
+		var data_bg_id = $(this).attr('data-bg-id');
+		
+	$.ajax({
+			url: '<?php echo base_url();?>game/call_modal',
+			type: "POST",
+			data: {  "data_title": data_title ,"data_sub_title":data_sub_title, "data_yes":data_yes,"data_no":data_no,"data_btn":data_btn,"data_target":data_target ,"data_bg_id":data_bg_id},
+			success: function (response) {  
+				$("#modal_content_ajax").html(response); 
+				 $('#'+data_target).modal("show");  
+				//$("#").modal('show');
+			},
+			error: function () {
+			}
+		});
+
 });
 
-//
-$('#emailIcon, #emailIcon_need_to_receive').click(function() {
+$("body").on('click',' #update_modal_booking_status ',function(e){
 
-    var Email = $('#email_address').val(); // Get the value of the textbox
+	var sendmail = $('#sendmail').is(":checked");
+    var mail_enable = 0;
+    if (sendmail == true) {
+        mail_enable = 1;
+    }
+
+	var bg_id = $(this).attr('data-bg-id');
+	var status = $(this).attr('data-status');
+	var data_close_modal = $(this).attr('data-close-modal');
+	var reason = "";
+            if (status == 3) {
+                reason = prompt("Please Enter the reason for Cancel ", "");
+            }
+            $.ajax({
+                url: base_url + 'game/orders/update_booking_status',
+                method: "POST",
+                data: {
+                    "bg_id": bg_id,
+                    "status": status,
+                    "mail_enable": mail_enable,
+                    "reason": reason
+                },
+                dataType: 'json',
+                success: function(result) {
+
+                    if (result) {
+
+                        swal('Updated !', result.msg, 'success');
+
+                    } else {
+                        swal('Updation Failed !', result.msg, 'error');
+
+                    }					
+					$('#'+data_close_modal).modal("hide");  
+                }
+            });
+});
+
+
+$("body").on('click',' #emailIcon ,#emailIcon_need_to_receive',function(e){
+    var Email = $('#email_address').val(); 
 	var email_status= '<?php echo $orderData->ticket_email_status == 1 ? "Resend" : "Send"; ?>';
 	var ticket_id='<?php echo md5($orderData->bg_id); ?>';
+	var data_close_modal = $(this).attr('data-close-modal');
+	
+	if(Email==""){	
+		swal('Error!', "Emai ID Cannot be empty.", 'error');
+		return false;
+	}				   
+				$.ajax({
+			url: '<?php echo base_url();?>game/send_email',
+			type: 'POST',
+			dataType: "json",
+			data: {  email: Email ,ticket_id:ticket_id  },
+			success: function (response) {   
+					if(response.status==0)
+					{
+						swal('Updation Failed !', response.msg, 'error');
+					}
+					else
+					{
+						swal('Updated !', response.msg, 'success');
+					}
+					$('#'+data_close_modal).modal("hide");  
+			},
+			error: function () {
+			console.log('Failed');
+			}
+		});
+	});
+/*$("body").on('click',' #emailIcon_need_to_receive',function(e){
+    var Email = $('#email_address').val(); // Get the value of the textbox
+	var email_status= '<?php //echo $orderData->ticket_email_status == 1 ? "Resend" : "Send"; ?>';
+	var ticket_id='<?php //echo md5($orderData->bg_id); ?>';
 	if(Email=="")
 				{	
 					swal('Error!', "Emai ID Cannot be empty.", 'error');
@@ -1757,21 +1976,24 @@ $('#emailIcon, #emailIcon_need_to_receive').click(function() {
 					swal({
 						title: 'Are you sure you want to '+email_status+' a email ?',
 						text: "Send or Cancel",
-						type: 'warning',
+						// type: 'warning',
 						showCancelButton: true,
-						confirmButtonColor: '#0CC27E',
-						cancelButtonColor: '#FF586B',
+						confirmButtonColor: '#43D39E',
+						cancelButtonColor: '#FF5C75',
 						confirmButtonText: 'Yes, Send!',
-		   				cancelButtonText: 'No, cancel!',
+		   				cancelButtonText: 'No, Cancel!',
 						confirmButtonClass: 'button h-button is-primary btn btn-primary ',
-						cancelButtonClass: 'button h-button is-danger btn btn-danger',
-						buttonsStyling: false
+						// cancelButtonClass: 'button h-button is-danger btn btn-danger',
+						cancelButtonClass: 'btn-light btn',
+						buttonsStyling: false,
+						showCloseButton: true,
+						reverseButtons: true
 					}).then(function (res) {
 
 
 				if (res.value == true) {    
 							$.ajax({
-						url: '<?php echo base_url();?>game/send_email',
+						url: '<?php //echo base_url();?>game/send_email',
 						type: 'POST',
 						dataType: "json",
 						data: {  email: Email ,ticket_id:ticket_id  },
@@ -1796,7 +2018,7 @@ $('#emailIcon, #emailIcon_need_to_receive').click(function() {
 			}, function (dismiss) {
 
 			});
-			});
+			});*/
 
   $(".owl-prev").html('<i class="fas fa-arrow-left"></i>');
   $( ".owl-next").html('<i class=" fas fa-arrow-right"></i>');

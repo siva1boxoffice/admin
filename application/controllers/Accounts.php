@@ -1,8 +1,8 @@
 <?php
 if (!defined('BASEPATH')) exit('No direct script access allowed');
-/*require 'vendor/autoload.php';
+require 'vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;*/
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 error_reporting(0);
 class Accounts extends CI_Controller {
     public function __construct() {
@@ -1361,16 +1361,16 @@ return true;
             }
             
             if($Insert != ''){
-               // $saved_proof = $this->save_payout_proof("",$order_data);
+                $saved_proof = $this->save_payout_proof("",$order_data);
                 foreach($order_info as $order_in){
                    $update_data = array('payout_status' => '1','seller_status' => '1');
                    $this->General_Model->update('booking_global', array('bg_id' => $order_in['bg_id']), $update_data);
                 }
               
 
-                // if($saved_proof == true){
-                //    $this->send_payout_proof($Insert);
-                // }
+                if($saved_proof == true){
+                   $this->send_payout_proof($Insert);
+                }
                 
 
              }

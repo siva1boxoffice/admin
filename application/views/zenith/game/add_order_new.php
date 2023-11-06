@@ -390,7 +390,7 @@
 
                    <?php if($cid != ''){ ?>
 
-                      <form id="order-form" method="post" class=" " action="<?php echo base_url(); ?>game/orders/save_order_new" >
+                      <form id="order-form" method="post" class="call_modal" action="<?php echo base_url(); ?>game/orders/save_order_new"  data-toggle="modal" data-target="centermodal1"  data-title="Are you sure?" data-sub-title="Are you sure want to do the make booking?!" data-yes="Yes" data-no="No" data-btn-id="new_order" data-target="update_booking_status">
                            
                            <div  style="display:none">
                            <input type="hidden" name="currency_code" value="<?php echo $category_details['currency_code']; ?>">
@@ -640,6 +640,9 @@
       </div>
       <!-- main content End -->
 
+      <div id="modal_content_ajax">
+				<!-- Your modal content here -->
+				</div>
 <?php $this
    ->load
    ->view(THEME.'common/footer'); ?>
@@ -1378,11 +1381,84 @@
  
  $(document).ready(function () {
 
+   $("body").on('click',' #new_order',function(e){
+                      //var myform = $('#'+$(form).attr('id'))[0];
+                      var myform = $('#order-form')[0];
+                      var formData = new FormData(myform);
+                      //$('#'+$(form).attr('id')+'-btn').addClass("is-loading no-click");
+                      $('#order-form'+'-btn').addClass("is-loading no-click");
+
+                      $('.has-loader').addClass('has-loader-active');
+                       var submit = $("#order-form").find('button:first');
+                         submit.attr("disabled", true);
+                         submit.html('<i class="fa fa-spinner fa-spin" style="color:#color: #325edd;"></i>&nbsp;Processing ...');
+                        //action="";
+                     // var action = $(form).attr('action');
+                      var action = $('#order-form').attr('action');
+                      $.ajax({
+                        type: "POST",
+                        enctype: 'multipart/form-data',
+                        url: action,
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        dataType: "json",
+
+                        success: function(data) {
+                            submit.html("Confirm Order");
+                           console.log(data);
+
+                          if(data.status == 1) {
+                        //    alert('Booking Success');
+                            swal('Updated !', "Booking Success", 'success');
+                            setTimeout(window.location.reload(),300);
+                          }else if(data.status == 0) {
+                             submit.attr("disabled", false);
+                              swal('Updated !', data.msg, 'success');
+                            setTimeout(function(){ window.location.href = data.redirect_url; }, 1000);
+                            
+                          }
+                          
+                        }
+                   })
+                   return false;
+            //      }
+     
+            //   else{
+            //       return false;
+            //   }
+           // });
+
+   });
+
        $('#order-form').validate({
+         
 
          submitHandler: function(form) {
 
-            swal({
+		var data_title = $(".call_modal").attr('data-title');
+		var data_sub_title = $(".call_modal").attr('data-sub-title');
+		var data_yes = $(".call_modal").attr('data-yes');
+		var data_no = $(".call_modal").attr('data-no');
+		var data_btn = $(".call_modal").attr('data-btn-id');
+		var data_target = $(".call_modal").attr('data-target');
+		var data_bg_id = "";
+      var data_form="";
+		
+	$.ajax({
+			url: '<?php echo base_url();?>game/call_modal',
+			type: "POST",
+			data: {  "data_title": data_title ,"data_sub_title":data_sub_title, "data_yes":data_yes,"data_no":data_no,"data_btn":data_btn,"data_target":data_target ,"data_bg_id":data_bg_id,"data_form":data_form},
+			success: function (response) {  
+				$("#modal_content_ajax").html(response); 
+				 $('#'+data_target).modal("show");  
+				//$("#").modal('show');
+			},
+			error: function () {
+			}
+		});
+    /*  swal({
                title: 'Are you sure?',
                text: "Are you sure want to do the make booking?!",
                type: 'warning',
@@ -1408,7 +1484,7 @@
                        var submit = $("#order-form").find('button:first');
                          submit.attr("disabled", true);
                          submit.html('<i class="fa fa-spinner fa-spin" style="color:#color: #325edd;"></i>&nbsp;Processing ...');
-
+                     //   action="";
                       var action = $(form).attr('action');
                       $.ajax({
                         type: "POST",
@@ -1453,7 +1529,7 @@
               else{
                   return false;
               }
-            });
+            });*/
          }
          });
    
