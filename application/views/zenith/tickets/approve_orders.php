@@ -928,6 +928,7 @@ var reason = "";
 
                  }					
             $('#'+data_close_modal).modal("hide");  
+            setTimeout(function () { window.location.reload(); }, 2000);
              }
          });
 });
