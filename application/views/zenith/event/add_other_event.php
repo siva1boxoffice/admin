@@ -648,9 +648,10 @@ z-index: 9999;
                                           <div class="form-group">
                                              <label for="simpleinput">Match Title <span class="text-danger">*</span></label>
                                              <!-- <input type="text" id="simpleinput" class="form-control" placeholder="Enter Tournament Name" <?php //echo $event->match_name;?> value="<?php echo $event->match_name;?>"> -->
-                                             <input disabled type="text" id="" name="" class="form-control" placeholder="Enter Match Title" value="<?php
+                                             <!-- disabled -->
+                                             <input  type="text" id="matchname" name="matchname" class="form-control" placeholder="Enter Match Title" value="<?php
                                                 echo isset($event->match_name) ? $event->match_name : '';?>">
-                                             <input  type="hidden" id="matchname" name="matchname" class="input" placeholder="Enter Match Title" required value="<?php echo $event->match_name;?>">
+                                             <input  type="hidden" id="" name="" class="input" placeholder="Enter Match Title" required value="<?php echo $event->match_name;?>">
                                           </div>
                                        </div>
                                        <div class="col-lg-6">

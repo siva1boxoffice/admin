@@ -1,6 +1,9 @@
 <?php
 if (!defined('BASEPATH')) exit('No direct script access allowed');
-error_reporting(0);
+//error_reporting(0);
+// 		ini_set('display_errors', 0);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
 class Ajax extends CI_Controller
 {
 	public function __construct()
@@ -460,7 +463,14 @@ class Ajax extends CI_Controller
 	        "aaData" => $data
 	     );
 
-	     echo json_encode($response); 
+		if (mb_check_encoding($response, 'UTF-8')) {
+			$json = json_encode($response);
+		} else {
+			$response = mb_convert_encoding($response, 'UTF-8');
+			$json = json_encode($response);
+		}
+		echo $json;
+	  //   echo json_encode($response); 
 	     die;
 	}
 
