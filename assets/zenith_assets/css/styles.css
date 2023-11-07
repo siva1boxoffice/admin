@@ -9192,7 +9192,11 @@ span.compare_price {
 .padfive {padding: 0 18px;}
 .delivery-select .custom-select {max-width: 90%;margin: 0 10px;}
 
-.ui-widget.ui-widget-content {z-index: 1000 !important;}
+/*.ui-widget.ui-widget-content {z-index: 1000 !important;}*/
+
+
+.ui-widget.ui-widget-content {z-index: 10000000 !important;}
+
 span.sell_name {font-weight: 600 !important;}
 
 .details_copy {margin-top: 5px;}

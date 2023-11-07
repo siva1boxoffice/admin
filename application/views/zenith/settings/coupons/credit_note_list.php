@@ -310,7 +310,7 @@ label.error{
 
       $("#coupon_value").keyup(function() {   
          var inputValue = $(this).val();     
-         inputValue = inputValue.replace(/[^0-9]/g, '');
+         /*inputValue = inputValue.replace(/[^0-9]/g, '');*/
          $(this).val(inputValue);
          $('#coupon_balance').val(inputValue);
       });
