@@ -2,7 +2,7 @@
 
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
-error_reporting(0);
+//error_reporting(0);
 class Event extends CI_Controller
 {
 	public function __construct()
@@ -837,7 +837,6 @@ class Event extends CI_Controller
 
 
 		} else if ($match_segment == "save_matches_content") {
-
 			$matchId = $this->input->post('matchId');
 			if ($matchId != '') {
 				if ($this->input->post()) {
@@ -851,12 +850,12 @@ class Event extends CI_Controller
 
 					$msg = '';
 					if ($this->form_validation->run() !== false) {
-
 						$updateData['seo_keywords'] = trim($this->input->post('seo_keywords'));
 						$this->General_Model->update('match_info', array('m_id' => $matchId), $updateData);
 						//echo "<pre>";print_r($updateData);
 
 						$updateData_lang['meta_title'] = strip_tags($this->input->post('metatitle'));
+						$updateData_lang['match_name'] = strip_tags($this->input->post('matchname'));
 						$updateData_lang['meta_description'] = $this->input->post('metadescription');
 						$updateData_lang['description'] = trim($this->input->post('description'));
 						$updateData_lang['long_description'] = trim($this->input->post('long_description'));
