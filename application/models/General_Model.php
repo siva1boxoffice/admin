@@ -1407,8 +1407,29 @@ class General_Model extends CI_Model
 	{
 
 
-		$select = 'match_info.match_name as event_name,match_settings.*,match_info.*,s1.s_no,match_info.status as match_status,tournament_lang.*,match_info_lang.*,teams_lang.*,admin_details.*,tournament.url_key,match_info_lang.meta_title as meta_title,match_info_lang.meta_description as meta_description,st.stadium_name,(SUM(s1.quantity 
-			 )  + SUM(s1.sold) ) as box_quantity,s1.sold , SUM(s1.sold) as sold_total, match_info.seo_keywords as match_seo_keywords,cities.name as city_name,countries.name as country_name,game_category_lang.category_name';
+		/*$select = 'match_info.match_name as event_name,match_settings.*,match_info.*,s1.s_no,match_info.status as match_status,tournament_lang.*,match_info_lang.*,teams_lang.*,admin_details.*,tournament.url_key,match_info_lang.meta_title as meta_title,match_info_lang.meta_description as meta_description,st.stadium_name,(SUM(s1.quantity 
+			 )  + SUM(s1.sold) ) as box_quantity,s1.sold , SUM(s1.sold) as sold_total, match_info.seo_keywords as match_seo_keywords,cities.name as city_name,countries.name as country_name,game_category_lang.category_name';*/
+
+			 /*match_info_lang.*, teams_lang.*,  admin_details.*,
+			 st.stadium_name,(SUM(s1.quantity )  + SUM(s1.sold) ) as box_quantity,
+						SUM(s1.sold) as sold_total,
+						SUM(s1.quantity + s1.sold) AS box_quantity,
+						*/
+
+			 $select = 'match_info.match_name as event_name,
+			 			match_settings.*,
+						match_info.*,
+						s1.s_no,match_info.status as match_status,
+						tournament_lang.*,
+						match_info_lang.match_name,
+						teams_lang.team_name,
+						tournament.url_key,
+						s1.sold , 
+						st.stadium_name,
+						SUM(s1.quantity + s1.sold) AS box_quantity,
+						match_info_lang.meta_title as meta_title,
+						match_info_lang.meta_description as meta_description,						 
+			 match_info.seo_keywords as match_seo_keywords,cities.name as city_name,countries.name as country_name,game_category_lang.category_name';
 
 		$this->db->select($select)
 			->from('match_info')
@@ -5042,7 +5063,7 @@ public function getOrderData_v2()
 		}
 		$this->db->order_by("match_date_new ASC ,booking_tickets.match_date ASC");
 		$qry = $this->db->get();
-		//echo $this->db->last_query();exit;
+		echo $this->db->last_query();exit;
 		return $qry;
 		/*if ($qry->num_rows() > 0) {
 			return $qry->result();
