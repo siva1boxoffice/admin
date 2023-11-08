@@ -84,6 +84,39 @@ function getChildren_oneclicket($array, $category = NULL){
   unset($category);
 
 }
+
+
+function getChildren_xs2event($array, $category = NULL){  
+
+  foreach($array as $child){
+
+    if(isset($child['children']) && $child['children']){
+
+      if($category != NULL){
+
+        $newCategory = $category . ' > ' . $child['category'];
+
+
+      }else {
+
+          $newCategory = $child['category'];
+
+        }
+
+      getChildren_xs2event($child['children'], $newCategory);
+
+    } else {
+
+     // echo '<option value="' . $child['id'] . '">' . $category . ' > ' . $child['name'] . '</option>';
+       echo '<option value="' . $child['unique_id'] . '">' . $category . ' > ' . $child['category'] . '</option>';
+
+    }
+
+  }
+
+  unset($category);
+
+}
  ?>
 
 <div id="overlay">
@@ -242,28 +275,7 @@ function getChildren_oneclicket($array, $category = NULL){
                   </div> 
                   </div>                                  
 
-                                          <!-- <div class="col-lg-3">
-                                             <div class="form-group">
-                                                 <label for="example-select">Event Parent Category <span class="text-danger">*</span></label>
-                                                 <select class="actionpayout roleuser custom-select" required name="oneclicket_parent_category" id="oneclicket_parent_category">
-                                            <option value="">Choose Parent Category</option>
-                                            <?php foreach($oneclicket_categories as $category){ ?>
-                                            <option  value="<?php echo $category->category_id;?>"><?php echo $category->category;?></option>
-                                            <?php } ?>
-                                            </select>
-                                                 
-                                             </div> 
-                                          </div> 
-                                           <div class="col-lg-3">
-                                             <div class="form-group">
-                                                 <label for="example-select">Select Tournament <span class="text-danger">*</span></label>
-                                                 <select class="actionpayout roleuser custom-select"  name="oneclicket_tournaments" id="oneclicket_tournaments">
-                                            <option value="">Choose Tournament</option>
-                                           
-                                            </select>
-
-                                             </div> 
-                                          </div>   -->
+                                        
                                            <div class="col-lg-3">
                                              <div class="form-group">
                                                  <label for="example-select">Select Content Type <span class="text-danger">*</span></label>
@@ -292,10 +304,79 @@ function getChildren_oneclicket($array, $category = NULL){
                                 </div><!-- end col -->
                               </div>
                               <!-- end row -->
+                             
+
+                                <div class="row" id="xs2event_pull_area" style="display: none;">
+                                <div class="col-12">
+                                  <div class="card">
+                                     <form id="search-form-xs2event" method="post" enctype='multipart/form-data' class="login-wrapper" action="<?php echo base_url();?>xs2event/updateFeedsEvents/true" data-action="<?php echo base_url();?>xs2event/updateEventsData/true">
+                                      <div class="row column_modified">
+                                     
+
+              <div class="col-lg-4">
+                  <div class="form-group">
+                  <label for="example-select">Event Category <span class="text-danger">*</span></label>
+                  
+                <!--   <select name="xs2event_category_name" id="xs2event_category_name" class="actionpayout roleuser custom-select" >
+                  <option value="">-- please select --</option>
+                   <?php for($i = 0; $i < count($dropdownlist_xs2event); $i++){ ?>
+                   <option value="<?php echo trim($dropdownlist_xs2event[$i]->category);?>"><?php echo ucfirst($dropdownlist_xs2event[$i]->category);?></option>
+                 <?php } ?>
+                  </select> -->
+                  
+
+                  <?php 
+                                        
+                                          echo
+                  '<select name="category_name" class="actionpayout roleuser custom-select" >
+                  <option value="">-- please select --</option>';
+                  //echo "<pre>";print_r($dropdownlist_xs2event);exit;
+                  for($i = 0; $i < count($dropdownlist_xs2event); $i++){
+
+                  echo
+                  '<optgroup label="' . ucfirst($dropdownlist_xs2event[$i]['category']) . '"></label>';
+
+                  getChildren_xs2event($dropdownlist_xs2event[$i]['children']);    
+                  echo'</optgroup>';
+                  }
+                  echo
+                  '</select>';?>
+                  </div> 
+                  </div> 
+
+                                           <div class="col-lg-3">
+                                             <div class="form-group">
+                                                 <label for="example-select">Select Content Type <span class="text-danger">*</span></label>
+                                                 <select class="custom-select" id="xs2event_content_type">
+                                                   <option value="team">Tournament,Team,Stadium</option>
+                                                   <option value="events">Events & tickets</option>
+                                                 </select>
+                                             </div> 
+                                          </div>
+                                          <div class="col-lg-3">
+                                             <div class="form-group">
+                                                 <label for="example-select">Page Number <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" required name="xs2event_page" id="xs2event_page" required value="1">
+                                             </div> 
+                                          </div>                                   
+                                       </div> <!-- end col -->
+                                      
+
+                                       <div class="row column_modified">
+                                          <div class="tick_details">
+                                             <button id="xs2event_search" type="submit" class="btn btn-success mb-2 ml-2 mt-3">Search</button>
+                                          </div>
+                                       </div>
+                                  </div> <!-- end card -->
+                              </form>
+                                </div><!-- end col -->
+                              </div>
+                              <!-- end row -->
                               <div class="clearfix"></div>
 
                               <hr>
-                              <form id="payout-form" method="post" enctype='multipart/form-data' class="login-wrapper" action="<?php echo base_url();?>tixstockcms/migrateevents" oneclicket-action="<?php echo base_url();?>oneclicketapi/migrateevents">
+
+                              <form id="payout-form" method="post" enctype='multipart/form-data' class="login-wrapper" action="<?php echo base_url();?>tixstockcms/migrateevents" oneclicket-action="<?php echo base_url();?>oneclicketapi/migrateevents" xs2event-action="<?php echo base_url();?>xs2event/migrateevents">
                                 <input type="hidden" name="action" id="action" value="pull">
                               <div class="" id="content_1">
                                     <div class="" id="payout_orders">
@@ -567,12 +648,21 @@ function getChildren_oneclicket($array, $category = NULL){
          var api = $(this).val();
          if(api == 'tixstock'){
             $('#oneclicket_pull_area').hide();
+            $('#xs2event_pull_area').hide();
             $('#tixstock_pull_area').show();
+
            // $('#boxoffice_btn').show();
          }
          else if(api == 'oneclicket'){
             $('#oneclicket_pull_area').show();
+            $('#xs2event_pull_area').hide();
             $('#tixstock_pull_area').hide();
+          //  $('#boxoffice_btn').hide();
+         }
+         else if(api == 'xs2event'){
+            $('#oneclicket_pull_area').hide();
+            $('#tixstock_pull_area').hide();
+            $('#xs2event_pull_area').show();
           //  $('#boxoffice_btn').hide();
          }
       });   
@@ -996,7 +1086,9 @@ var Dtable = $('#tickets-datatable-3').DataTable({
     else if(api == "oneclicket"){
       var action = $(form).attr('oneclicket-action');
     }
-
+    else if(api == "xs2event"){
+      var action = $(form).attr('xs2event-action');
+    }
     
     $.ajax({
       type: "POST",
@@ -1175,8 +1267,76 @@ $('#search-form-oneclicket').validate({
     return false;
   }
 });
-           
+        
+$('#search-form-xs2event').validate({
 
+  submitHandler: function(form) {
+    
+    var myform = $('#'+$(form).attr('id'))[0];
+    //is-loading no-click
+   // branch-form-btn
+    var formData = new FormData(myform);
+     formData.append('category', $("#xs2event_category_name").val()); 
+     formData.append('page', $("#xs2event_page").val()); 
+
+    $('#xs2event_search').addClass("is-loading no-click");
+
+     var dataString = $('#'+$(form).attr('id')).serialize();
+     
+     var content_type         = $("#xs2event_content_type").val();
+     
+    if(content_type == "team"){
+        var action = $(form).attr('data-action');
+    }
+    else{
+
+    var action = $(form).attr('action');
+    }
+
+    $.ajax({
+      type: "POST",
+      url: action,
+      data: formData,
+      processData: false,
+      contentType: false,
+      cache: false,
+      dataType: "json",
+      beforeSend: function() {
+        // setting a timeout
+        $("#overlay").show();
+        },
+      success: function(data) { 
+        $("#overlay").hide();
+               $("#content_1").addClass("section_left_scroll");
+                  $("#content_1").mCustomScrollbar({
+          scrollButtons:{
+            enable:true
+          }
+        });
+        $('#xs2event_search').removeClass("is-loading no-click");
+
+        $('.has-loader').removeClass('has-loader-active');
+
+        if(data.flag == "team" && data.status == 1) {
+            $('#xs2event_page').val(data.next);
+         swal('Success !', data.msg, 'success');
+        }else if(data.flag == "team" && data.status == 0) {
+           swal('Failed !', data.msg, 'error');
+          
+        }
+
+             if(data.flag == "event" && data.status == 1) {
+                             $('#xs2event_page').val(data.next);
+                            $('#payout_orders').html(data.matches);
+            }
+            else if(data.flag == "event" && data.status == 0) {
+                swal('Failed !', data.msg, 'error');
+            }
+      }
+    })
+    return false;
+  }
+});
 $('body').on('change', '#oneclicket_parent_category', function() {
     var parent_category_id = $(this).val();
      var action = "<?php echo base_url();?>game/get_oneclicket_category";

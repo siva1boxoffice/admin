@@ -1804,7 +1804,7 @@ $this->data['teams'] = $teamshtml;
 		//$this->db->where(array('archived' => NULL));
 		$this->data['apis'] = 		$this->General_Model->getAllItemTable_Array('api', array('status' => 1))->result();
 		$this->load->view(THEME.'game/update_events', $this->data);
-	}
+}
 
 public function update_oneclicket_categories(){
 $request_data = array();
@@ -1878,9 +1878,25 @@ public function update_events()
 			
 
 		$i++;}
+		$i = 0;
+		$xs2events_parent_category = array();
+		$dropdownlist_xs2events = $this->General_Model->getAllItemTable_Array('xs2event_categories', array('parent_category' =>null))->result();
+		foreach($dropdownlist_xs2events as $dropdownlist_xs2event){
+			$xs2events_category = json_decode(json_encode($dropdownlist_xs2event), true);
+			$xs2events_parent_category['data'][$i] = $xs2events_category;
+			$child = $this->General_Model->getAllItemTable_Array('xs2event_categories', array('parent_category' => $dropdownlist_xs2event->id))->result();
+			if(!empty($child)){
+				$child = json_decode(json_encode($child), true);
+				$xs2events_parent_category['data'][$i]['children'] = 		$child;
+			}
 
+	
+		$i++;
+		} 	
 		//echo "<pre>";print_r($oneclicket_parent_category);exit;
 		$this->data['dropdownlist_oneclicket'] = $oneclicket_parent_category['data'];
+		$this->data['dropdownlist_xs2event']   = $xs2events_parent_category['data'];
+		
 		$this->data['dropdownlist'] = $category_data['data'];
 		$this->load->view(THEME.'game/update_events_v1', $this->data);
 	}
@@ -2066,6 +2082,7 @@ public function get_teams_name(){
 	{	
 		$category 	 			= 		$_POST['category'];
 		$tournaments 			= 		$this->General_Model->tournaments_api($_POST['api'],$category);
+		
 		$teams    				= 		$this->General_Model->teams_api($_POST['api'],$category);
 		$stadiums 				= 		$this->General_Model->stadiums_api($_POST['api'],$category);
 
@@ -6759,6 +6776,14 @@ public function get_stadium_details()
 			else if($_POST['api'] == "oneclicket"){
 				$data['api_source'] =$_POST['api'];
 				$data['api_categories'] = $this->General_Model->get_stadium_category_oneclicket($_POST['stadium'],'oneclicket')->result();
+				$category_count = count($data['api_categories']);
+				//echo "<pre>";print_r($data['api_categories']);exit;
+			 $category_block_data = $this->load->view(THEME.'game/stadium_category_v1', $data,true);
+
+			}
+			else if($_POST['api'] == "xs2event"){
+				$data['api_source'] =$_POST['api'];
+				$data['api_categories'] = $this->General_Model->get_stadium_category_xs2event($_POST['stadium'],'oneclicket')->result();
 				$category_count = count($data['api_categories']);
 				//echo "<pre>";print_r($data['api_categories']);exit;
 			 $category_block_data = $this->load->view(THEME.'game/stadium_category_v1', $data,true);

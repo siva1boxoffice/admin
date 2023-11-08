@@ -6487,6 +6487,24 @@ public function getOrderData_v2()
 		return $query;
 	}
 
+	public function get_stadium_category_xs2event($stadium_id='',$source_type='')
+	{ 
+
+		$this->db->select('xs2event_stadium_category.*,merge_api_stadium_category.category as boxoffice_category,merge_api_stadium_category.api_category')
+			->from('xs2event_stadium_category')
+			->join('merge_api_content', 'merge_api_content.api_content_id = xs2event_stadium_category.stadium_id', 'left')
+			->join('merge_api_stadium_category', 'merge_api_stadium_category.stadium_id = merge_api_content.api_content_id', 'left');
+		$this->db->where('merge_api_content.content_type', 'stadium');
+		if($stadium_id != ""){
+        $this->db->where('merge_api_content.content_id', $stadium_id);
+		}
+		$this->db->where('merge_api_content.source_type', 'xs2event');
+		$this->db->group_by('xs2event_stadium_category.id');
+		//$this->db->where('merge_api_stadium_category.source_type', 'tixstock');
+		$query = $this->db->get();//echo $this->db->last_query();exit;
+		return $query;
+	}
+
 
 	public function get_stadium_category_1boxoffice($stadium_id='',$source_type='')
 	{ 
