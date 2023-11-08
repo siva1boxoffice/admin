@@ -816,9 +816,9 @@ return TRUE;
 			$this->data['flag'] = $this->uri->segment(4);
 			$segment5 = $this->uri->segment(5);
 			$admin_id = json_decode(base64_decode($segment5));
-			$this->data['user'] = $this->General_Model->get_admin_details($admin_id);			
-			
-			$this->data['country_lists'] = $this->General_Model->fetch_country_list();
+			$this->data['user'] = $this->General_Model->get_admin_details($admin_id);
+		//	$this->data['country_lists'] = $this->General_Model->fetch_country_list();
+			$this->data['country_lists'] = $this->General_Model->getAllItemTable('countries')->result();
 			$this->data['roles'] = $this->General_Model->getAllItemTable('admin_role', 'status', 'ACTIVE', 'admin_role_id', 'DESC')->result();
 			$this->load->view(THEME.'users/add_user', $this->data);
 		}
@@ -856,7 +856,7 @@ return TRUE;
 			} else if ($_POST['flag'] == 2) {
 				//echo "<pre>";print_r($_POST);exit;
 				$this->form_validation->set_rules('country', 'Country', 'required');
-				$this->form_validation->set_rules('state', 'State', 'required');
+				// $this->form_validation->set_rules('state', 'State', 'required');
 				$this->form_validation->set_rules('city', 'City', 'required');
 				$this->form_validation->set_rules('zip_code', 'Zip Code', 'required');
 				$this->form_validation->set_rules('address', 'Address', 'required');
@@ -1230,6 +1230,7 @@ return TRUE;
 			$this->data['users'] = $this->General_Model->get_user_details()->result();
 			$row_count = $this->uri->segment(4);
 			//$this->loadRecord($row_count, ' ', 'home/users/users', 'id', 'DESC', 'users/user_list', 'users', 'users', '');
+
 			$this->load->view(THEME.'users/user_list', $this->data);
 		}
 		else if ($segment == 'seller') {

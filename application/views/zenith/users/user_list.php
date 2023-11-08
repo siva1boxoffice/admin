@@ -32,25 +32,13 @@ $segment = $this->uri->segment(3);
                <div class="container-fluid">
                   <div class="page-title dflex-between-center">
                      <h3 class="mb-1"><?php echo ucfirst($segment);?> List</h3>
-                     <?php if($segment=='seller')
-                     {;?>
+                    <?php
+                        $buttonText = ($segment == 'seller') ? 'Add Seller' : 'Add User';
+                        $urlSegment = ($segment == 'seller') ? 'create_user' : 'add_user';
+                     ?>    
                      <div class="float-sm-right mt-3 mt-sm-0 add_team_s">
-                       <a href="<?php echo base_url(); ?>home/users/create_user/1"  class="btn btn-success mb-2">Add Seller</a>
-                    </div>
-                    <?php  } ?>
-                     <!-- <ol class="breadcrumb mb-0 mt-1">
-                        <li class="breadcrumb-item">
-                           <a href="../index.html">
-                              <i class="bx bx-home fs-xs"></i>
-                           </a>
-                        </li>
-                        <li class="breadcrumb-item">
-                           <a href="calender.html">
-                              Tickets
-                           </a>
-                        </li>
-                        <li class="breadcrumb-item active">Ticket approval</li>
-                     </ol> -->
+                        <a href="<?php echo base_url(); ?>home/users/<?php echo $urlSegment; ?>/1" class="btn btn-success mb-2"><?php echo $buttonText; ?></a>
+                     </div>
                   </div>
                </div>
             </div>
