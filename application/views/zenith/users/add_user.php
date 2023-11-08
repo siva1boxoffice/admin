@@ -1,3 +1,17 @@
+<style>
+   label.error {
+    color: #ff0000 !important;
+    font-weight: unset !important;
+}
+   </style>
+<?php
+ $user_id="";
+if($user->user_id!="")
+{
+$user_id= base64_encode(json_encode($user->user_id));
+}
+
+ ?>
 <?php
    $this->load->view(THEME.'/common/header'); ?>
 <!-- Begin main content -->
@@ -12,7 +26,7 @@
                <!-- <h3 class="mb-1"> <div class="go_back_btn"><a href="<?php echo base_url(); ?>home/index"><i class="fas fa-arrow-left"></i></a></div>Order Info</h3> -->
                <h5 class="card-title">
                   <div class="go_back_btn"><a href="<?php echo base_url();?>home/users/users"><i class="fas fa-arrow-left"></i></a></div>
-                  User List
+                 Add New User
                </h5>
             </div>
             <div class="col-sm-4">
@@ -38,34 +52,34 @@
                         validate_form_v2 form_req_validation login-wrapper
                      
                      -->
-                           <form id="profile-form" method="post" class="login-wrapper form_req_validation validate_form_v1" action="<?php echo base_url();?>home/users/save_user">
+                           <form id="profile-form" method="post" class="validate_form_v1 login-wrapper " action="<?php echo base_url();?>home/users/save_user">
                               <input type="hidden" name="flag" value="<?php echo $flag;?>">
                               <input type="hidden" name="admin_id" value="<?php echo $user->user_id;?>">
                               <input type="hidden" name="address_details_id" value="<?php echo $user->address_details_id;?>">
                               <ul class="nav nav-tabs nav-bordered">
                                  <li class="nav-item">
-                                    <a href="<?php echo base_url();?>home/users/add_user/1/<?php echo base64_encode(json_encode($user->user_id));?>"  class="nav-link <?php if($flag == '1'){ ?> active <?php } ?>">
+                                    <a href="<?php echo base_url();?>home/users/add_user/1/<?php echo $user_id ?>"  class="nav-link <?php if($flag == '1'){ ?> active <?php } ?>">
                                     General
                                     </a>
                                  </li>
                                  <li class="nav-item">
-                                    <a href="<?php echo base_url();?>home/users/add_user/2/<?php echo base64_encode(json_encode($user->user_id));?>"  class="nav-link <?php if($flag == '2'){ ?> active <?php } ?> ">
+                                    <a href="<?php echo base_url();?>home/users/add_user/2/<?php echo $user_id ?>"  class="nav-link <?php if($flag == '2'){ ?> active <?php } ?> ">
                                     Address
                                     </a>
                                  </li>
                                  <li class="nav-item">
-                                    <a href="<?php echo base_url();?>home/users/add_user/3/<?php echo base64_encode(json_encode($user->user_id));?>"  class="nav-link <?php if($flag == '3'){ ?> active <?php } ?> ">
+                                    <a href="<?php echo base_url();?>home/users/add_user/3/<?php echo $user_id ?>"  class="nav-link <?php if($flag == '3'){ ?> active <?php } ?> ">
                                     Login Access
                                     </a>
                                  </li>
                                  <li class="nav-item">
-                                    <a href="<?php echo base_url();?>home/users/add_user/4/<?php echo base64_encode(json_encode($user->user_id));?>"  class="nav-link <?php if($flag == '4'){ ?> active <?php } ?> ">
+                                    <a href="<?php echo base_url();?>home/users/add_user/4/<?php echo $user_id ?>"  class="nav-link <?php if($flag == '4'){ ?> active <?php } ?> ">
                                     Bank Detail
                                     </a>
                                  </li>
                                  <?php if($user->admin_role_id == 3){ ?>
                                  <!-- <li class="nav-item">
-                                    <a href="<?php //echo base_url();?>home/users/add_user/5/<?php // echo base64_encode(json_encode($user->user_id));?>"  class="nav-link <?php //if($flag == '5'){ ?> active <?php //} ?>">
+                                    <a href="<?php //echo base_url();?>home/users/add_user/5/<?php // echo $user_id ?>"  class="nav-link <?php //if($flag == '5'){ ?> active <?php //} ?>">
                                     Website
                                     </a>
                                  </li> -->
@@ -124,6 +138,10 @@
                                                 <div class="col-lg-12">
                                                    <div class="pt-2 float-right">
                                                       <button class="edit_btn btn btn-primary ms-1 waves-effect waves-light " data-effect="wave" type="button">Edit</button>
+
+                                                      <!-- <button
+                                                            class="save_add_btn btn btn-success mb-2 ml-2 mt-3"
+                                                            data-effect="wave" id='' type="submit">Save</button> -->
                                                    </div>
                                                 </div>
                                              </div>
@@ -131,45 +149,44 @@
                                              <div class="row column_modified edit_data data_show" style="display:none;">
                                                 <div class="col-lg-6">
                                                    <div class="form-group mb-3">
-                                                      <label for="simpleinput" class="mb-0 gr_clr">First Name</label>
-                                                      <input type="text" name="first_name" id="simpleinput" class="form-control rounded-0" placeholder="First Name" value="<?php echo $user->admin_name;?>" required >
+                                                      <label for="simpleinput" class="mb-0 gr_clr">First Name <span class="text-danger">*</label>
+                                                      <input type="text" name="first_name" id="first_name" class="form-control rounded-0" placeholder="First Name" value="<?php echo $user->admin_name;?>" required >
                                                    </div>
                                                 </div>
                                                 <div class="col-lg-6">
                                                    <div class="form-group mb-3">
-                                                      <label for="simpleinput" class="mb-0 gr_clr">Last Name</label>
-                                                      <input type="text" name="last_name" id="simpleinput" class="form-control rounded-0" placeholder="Last Name"  value="<?php echo $user->admin_last_name;?>" required >
+                                                      <label for="simpleinput" class="mb-0 gr_clr">Last Name <span class="text-danger">*</label>
+                                                      <input type="text" name="last_name" id="last_name" class="form-control rounded-0" placeholder="Last Name"  value="<?php echo $user->admin_last_name;?>" required >
                                                    </div>
                                                 </div>
                                                 <div class="col-lg-6">
                                                    <div class="form-group mb-3">
-                                                      <label for="example-email" class="mb-0 gr_clr">Email ID</label>
-                                                      <input type="email" name="email" id="example-email" class="form-control rounded-0" placeholder="Email" value="<?php echo $user->admin_email;?>" required>
+                                                      <label for="example-email" class="mb-0 gr_clr">Email ID <span class="text-danger">*</label>
+                                                      <input type="email" name="email" id="email" class="form-control rounded-0" placeholder="Email" value="<?php echo $user->admin_email;?>" required>
                                                    </div>
                                                 </div>
                                                 <div class="col-lg-6">
                                                    <div class="form-group mb-3">
-                                                      <label for="simpleinput" class="mb-0 gr_clr">Phone Number</label>
-                                                      <input type="text" id="simpleinput" class="form-control rounded-0" name="mobile_no"placeholder="Phone Number" value="<?php echo $user->admin_cell_phone;?>" required >
+                                                      <label for="simpleinput" class="mb-0 gr_clr">Phone Number <span class="text-danger">*</label>
+                                                      <input type="text" id="mobile_no" class="form-control rounded-0" name="mobile_no"placeholder="Phone Number" value="<?php echo $user->admin_cell_phone;?>" required >
                                                    </div>
                                                 </div>
-                                                <div class="col-lg-6">
+                                                <!-- <div class="col-lg-6">
                                                    <div class="form-group mb-3">
                                                       <label for="simpleinput" class="mb-0 gr_clr">Birth Date</label>
-                                                      <input type="text" name="company_name" class="form-control" placeholder="Company Name." value="<?php echo $user->company_name;?>">
-                                                      <!-- <input class="form-control" id="MyTextbox1" type="text" name="MyTextbox1" placeholder="To"> -->
+                                                      <input type="text" name="company_name" id="company_name" class="form-control" placeholder="Company Name." value="<?php //echo $user->company_name;?>">
                                                    </div>
-                                                </div>
+                                                </div> -->
                                                 <div class="col-lg-6">
                                                    <div class="form-group mb-3">
-                                                      <label for="simpleinput" class="mb-0 gr_clr">Company Url</label>
-                                                      <input type="text" name="company_url" class="form-control" placeholder="Company Url." value="<?php echo $user->company_url;?>">
+                                                      <label for="simpleinput" class="mb-0 gr_clr">Company Url </label>
+                                                      <input type="text" name="company_url"  id="company_url" class="form-control" placeholder="Company Url." value="<?php echo $user->company_url;?>">
                                                    </div>
                                                 </div>
 
                                                 <div class="col-lg-6">
                                                    <div class="form-group mb-3">
-                                                      <label for="simpleinput" class="mb-0 gr_clr">Role</label>
+                                                      <label for="simpleinput" class="mb-0 gr_clr">Role <span class="text-danger">*</label>
                                                       <select class="form-control" id="role" name="role" required onchange="show_events(this.value)">
                                                 <option value="">-Select Role-</option>
                                                 <?php foreach ($roles as $role) { ?>
@@ -221,12 +238,12 @@
                                                    </div>
                                                 </div>
 
-                                                  <div class="col-lg-6">
+                                                  <!-- <div class="col-lg-6">
                                                    <div class="form-group">
                                                       <label for="simpleinput" class="mb-0 gr_clr">State</label><br>
-                                                      <span><?php echo $user->city_name;?></span>
+                                                      <span><?php // echo //$user->city_name;?></span>
                                                    </div>
-                                                </div>
+                                                </div> -->
 
                                                 <div class="col-lg-6">
                                                    <div class="form-group">
@@ -266,31 +283,44 @@
                   <div class="col-lg-6">
                      <div class="form-group mb-3">
                         <label for="simpleinput" class="mb-0 gr_clr">Country</label>
-                        <select class="form-control" id="country" name="country" onchange="(this.value);" required>
+                        <select class="form-control" id="country" name="country" onchange="get_state_city(this.value);"  required>
                                        <option value="">-Select Country-</option>
                                        <?php foreach($country_lists as $country_list){ ?>
-                                       <option value="<?php echo $country_list->id;?>" <?php if($country_list->id == $user->country){?> selected <?php } ?>><?php echo $country_list->name;?></option>
+                                       <option value="<?php echo $country_list->id;?>" <?php if($country_list->name == $user->country_name){?> selected <?php } ?>><?php echo $country_list->name;?></option>
                                        <?php } ?>
                                     </select>
                      </div>
                   </div>
 
 
-                  <div class="col-lg-6">
+                  <!-- <div class="col-lg-6">
                      <div class="form-group mb-3">
                         <label for="simpleinput" class="mb-0 gr_clr">State</label>
                          <select class="form-control" id="state" name="state" onchange="get_selected_city(this.value);" required>
                                        <option value="">-Select State-</option>
                                     </select>
                      </div>
-                  </div>
+                  </div> -->
 
 
                   <div class="col-lg-6">
                      <div class="form-group mb-3">
+                     <?php $cityArray = $this->General_Model->get_state_cities(2); 
+                     ?>   
                         <label for="simpleinput" class="mb-0 gr_clr">City</label>
                          <select class="form-control" id="city" name="city" required>
                                  <option value="">-Select City-</option>
+                                 <?php 
+                                                                     foreach ($cityArray as $cityArr) {
+                                                                        ?>
+                                                                        <option value="<?= $cityArr->id; ?>" <?php
+                                                                        if ($user->city): if ($user->city == $cityArr->id) {
+                                                                                 echo 'selected';
+                                                                           } endif;
+                                                                        ?>><?= $cityArr->name; ?></option>
+                                                                                 <?php
+                                                                           }
+                                                                  ?>
                               </select>
                      </div>
                   </div>
@@ -543,20 +573,23 @@
                                  </tr>
                                  <tr>
                                     <th>Registration :</th>
-                                    <td><?php  echo date("d F Y h:i A", strtotime($user->admin_creation_date_time));?></td>
+                                    <td><?php  echo !empty($user->admin_creation_date_time) ? date("d F Y h:i A", strtotime($user->admin_creation_date_time)) : ""; ?></td>
                                  </tr>
                                  <tr>
                                     <th>Updated At:</th>
-                                    <td><?php  echo date("d F Y h:i A", strtotime($user->admin_updation_date_time));?></td>
+                                    <td><?php  
+                                    echo !empty($user->admin_updation_date_time) ? date("d F Y h:i A", strtotime($user->admin_updation_date_time)) : ""; ?></td>
                                  </tr>
                                  
                             
                                  <tr>
                                     <th>Status :</th>
                                     <td>
+                                       <?php if($user_id!="") {?>
                                        <div class="bttns">
                                           <span class="badge <?php echo $status = ($user->admin_status == 'ACTIVE') ? "badge-success" : "badge-danger"; ?>"><?php echo $status = ($user->admin_status == "ACTIVE") ? "Active" : "Inactive"; ?></span>
                                        </div>
+                                      <?php } ?>
                                     </td>
                                  </tr>
                                 
@@ -580,10 +613,10 @@
     $(".data_hide").hide();
     $(".data_show").show();
    });
-   $(".save_add_btn").click(function() {
-    $(".data_hide").show();
-     $(".data_show").hide();
-   });
+   // $(".save_add_btn").click(function() {
+   //  $(".data_hide").show();
+   //   $(".data_show").hide();
+   // });
    });
 </script>
 <script type="text/javascript">
@@ -612,6 +645,13 @@
     }
 
    $( document ).ready(function() {
+
+      var userId = "<?php echo $user->user_id; ?>";
+      if (userId === '') {
+         $(".edit_btn").trigger("click");
+      }
+ 
+     
      
    <?php if($user->state != ''){ ?> 
       get_selected_state("<?php echo $user->country;?>","<?php echo $user->state;?>");
@@ -620,6 +660,29 @@
         
       get_selected_city("<?php echo $user->state;?>","<?php echo $user->city; ?>");
       <?php } ?>
+
+
+      function checkUserId() {
+    var userId = "<?php echo $user->user_id; ?>";
+    if (userId === '') {
+      // SweetAlert popup when user_id is empty
+      swal('Attention!', 'Please Fill The General Info', 'error');
+      return false;
+    }
+    return true;
+  }
+
+   $('.nav-link').on('click', function(event) {
+    var href = $(this).attr('href');
+    var flag = href.split('/').slice(-2, -1)[0]; // Extracting the flag from the URL
+    if (flag) {
+      if (!checkUserId()) {
+        event.preventDefault(); // Prevent navigation when user_id is empty
+      }
+    }    
+  });
+
+
    });
    
    var loadFile = function(event) {
