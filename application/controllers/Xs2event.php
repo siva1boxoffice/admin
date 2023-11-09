@@ -836,7 +836,7 @@ class Xs2event extends CI_Controller {
     	echo "updateEventsData";exit;
     }
 
-    public function stadiumCategory_update_v1($stadium_id,$category,$xs2event_stadium_id){
+    public function stadiumCategory_update_v1($stadium_id,$category,$onebox_stadium_id){
 
     $language_array = $this->language_array;
     $api_stadiums_category = $this->General_Model->getAllItemTable_Array('xs2event_stadium_category', array('stadium_id' => $stadium_id,'category' => $category))->row();
@@ -845,7 +845,7 @@ class Xs2event extends CI_Controller {
         $api_stadiums_category_id = $this->Tixstock_Model->insert_data('xs2event_stadium_category',$category_data);
     }
     else{
-        $api_stadiums_category = $this->General_Model->getAllItemTable_Array('merge_api_stadium_category', array('stadium_id' => $stadium_id,'api_category' => $api_stadiums_category->id,'xs2event_stadium_id' => $xs2event_stadium_id))->row();
+        $api_stadiums_category = $this->General_Model->getAllItemTable_Array('merge_api_stadium_category', array('stadium_id' => $stadium_id,'api_category' => $api_stadiums_category->id,'onebox_stadium_id' => $onebox_stadium_id))->row();
         if($api_stadiums_category->category != ""){
             return $api_stadiums_category->category;
         }
@@ -892,8 +892,9 @@ class Xs2event extends CI_Controller {
                               
                         			//echo "<pre>";print_r($listing);exit;
                                 $match_info = $this->General_Model->getAllItemTable_Array('match_info', array('xs2event_id' => $listing['event_id']))->row();
-                                if(!empty($match_info)){
+                                if(!empty($match_info)){ 
 
+                                    $ticket_type_xs2event              = $listing['type_ticket'];
                                 	$flags                             = $listing['flags'];
                                 	if(empty($flags)){
                                 		$ticket_type_data 			   = "No Preferences";
@@ -911,6 +912,7 @@ class Xs2event extends CI_Controller {
                                     $listing_notes = array();
                                     if($description_supplier != ""){
                                     	$description_supplier = explode('- ',$description_supplier);
+
                                     	 foreach($description_supplier as $restrictions_benefits_option){
                                     	 	if(trim($restrictions_benefits_option) != ""){
                                     	 	  $listing_notes[] = trim($restrictions_benefits_option);	
@@ -919,7 +921,7 @@ class Xs2event extends CI_Controller {
                                         }
 
                                     } 
-
+                                    echo "<pre>";print_r($listing_notes);exit;
                                     $listing_notes_data = '';
                                     if(!empty($listing_notes)){ 
                                         $notes = $this->updateListingNotes($listing_notes);
@@ -930,12 +932,13 @@ class Xs2event extends CI_Controller {
                                     }
 
                                     $ticket_category_id = $this->stadiumCategory_update_v1($stadium,$ticket_category,$match_info->venue);
-
-                                    $seller_tickets['xs2event_id']     = $listing['id'];
-                                    $seller_tickets['ticket_type']     = $ticket_type[$ticket_type_data];
+                                    /*echo 'ticket_type_data = '.$ticket_type_data;
+                                    echo "<pre>";print_r($ticket_type);exit;*/
+                                    $seller_tickets['xs2event_id']     = $listing['ticket_id'];
+                                    $seller_tickets['ticket_type']     = $ticket_type[$ticket_type_xs2event];
                                     $seller_tickets['ticketid']        = $ticketid;
                                     $seller_tickets['ticket_group_id'] = $ticket_group_id;
-                                    $seller_tickets['user_id']           = 223;
+                                    $seller_tickets['user_id']           = 255;
                                     $seller_tickets['match_id']          = $match_info->m_id;
                                     $seller_tickets['event_flag']        = 'E';
                                     $seller_tickets['ticket_category']   = $ticket_category_id;
@@ -949,12 +952,12 @@ class Xs2event extends CI_Controller {
                                     $seller_tickets['split']             = $split_type[$split_type_data];
                                     $seller_tickets['sell_date']         = date("Y-m-d h:i:s");
                                    // $seller_tickets['status']             = 1;
-                                    $seller_tickets['add_by']             = 223;
+                                    $seller_tickets['add_by']             = 255;
                                     $seller_tickets['store_id']           = 1;
                                     $seller_tickets['source_type']        = 'xs2event';
                                     $seller_tickets['general_admission']  = $listing['category_type'];
                                     $seller_tickets['seat']               = '';
-                                     
+                                     echo "<pre>";print_r($seller_tickets);exit;
                                      $sell_ticket                                 = $this->sellerTickets_update($listing['id'],$seller_tickets);
 
                                      $ticket_count = $ticket_count + $quantity;
@@ -1241,7 +1244,7 @@ class Xs2event extends CI_Controller {
 
         if(!empty($datas)){
 
-        foreach($datas as $data){
+        foreach($datas as $data){ 
 
         $check_notes_exists          =  $this->Tixstock_Model->get_listing_notes($data)->row();
         $ticket_details_id           =  $check_notes_exists->ticket_details_id;

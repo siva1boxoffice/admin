@@ -5063,7 +5063,7 @@ public function getOrderData_v2()
 		}
 		$this->db->order_by("match_date_new ASC ,booking_tickets.match_date ASC");
 		$qry = $this->db->get();
-		echo $this->db->last_query();exit;
+		//echo $this->db->last_query();exit;
 		return $qry;
 		/*if ($qry->num_rows() > 0) {
 			return $qry->result();
