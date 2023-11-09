@@ -662,7 +662,7 @@ function oe_getListing_details($match_id) {
         }
         else{
              // $this->db->where('sell_tickets.source_type', "1boxoffice");
-           $this->db->where_in('sell_tickets.source_type', ['1boxoffice','tixstock','oneclicket']);
+           $this->db->where_in('sell_tickets.source_type', ['1boxoffice','tixstock','oneclicket','xs2event']);
         }
         $this->db->order_by('sell_tickets.price', 'asc');
         $this->db->order_by('sell_tickets.s_no', 'DESC');
