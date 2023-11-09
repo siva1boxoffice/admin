@@ -3628,11 +3628,13 @@ public function get_order_status(){
 				exit;
 		}
 		else if($segment =='ajax_update_pending_orders')
-		{	
+		{
+			
 			$status=$_POST['status'];
 			$cancel_reason=@$_POST['reason'];
 			$update_cnt=0;
 			$failed_update_cnt=0;
+			$failed_orders= array();
 
 			foreach ($_POST['org_order_id'] as $key => $value) {
 				$order = $this->General_Model->getAllItemTable_Array('booking_global', array('bg_id' => $value))->row();
@@ -3656,14 +3658,15 @@ public function get_order_status(){
 
 							$sendMail = $this->sendCurlMail($order->bg_id);
 
-							$response = array('status' => 0, 'msg' => "Ticket Status successfully changed.");
-							++$update_cnt;
+							$response = array('status' => 1, 'msg' => "Orders Status successfully changed.");
+							$update_cnt++;
 						//	echo json_encode($response);
 							// exit;
 
 						} else {
-							$response = array('status' => 1, 'msg' => "Oops. Unable to change the Ticket status.");
-							++$failed_update_cnt;
+							$response = array('status' => 0, 'msg' => "Oops. Unable to change the Orders status.");
+							$failed_orders[] = $order->booking_no;
+							$failed_update_cnt++;
 							//echo json_encode($response);
 							//exit;
 						}
@@ -3677,14 +3680,15 @@ public function get_order_status(){
 						$this->General_Model->update('booking_global', $cond, $updateData);
 						$sendMail = $this->sendCurlMail($order->bg_id);
 
-						$response = array('status' => 0, 'msg' => "Ticket Status successfully changed.");
-						++$update_cnt;
+						$response = array('status' => 1, 'msg' => "Orders Status successfully changed.");
+						$update_cnt++;
 						//echo json_encode($response);
 						// exit;
 					} else {
 
-						$response = array('status' => 1, 'msg' => "Oops. Unable to change the Ticket status.");
-						++$failed_update_cnt;
+						$response = array('status' => 0, 'msg' => "Oops. Unable to change the Orders status.");
+						$failed_orders[] = $order->booking_no;
+						$failed_update_cnt++;
 						// echo json_encode($response);
 						// exit;
 					}
@@ -3714,14 +3718,15 @@ public function get_order_status(){
 							$cond = array('bg_id' => $order->bg_id);
 							$this->General_Model->update('booking_global', $cond, $updateData);
 
-							 $response = array('status' => 0, 'msg' => "Success.Your Ticket Cancelled Successfully.");
-							 ++$update_cnt;
+							 $response = array('status' => 1, 'msg' => "Success.Your Orders Cancelled Successfully.");
+							 $update_cnt++;
 							// echo json_encode($response);
 							// exit;
 
 						} else {
-							$response = array('status' => 1, 'msg' => "Oops. Unable to change the Ticket status.");
-							++$update_cnt;
+							$response = array('status' => 0, 'msg' => "Oops. Unable to change the Orders status.");
+							$failed_orders[] = $order->booking_no;
+							$failed_update_cnt++;
 						//	echo json_encode($response);
 						//	exit;
 						}
@@ -3741,28 +3746,37 @@ public function get_order_status(){
 						$cond = array('bg_id' => $order->bg_id);
 						$this->General_Model->update('booking_global', $cond, $updateData);
 
-						 $response = array('status' => 1, 'msg' => "Success.Your Ticket Cancelled Successfully.");
-						 ++$update_cnt;
+						 $response = array('status' => 1, 'msg' => "Success.Your Orders Cancelled Successfully.");
+						 $update_cnt++;
 						// echo json_encode($response);
 						// exit;
 					} else {
 
-						$response = array('status' => 1, 'msg' => "Oops. Unable to change the Ticket status.");
+						$response = array('status' => 0, 'msg' => "Oops. Unable to change the Orders status.");
 						//echo json_encode($response);
 						//exit;
-						++$failed_update_cnt;
+						$failed_orders[] = $order->booking_no;
+						$failed_update_cnt++;
 					}
 				} else {
-					$response = array('status' => 1, 'msg' => "Oops. Unable to change the Ticket status.");
-					++$failed_update_cnt;
+					$response = array('status' => 0, 'msg' => "Oops. Unable to change the Orders status.");
+					$failed_update_cnt++;
 					// echo json_encode($response);
 					// exit;
 				}
 			}
-			$response['update_cnt']=$update_cnt." Tickets Approved.";
-			$response['failed_update_cnt']=$failed_update_cnt." Ticket Rejected.";
+			$failed_msg = '';
+			if(!empty($failed_orders)){
+				$failed_msg = implode(',', $failed_orders)." Orders are Rejected.";
+			}
+			else{
+				$failed_msg = '';
+			}
+			$response['update_cnt']=$update_cnt." Orders Approved.";
+			$response['failed_update_cnt']=$failed_msg;
 			echo json_encode($response);
 						exit;
+		
 		}
 		else if ($segment == 'send_mail_ticket_status') {
 
@@ -6783,7 +6797,7 @@ public function get_stadium_details()
 			}
 			else if($_POST['api'] == "xs2event"){
 				$data['api_source'] =$_POST['api'];
-				$data['api_categories'] = $this->General_Model->get_stadium_category_xs2event($_POST['stadium'],'oneclicket')->result();
+				$data['api_categories'] = $this->General_Model->get_stadium_category_xs2event($_POST['stadium'],'xs2event')->result();
 				$category_count = count($data['api_categories']);
 				//echo "<pre>";print_r($data['api_categories']);exit;
 			 $category_block_data = $this->load->view(THEME.'game/stadium_category_v1', $data,true);

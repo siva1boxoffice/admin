@@ -476,7 +476,6 @@ class Home extends CI_Controller
 			//echo $this->db->last_query();exit;
 			
 		$this->data['getMySalesData'] = $this->General_Model->getOrderData_v1()->result();
-		
 		$this->data['orders'] = $this->General_Model->getOrders('','all')->num_rows();
 		$this->data['confirmed_orders'] = $this->General_Model->getOrders('','confirmed_all')->num_rows();
 		$this->data['confirmed_sales'] = $this->General_Model->confirmed_sales();

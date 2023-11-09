@@ -227,6 +227,9 @@
 
       $("body").on('click',' #approve_reject',function(e){
 
+   $(this).attr("disabled",true);
+   $(this).text("Please wait...");
+
 var bg_id = $(this).attr('data-bg-id');
 var status = $(this).attr('data-ticket-status');
 var data_close_modal = $(this).attr('data-close-modal');
@@ -256,7 +259,18 @@ var reason = "";
 
                  }					
             $('#'+data_close_modal).modal("hide");  
-             }
+
+             setTimeout(function () {
+               $("#approve_reject").text("Yes, Change it!");
+               $("#approve_reject").attr("disabled",false);
+             window.location.reload(); }, 2000);
+
+             },
+              error: function(xhr) {
+             $("#approve_reject").text("Yes, Change it!");
+             $("#approve_reject").attr("disabled",false);
+            // Handle the error here
+         }
          });
 });
 
@@ -311,6 +325,8 @@ Dtable.draw();
 
            $("body").on('click',' #approve_all_orders',function(e){
 
+             $(this).attr("disabled",true);
+             $(this).text("Please wait...");
          const order_id = [];
 const org_order_id = [];
 
@@ -356,10 +372,15 @@ if(org_order_id.length >0)
 
             }
 
-            setTimeout(function () { window.location.reload(); }, 2000);
+            setTimeout(function () {
+               $("#approve_all_orders").text("Yes, Change it!");
+               $("#approve_all_orders").attr("disabled",false);
+             window.location.reload(); }, 2000);
          
          },
          error: function(xhr) {
+             $("#approve_all_orders").text("Yes, Change it!");
+             $("#approve_all_orders").attr("disabled",false);
             // Remove overlay if the AJAX request fails
             $("#overlay").remove();
             // Handle the error here
@@ -367,6 +388,8 @@ if(org_order_id.length >0)
       });
    }
    else{
+       $("#approve_all_orders").text("Yes, Change it!");
+       $("#approve_all_orders").attr("disabled",false);
       swal('Updation Failed !', "Please Choose any one of the Order", 'error');
    }
       });
