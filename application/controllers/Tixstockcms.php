@@ -263,9 +263,9 @@ class Tixstockcms extends CI_Controller {
            
 
         }
-
+             $new_ids[] = $ticket_details_id;
         }
-        return true;
+         return $new_ids;
     }
     }
 
@@ -1656,7 +1656,7 @@ public function stadiumCategory_update_v1($stadium_id,$category,$onebox_stadium_
         $api_stadiums_category_id = $this->Tixstock_Model->insert_data('tixstock_stadium_category',$category_data);
     }
     else{
-        $api_stadiums_category = $this->General_Model->getAllItemTable_Array('merge_api_stadium_category', array('stadium_id' => $stadium_id,'api_category' => $api_stadiums_category->id,'onebox_stadium_id' => $onebox_stadium_id))->row();
+        $api_stadiums_category = $this->General_Model->getAllItemTable_Array('merge_api_stadium_category', array('stadium_id' => $stadium_id,'api_category' => $api_stadiums_category->id,'onebox_stadium_id' => $onebox_stadium_id,'source_type' => 'tixstock'))->row();
         if($api_stadiums_category->category != ""){
             return $api_stadiums_category->category;
         }

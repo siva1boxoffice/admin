@@ -151,6 +151,15 @@ public function check_sellerTickets($tixstock_id)
 		return $query;
 	}
 
+public function check_sellerTickets_xs2event($xs2event_id)
+	{
+
+		$this->db->select('sell_tickets.*')->from('sell_tickets');
+		$this->db->where('sell_tickets.xs2event_id', $xs2event_id);
+		$query = $this->db->get();
+		return $query;
+	}
+
 public function get_listing_notes($note)
 	{
 
