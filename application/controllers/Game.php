@@ -7656,16 +7656,19 @@ if ($dateObj !== false) {
 
 				$booking_ticket_tracking = $this->General_Model->getAllItemTable('booking_ticket_tracking', 'booking_id', $bg_id)->row();
 					
-
+				
 				if($booking_ticket_tracking->tracking_id == ""){
 					
 					$tracking_data['booking_id'] = $bg_id;
-					$tracking_data['pod_status'] = 1;
+					$tracking_data['pod_status'] = 2;
 					$tracking_id = $this->General_Model->insert_data('booking_ticket_tracking', $tracking_data);
+					$this->update_e_ticket_status($bg_id);
 				}
+				
 				$booking_ticket_tracking = $this->General_Model->getAllItemTable('booking_ticket_tracking', 'booking_id', $bg_id)->row();
 				
-				if ($this->General_Model->update_table('booking_ticket_tracking', 'tracking_id', $booking_ticket_tracking->tracking_id, $tracking_data)) {
+				if ($this->General_Model->update_table('booking_ticket_tracking', 'tracking_id', $booking_ticket_tracking->tracking_id, $tracking_data)) {			
+					$this->update_e_ticket_status($bg_id);	
 
 						$response = array('msg' => 'Ticket Tracking Details Updated Successfully.','status' => 1,'bg_id' => $booking_ticket_tracking->booking_id);
 					} else {
@@ -7768,4 +7771,19 @@ public function call_modal()
 	$this->load->view(THEME.'/common/popup',$this->data);
 }
 
+	public function update_e_ticket_status($bg_id)
+	{
+		$this->db->where('booking_id', $bg_id);
+		$query = $this->db->get('booking_etickets');
+		$results = $query->result();
+
+		foreach ($results as $result) {
+			$updateData = array(
+				'ticket_upload_date' => date("Y-m-d h:i:s"),
+				'ticket_status' => 2
+			);
+
+			$this->General_Model->update_table('booking_etickets', 'id', $result->id, $updateData);
+		}
+	}
 }
