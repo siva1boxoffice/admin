@@ -669,9 +669,17 @@ z-index: 9999;
                                        <div class="col-lg-12">
                                           <div class="form-group">
                                              <label for="example-textarea">Match Description<span class="text-danger">*</span></label>
-                                             <textarea id="editor-5" name="description" placeholder="Enter Match Description"><?php echo isset($matches_lang->description) ? $matches_lang->description : ''; ?></textarea>
+                                             <textarea id="editor-4" name="description" placeholder="Enter Match Description"><?php echo isset($matches_lang->description) ? $matches_lang->description : ''; ?></textarea>
                                           </div>
                                        </div>
+
+                                       <div class="col-lg-12">
+                                             <div class="form-group">
+                                                 <label for="example-textarea">Long Description</label>
+                                                 <textarea id="editor-5" name="long_description" placeholder="Enter Long Description"><?php echo isset($matches_lang->long_description) ? $matches_lang->long_description : ''; ?></textarea>
+                                               </div>
+                                          </div>  
+                                          
                                        <div class="col-lg-12">
                                           <div class="form-group">
                                              <label for="simpleinput">Seo Keywords</label>
