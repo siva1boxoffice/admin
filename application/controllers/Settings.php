@@ -2972,6 +2972,7 @@ public function get_country_name(){
 						$updateData['stadium'] = trim($this->input->post('stadium'));
 						$updateData['team_color'] = trim($this->input->post('teamcolor'));
 						$updateData['popular_team'] = trim($this->input->post('topteam'));
+						$updateData['header_top_teams'] = trim($this->input->post('header_footer'));
 						$updateData['create_date'] = strtotime(date('Y-m-d H:i:s'));
 						$updateData['status'] = $this->input->post('is_active') ? 1 : 0;
 						
