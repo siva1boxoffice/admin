@@ -65,18 +65,32 @@ class Tixstockcms extends CI_Controller {
     }
     return "";
     }
-     public function updatePerformers($data,$category='')
+      public function updatePerformers($data,$category='')
     { 
         $language_array = $this->language_array;
         $performers = $data['performers'];
+        $event_name = $data['name'];
+        $performers_team = explode(' vs ',$event_name);
         if(!empty($performers)){
             foreach($performers as $pkey => $performer){
-                
-                $teams_exists = $this->General_Model->getAllItemTable_Array('api_teams', array('team_name' => $performer['name'],'source_type' => 'tixstock','category' => $category))->row();
+
+                if($performer['name'] == "TBC Performer"){
+
+                    $performer_team   = trim($performers_team[0]);
+
+                }
+                else if($performer['name'] == "TBC Performer2"){
+                    $performer_team   = trim($performers_team[1]);
+                }
+                else{
+                    $performer_team   = trim($performer['name']);
+                }
+                    
+                $teams_exists = $this->General_Model->getAllItemTable_Array('api_teams', array('team_name' => $performer_team,'source_type' => 'tixstock','category' => $category))->row();
                 $team_id = $teams_exists->team_id;
                 if($teams_exists == 0){
 
-                $insertsData['team_name'] = $performer['name'];
+                $insertsData['team_name'] = $performer_team;
                 $insertsData['api_unique_id']  = '';
                 $insertsData['merge_status'] = 0;
                 $insertsData['source_type'] = 'tixstock';

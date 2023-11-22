@@ -298,6 +298,7 @@ if(!empty($branches))
                                             $CI =& get_instance();
                                             $CI->load->model('General_Model');
                                             $menu_module_v1 = @$CI->General_Model->get_side_bar_menu_v1($gdata='',$menu_title_v[$jd]->privilege_title,$menu_module_v[$j]->privilege_module);
+                                           // echo $CI->db->last_query();exit;
                                            $incrmnt=0;
                                            $module_arr=[];
                                             for($k=0;$k<count($menu_module_v1);$k++)

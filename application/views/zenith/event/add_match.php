@@ -525,7 +525,17 @@
                      </tr>
                   <?php } ?>
 
-                  <?php foreach ($partners_api as $partner_api) { ?>
+                  <?php foreach ($partners_api as $partner_api) { 
+                    if($partner_api->api_id == 1){ 
+                      $inpt_status = "tixstock_status";
+                    }
+                    else if($partner_api->api_id == 2){ 
+                      $inpt_status = "oneclicket_status";
+                    }
+                    else if($partner_api->api_id == 3){ 
+                      $inpt_status = "xs2event_status";
+                    }
+                    ?>
                      <tr>
                         <td><label for="sellers" class="mb-0"><?php echo $partner_api->api_name ; ?></label></td>
                         <td>
@@ -533,7 +543,7 @@
                               Disable / Enable
                                  <div class="custom-control custom-switch">
                                     <input type="checkbox" class="custom-control-input" name="partner_api[]" id="partner_api_<?php echo $partner_api->api_id; ?>" value="<?php echo $partner_api->api_id; ?>" <?php
-                                      $inpt_status = ($partner_api->api_id == 1) ? "tixstock_status" : "oneclicket_status";
+                                      
 
                                     if ($matches->m_id == "" ||  $matches->$inpt_status==1 ) { echo 'checked';  } ?>>
                                     <label class="custom-control-label" for="partner_api_<?php echo $partner_api->api_id; ?>" ></label>

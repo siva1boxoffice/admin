@@ -248,12 +248,14 @@ class Xs2event extends CI_Controller {
 
             foreach($venue_details as $venue_detail){
                 $category_name = trim($venue_detail['category_name']);
+                $category_id = trim($venue_detail['category_id']);
 
                 $stadium_category_exists = $this->General_Model->getAllItemTable_Array('xs2event_stadium_category', array('category' => $category_name,'stadium_id' => $stadium_id))->row();
                     if(@$stadium_category_exists->id == ''){
 
                         $insertsvData['stadium_id'] = $stadium_id;
                         $insertsvData['category']   = $category_name;
+                        $insertsvData['category_id']   = $category_id;
                         $this->Tixstock_Model->insert_data('xs2event_stadium_category',$insertsvData);
 
                     }
@@ -318,12 +320,13 @@ class Xs2event extends CI_Controller {
        
             foreach($venue_details as $venue_detail){
                 $category_name = trim($venue_detail['category_name']);
-
+                $category_id = trim($venue_detail['category_id']);
                 $stadium_category_exists = $this->General_Model->getAllItemTable_Array('xs2event_stadium_category', array('category' => $category_name,'stadium_id' => $tmp_stadium_id))->row();
                     if(@$stadium_category_exists->id == ''){
 
                         $insertsvData['stadium_id'] = $tmp_stadium_id;
                         $insertsvData['category']   = $category_name;
+                        $insertsvData['category_id']   = $category_id;
                         $this->Tixstock_Model->insert_data('xs2event_stadium_category',$insertsvData);
 
                     }
@@ -836,13 +839,13 @@ class Xs2event extends CI_Controller {
     	echo "updateEventsData";exit;
     }
 
-    public function stadiumCategory_update_v1($stadium_id,$category,$onebox_stadium_id){
+    public function stadiumCategory_update_v1($stadium_id,$category,$category_id,$onebox_stadium_id){
 
     $language_array = $this->language_array;
     $api_stadiums_category = $this->General_Model->getAllItemTable_Array('xs2event_stadium_category', array('stadium_id' => $stadium_id,'category' => $category))->row();
     
     if($api_stadiums_category->id == ""){
-        $category_data = array('stadium_id' => $stadium_id,'category' => $category,'merge_status' => 0);
+        $category_data = array('stadium_id' => $stadium_id,'category' => $category,'category_id' => $category_id,'merge_status' => 0);
         $api_stadiums_category_id = $this->Tixstock_Model->insert_data('xs2event_stadium_category',$category_data);
     }
     else{
@@ -906,6 +909,7 @@ class Xs2event extends CI_Controller {
                                 	$ticketid           	= mt_rand(1000, 9999) . '_' . mt_rand(100000, 999999);
                                     $ticket_group_id    	= mt_rand(100000, 999999);
                                     $ticket_category    	= $listing['category_name'];
+                                    $category_id            = $listing['category_id'];
                                     $quantity           	= $listing['stock'];
                                     $price_type         	= $listing['currency_code'];
                                     $price 					= $listing['face_value'];
@@ -934,7 +938,7 @@ class Xs2event extends CI_Controller {
                                         }
                                         
                                     }
-                                    $ticket_category_id = $this->stadiumCategory_update_v1($stadium,$ticket_category,$match_info->venue);
+                                    $ticket_category_id = $this->stadiumCategory_update_v1($stadium,$ticket_category,$category_id,$match_info->venue);
                                     /*echo 'ticket_type_data = '.$ticket_type_data;
                                     echo "<pre>";print_r($ticket_type);exit;*/
                                     if($split_type[$split_type_data] != "" && $ticket_type[$ticket_type_xs2event] != ""){

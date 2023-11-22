@@ -997,9 +997,21 @@ class Event extends CI_Controller
 										  }*/
 					//}
 					$insertData['slug'] = $titleURL;
-					foreach ($_POST['partner_api'] as $api) {
+					/*foreach ($_POST['partner_api'] as $api) {
 						$insertData[$api == 1 ? 'tixstock_status' : 'oneclicket_status'] = 1;
-					}
+					}*/
+
+					foreach ($this->input->post('partner_api') as $api) {
+							if($api == 1){								
+								$insertData['tixstock_status'] = 1;							
+							}else if($api == 2){							
+								$insertData['oneclicket_status'] = 1;	
+								}else if($api == 3){							
+								$insertData['xs2event_status'] = 1;								
+							}
+
+						}
+
 					$match_id = $this->General_Model->insert_data('match_info', $insertData);
 
 					// 
@@ -1210,18 +1222,23 @@ class Event extends CI_Controller
 
 					$updateData['tixstock_status']=0;
 					$updateData['oneclicket_status']=0;
+					$updateData['xs2event_status']=0;
 
 					foreach ($this->input->post('partner_api') as $api) {
-						if($api == 1)								
-							$updateData['tixstock_status'] = 1;							
-						else if($api == 2)							
-							$updateData['oneclicket_status'] = 1;								
+							if($api == 1){								
+								$updateData['tixstock_status'] = 1;							
+							}else if($api == 2){							
+								$updateData['oneclicket_status'] = 1;	
+								}else if($api == 3){							
+								$updateData['xs2event_status'] = 1;								
+							}
+
 						}
 						
-					//echo "<pre>";print_r($updateData);exit;
+					
 					$this->General_Model->update('match_info', array('m_id' => $matchId), $updateData);
-					//echo $this->db->last_query();exit;
-
+				/*	echo $this->db->last_query();exit;
+					echo "<pre>";print_r($updateData);exit;*/
 					$updateData_lang = array();
 					$updateData_lang['match_name'] = trim($this->input->post('matchname'));
 					$updateData_lang['match_label'] = trim($this->input->post('match_label'));
