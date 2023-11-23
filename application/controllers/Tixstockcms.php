@@ -826,6 +826,9 @@ public function updateFeedsEvents($proceed = false)
                         }
                         else{
 
+                            // $event_data['team_a']="";
+                            // $event_data['team_b']="";
+
                             $event_id = $this->Tixstock_Model->insert_data('api_events',$event_data);
                             if($boxoffice_match_id != ""){
                             $table1                     = "match_info";
@@ -1117,6 +1120,31 @@ error_reporting(E_ALL);*/
               $team_exists_b = $this->General_Model->getAllItemTable_Array('api_teams', array('team_name' => $team_b,'category' => $main_category))->row();
 
               //echo "<pre>";print_r($tournament_exists);exit;
+
+               //$performers = $data['performers'];
+                $event_name = $api_events_tickets->event_name;
+                $performers_team = explode(' vs ',$event_name);
+
+                if($team_a == "TBC Performer"){
+                    $team_a   = trim($performers_team[0]);
+                }
+                else if($team_a == "TBC Performer2"){
+                    $team_a   = trim($performers_team[1]);
+                }
+                else{
+                    $team_a   = trim($team_a);
+                }
+
+                if($team_b == "TBC Performer"){
+                    $team_b   = trim($performers_team[0]);
+                }
+                else if($team_b == "TBC Performer2"){
+                    $team_b   = trim($performers_team[1]);
+                }
+                else{
+                    $team_b   = trim($team_b);
+                }
+
                 $this->get_team_row($team_a, $main_category);
                 $this->get_team_row($team_b, $main_category);
                 $this->get_stadium_row($stadium_exists->stadium_name,1);
@@ -1208,11 +1236,14 @@ error_reporting(E_ALL);*/
                             $other_event_category = 18;
                         }
                         //echo 'api_events_tickets = '.$api_events_tickets->tixstock_parent_category;exit;
+
+                       
                        
                         $eventtype = ($main_category == 1) ? "match" : "other";
                         $match_data = array();
                         $match_data['category']                 = $main_category;
-                        $match_data['match_name']               = $match_name_full;
+                        //$match_data['match_name']               = $match_name_full;
+                        $match_data['match_name']               = $api_events_tickets->event_name;
                         $match_data['team_1']                   = $boxoffice_team_a;
                         $match_data['team_2']                   = $boxoffice_team_b;
                         $match_data['hometown']                 = $boxoffice_team_a;
