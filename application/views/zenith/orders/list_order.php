@@ -603,7 +603,7 @@
 
          var booking_selectBox = '';
 
-         if (<?php echo $this->session->userdata("role") == 6 ? 'true' : 'false'; ?>) {
+        // if (<?php echo $this->session->userdata("role") == 6 ? 'true' : 'false'; ?>) {
          booking_selectBox += '<select name="delivery_status" class="custom-select me-2 status_change" data-status-booking-id=' + order.bg_id + '>';
 
          if (order.booking_status != 0 && order.booking_status != 7 && order.booking_status != 3) {
@@ -611,7 +611,7 @@
             booking_selectBox += '<option ' + (1 == order.booking_status ? 'selected ' : '') + 'value="1">Confirmed</option>';
          }
 
-         if (<?php echo $this->session->userdata("role") == 6 ? 'true' : 'false'; ?>) {
+        // if (<?php echo $this->session->userdata("role") == 6 ? 'true' : 'false'; ?>) {
             booking_selectBox += '<option ' + (0 == order.booking_status ? 'selected ' : '') + 'value="0">Failed</option>';
             booking_selectBox += '<option value="3" ' + (3 == order.booking_status ? 'selected' : '') + '>Cancelled</option>';
 
@@ -620,10 +620,10 @@
                booking_selectBox += '<option ' + (5 == order.booking_status ? 'selected ' : '') + 'value="5">Delivered</option>';
                booking_selectBox += '<option ' + (6 == order.booking_status ? 'selected ' : '') + 'value="6">Downloaded</option>';
             }
-         }
+         //}
 
          booking_selectBox += '</select>';
-         }
+         //}
 
 
          //console.log(selectBox);
