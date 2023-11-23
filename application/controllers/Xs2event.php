@@ -470,9 +470,9 @@ class Xs2event extends CI_Controller {
 
                             }  
                            
-                            $this->get_team_row($data['hometeam_name'], $main_category);
-                            $this->get_team_row($data['visiting_name'], $main_category);
-                            $this->get_stadium_row($data['venue_name'],1);
+                            // $this->get_team_row($data['hometeam_name'], $main_category);
+                            // $this->get_team_row($data['visiting_name'], $main_category);
+                            // $this->get_stadium_row($data['venue_name'],1);
                
                             if($team_1_id != "" && $team_2_id != ""){
                         
@@ -870,6 +870,7 @@ class Xs2event extends CI_Controller {
         $split_type  = $this->split_type;
 
         $action = $_POST['action'];
+        
 
         if($action == "pull"){
 
@@ -1057,6 +1058,11 @@ class Xs2event extends CI_Controller {
 	              $team_exists_b = $this->General_Model->getAllItemTable_Array('api_teams', array('team_name' => $team_b,'category' => $main_category))->row();
 
 	              //echo "<pre>";print_r($tournament_exists);exit;
+
+                  $this->get_team_row($team_a, $main_category);
+                  $this->get_team_row($team_a, $main_category);
+                  $this->get_stadium_row($stadium_exists->stadium_name,1);
+
 	              if($stadium_exists->stadium_id != "" && $team_exists_a->team_id != "" && $team_exists_b->team_id != "" && $tournament_exists->tournament_id != ""){
 
 

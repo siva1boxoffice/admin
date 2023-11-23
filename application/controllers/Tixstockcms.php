@@ -661,9 +661,7 @@ public function updateFeedsEvents($proceed = false)
                             $teams_exists = $this->General_Model->getAllItemTable_Array('api_teams', array('team_id' => $team_2_id,'source_type' => 'tixstock','category' => $main_category))->row();
                             $team_2_name = $teams_exists->team_name;
 
-                            $this->get_team_row($team_1_name, $main_category);
-                            $this->get_team_row($team_2_name, $main_category);
-                            $this->get_stadium_row($stadium_name,1);
+                           
 
                             $boxoffice_team_exists = $this->General_Model->get_team_exist($team_1_name,$main_category)->row();
                             $boxoffice_team_a = $boxoffice_team_exists->team_id;
@@ -1119,6 +1117,10 @@ error_reporting(E_ALL);*/
               $team_exists_b = $this->General_Model->getAllItemTable_Array('api_teams', array('team_name' => $team_b,'category' => $main_category))->row();
 
               //echo "<pre>";print_r($tournament_exists);exit;
+                $this->get_team_row($team_a, $main_category);
+                $this->get_team_row($team_b, $main_category);
+                $this->get_stadium_row($stadium_exists->stadium_name,1);
+
               if($stadium_exists->stadium_id != "" && $team_exists_a->team_id != "" && $team_exists_b->team_id != "" && $tournament_exists->tournament_id != ""){
 
 
@@ -1167,6 +1169,9 @@ error_reporting(E_ALL);*/
 
                     // $match_exists = $this->General_Model->getAllItemTable_Array('match_info', array('tournament' => $boxoffice_tournament_id,'team_1' => $boxoffice_team_a,'team_2' => $boxoffice_team_b,'venue' => $boxoffice_stadium_id))->row();
                       $match_exists = $this->General_Model->check_match_exists($boxoffice_tournament_id,$boxoffice_team_a,$boxoffice_team_b,$boxoffice_stadium_id)->row();
+
+
+                      
 
 
                      if($boxoffice_tournament_id != "" && $boxoffice_team_a != "" && $boxoffice_team_b != "" && $boxoffice_stadium_id != ""){ 
