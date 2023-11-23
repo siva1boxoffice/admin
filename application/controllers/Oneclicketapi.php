@@ -469,12 +469,7 @@ public function updateFeedsEvents($category_id="")
                             echo 'boxoffice_match_id'.$boxoffice_match_id;exit;
                         }*/
                      // echo $stadium_id.'='.$team_1id.'='.$team_2id.'='.$tournament_id;exit;
-
-                     
-                     $this->get_team_row($team_1name, $main_category);
-                     $this->get_team_row($team_2name, $main_category);
-                     $this->get_stadium_row($stadium_name,1);
-                     
+ 
                     
                         if($stadium_id != "" && $team_1id != "" && $team_2id != "" && $tournament_id != ""){
                             $tournament_name = $category_name;
@@ -897,6 +892,10 @@ public function updateFeedsEvents($category_id="")
 
               $team_exists_a = $this->General_Model->getAllItemTable_Array('api_teams', array('team_name' => $team_a,'category' => $main_category))->row();
               $team_exists_b = $this->General_Model->getAllItemTable_Array('api_teams', array('team_name' => $team_b,'category' => $main_category))->row();
+
+              $this->get_team_row($team_a, $main_category);
+              $this->get_team_row($team_b, $main_category);
+              $this->get_stadium_row($stadium_exists->stadium_name,1);
 
               //echo "<pre>";print_r($tournament_exists);exit;
               if($stadium_exists->stadium_id != "" && $team_exists_a->team_id != "" && $team_exists_b->team_id != "" && $tournament_exists->tournament_id != ""){
