@@ -1004,10 +1004,10 @@ public function updateFeedsEvents($category_id="")
                         $match_data['other_event_category']     = $other_event_category;
                         $match_data['price_type']               = "EUR";
                         $match_data['store_id']                 = $this->session->userdata('storefront')->admin_id;
-                        $match_data['tixstock_id']              = $api_unique_id;
-                        $match_data['oneclicket_id']            = "";
+                        $match_data['tixstock_id']              = "";
+                        $match_data['oneclicket_id']            = $api_unique_id;
                         $match_data['tixstock_update_date']     =  date('Y-m-d', strtotime('-1 day', strtotime(date("Y-m-d H:i:s"))));
-                        $match_data['source_type']              = "tixstock";
+                        $match_data['source_type']              = "oneclicket";
                         $match_data['oneboxoffice_status']      = 1;
                         $match_data['add_by']                   = 1;
                       
