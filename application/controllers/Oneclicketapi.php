@@ -9,7 +9,7 @@ class Oneclicketapi extends CI_Controller {
         $this->load->model('Oneclicket_Model');
         $this->load->model('Tssa_Model');
         $this->load->model('General_Model');
-        
+        $this->load->model('Tixstock_Model');
         $this->language_array = array('en','ar');
         $this->ticket_type = array('eTicket' => 2,'Paper' => 3,'mobile' => 4,'Members / Season Card' => 1);
         $this->split_type = array('Avoid Leaving One Ticket' => 4,'No Preferences' => 5,'All Together' => 2,'Pairs' => 3);
@@ -469,6 +469,13 @@ public function updateFeedsEvents($category_id="")
                             echo 'boxoffice_match_id'.$boxoffice_match_id;exit;
                         }*/
                      // echo $stadium_id.'='.$team_1id.'='.$team_2id.'='.$tournament_id;exit;
+
+                     
+                     $this->get_team_row($team_1name, $main_category);
+                     $this->get_team_row($team_2name, $main_category);
+                     $this->get_stadium_row($stadium_name,1);
+                     
+                    
                         if($stadium_id != "" && $team_1id != "" && $team_2id != "" && $tournament_id != ""){
                             $tournament_name = $category_name;
                            // $stadium_name = $data['venue']['name'];
@@ -997,7 +1004,7 @@ public function updateFeedsEvents($category_id="")
                         $match_data['oneclicket_status']        = 1;
                         $match_data['other_event_category']     = $other_event_category;
                         $match_data['price_type']               = "EUR";
-                        $match_data['store_id']                 = 1;
+                        $match_data['store_id']                 = $this->session->userdata('storefront')->admin_id;
                         $match_data['tixstock_id']              = $api_unique_id;
                         $match_data['oneclicket_id']            = "";
                         $match_data['tixstock_update_date']     =  date('Y-m-d', strtotime('-1 day', strtotime(date("Y-m-d H:i:s"))));
@@ -1018,7 +1025,7 @@ public function updateFeedsEvents($category_id="")
                         $insertData_lang['language'] = $l_code->language_code;
                         $insertData_lang['match_name'] = trim($match_name_full);
                         $insertData_lang['match_label'] = '';
-
+                        $insertData_lang['store_id'] =   $this->session->userdata('storefront')->admin_id;
 
                         $team1 = $this->General_Model->getid('teams', array('teams.id' => $boxoffice_team_a, 'teams_lang.language' => $l_code->language_code))->row();
 
@@ -1834,6 +1841,56 @@ public function updateApiEvents($data,$tournament_id,$team_1_id,$team_2_id,$stad
         }
     }
 
+    public function update_match_settings($match_id,$tournament){
+
+        if($match_id != "" && $tournament != ""){
+
+        $afiliates = $this->General_Model->get_admin_details_by_role_v1(3, 'status');
+        $partners = $this->General_Model->get_admin_details_by_role_v1(2, 'status');
+        $storefronts = $this->General_Model->get_admin_details_by_site_setting();
+        
+        $afiliate_ids = array();
+        foreach ($afiliates as $key => $afiliate) {
+            $afiliate_ids[] = $afiliate->admin_id;
+        }
+
+        $storefronts_ids = array();
+        foreach ($storefronts as $key => $storefront) {
+            $storefronts_ids[] = $storefront->store_id;
+        }
+
+        $partner_ids = array();
+        foreach ($partners as $key => $partner) {
+            $partner_ids[] = $partner->admin_id;
+        }
+
+        $match_settings_data = array();
+        $match_settings_data['matches'] = $match_id;
+        $match_settings_data['storefronts'] = $storefronts_ids ? implode(",", $storefronts_ids)  : ""  ;
+        $match_settings_data['partners'] =  $partner_ids ? implode(",", $partner_ids)  : "";
+        $match_settings_data['afiliates'] = $afiliate_ids ? implode(",", $afiliate_ids)  : "" ;
+        $match_settings_data['status'] = "1";
+        $this->db->insert('match_settings', $match_settings_data);
+    
+        foreach ($partners as $key => $value) {
+            // API PARTNER
+            $api_partner_events_insertData = array(
+                'API_id' => date('dyhis'),
+                'partner_id' => $value->admin_id,
+                'from_date' => date("Y-m-d"),
+                'to_date' => date('Y-m-d', strtotime("+3 months", strtotime(date("Y-m-d")))),
+                'tournament_id' => $tournament ,
+                'event_id' => $match_id,
+                'category_id' => 1,
+                'tickets_per_events' => 1000,
+                'fullfillment_type' => 1,
+                'api_status' => 1
+            );
+            $this->db->insert('api_partner_events', $api_partner_events_insertData);
+        }
+        }
+
+    }
 
 
     function process_curl_request($service,$post_data=array()){
@@ -1866,6 +1923,51 @@ public function updateApiEvents($data,$tournament_id,$team_1_id,$team_2_id,$stad
         return $RESULT;
 
     }
+
+    private function get_team_row($team_name, $main_category)
+{
+     $team_row= $this->General_Model->get_team_exist($team_name, $main_category)->row();
+    if (!$team_row) {
+        $insertData['team_name'] = $team_name;
+        $insertData['category'] = $main_category;
+        $insertData['create_date'] = strtotime(date('Y-m-d H:i:s'));
+        $insertData['status'] = 1;     
+        $insertData['url_key'] = str_replace(" ", "-", trim($team_name));
+		$insertData['team_url'] = str_replace(" ", "-", trim($team_name));
+        $insertData['source_type'] = "oneclicket";
+        $insertData['store_id'] = $this->session->userdata('storefront')->admin_id;
+        $team_id = $this->General_Model->insert_data('teams', $insertData);
+
+        $lang = $this->General_Model->getAllItemTable('language','store_id',$this->session->userdata('storefront')->admin_id)->result();
+
+        foreach ($lang as $key => $l_code) {
+            $insertData_lang = array();
+            $insertData_lang['team_id'] = $team_id;
+            $insertData_lang['language'] = $l_code->language_code;
+            $insertData_lang['team_name'] = $team_name;
+            $this->General_Model->insert_data('teams_lang', $insertData_lang);
+        }
+    }
+
+}
+
+
+private function get_stadium_row($stadium_name,$stadium_type)
+{    
+     $check_stadium =  $this->Tixstock_Model->get_venues($stadium_name)->row();
+    
+    if (!$check_stadium) {
+        $insertData['stadium_name'] = $stadium_name;
+        $insertData['stadium_type'] = $stadium_type;
+        $insertData['create_date'] = strtotime(date('Y-m-d H:i:s'));
+        $insertData['status'] = 1;     
+        $insertData['source_type'] = "oneclicket";
+        $insertData['store_id'] = $this->session->userdata('storefront')->admin_id;
+        $this->General_Model->insert_data('stadium', $insertData);    
+       
+    }
+
+}
 
    
    

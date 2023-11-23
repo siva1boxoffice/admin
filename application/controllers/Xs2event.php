@@ -468,8 +468,12 @@ class Xs2event extends CI_Controller {
                         		$tournament_data  	= array('tournament_name' => $data['tournament_name'],'tournament_id' => $data['tournament_id']);
                         		$tournament_id  = $this->updateTournaments($tournament_data,$main_category);
 
-                            }
-
+                            }  
+                           
+                            $this->get_team_row($data['hometeam_name'], $main_category);
+                            $this->get_team_row($data['visiting_name'], $main_category);
+                            $this->get_stadium_row($data['venue_name'],1);
+               
                             if($team_1_id != "" && $team_2_id != ""){
                         
                         		if($stadium_id != "" && $team_1_id != "" && $team_2_id != "" && $tournament_id != ""){
@@ -483,6 +487,7 @@ class Xs2event extends CI_Controller {
                             $team_2_name = $teams_exists->team_name;
 
                             $boxoffice_team_exists = $this->General_Model->get_team_exist($team_1_name,$main_category)->row();
+
                             $boxoffice_team_a = $boxoffice_team_exists->team_id;
 
                             $boxoffice_team_exists = $this->General_Model->get_team_exist($team_2_name,$main_category)->row();
@@ -1161,7 +1166,7 @@ class Xs2event extends CI_Controller {
 	                        $match_data['xs2event_status']        	= 1;
 	                        $match_data['other_event_category']     = $other_event_category;
 	                        $match_data['price_type']               = "EUR";
-	                        $match_data['store_id']                 = 1;
+	                        $match_data['store_id']                 = $this->session->userdata('storefront')->admin_id;
 	                        $match_data['tixstock_id']              = "";
 	                        $match_data['oneclicket_id']            = "";
 	                        $match_data['xs2event_id']              = $api_unique_id;
@@ -1182,6 +1187,8 @@ class Xs2event extends CI_Controller {
 	                        $insertData_lang['language'] = $l_code->language_code;
 	                        $insertData_lang['match_name'] = trim($match_name_full);
 	                        $insertData_lang['match_label'] = '';
+                            $insertData_lang['store_id'] =   $this->session->userdata('storefront')->admin_id;
+                          
 
 
 	                        $team1 = $this->General_Model->getid('teams', array('teams.id' => $boxoffice_team_a, 'teams_lang.language' => $l_code->language_code))->row();
@@ -1415,7 +1422,56 @@ class Xs2event extends CI_Controller {
             $response['status'] = 0;
             $response['msg'] = $error;
             echo json_encode($response);exit;
+    } 
+
+private function get_team_row($team_name, $main_category)
+{
+     $team_row= $this->General_Model->get_team_exist($team_name, $main_category)->row();
+    if (!$team_row) {
+        $insertData['team_name'] = $team_name;
+        $insertData['category'] = $main_category;
+        $insertData['create_date'] = strtotime(date('Y-m-d H:i:s'));
+        $insertData['status'] = 1;     
+        $insertData['url_key'] = str_replace(" ", "-", trim($team_name));
+		$insertData['team_url'] = str_replace(" ", "-", trim($team_name));
+        $insertData['source_type'] = "Xs2event";
+        $insertData['store_id'] = $this->session->userdata('storefront')->admin_id;
+        $team_id = $this->General_Model->insert_data('teams', $insertData);
+
+        $lang = $this->General_Model->getAllItemTable('language','store_id',$this->session->userdata('storefront')->admin_id)->result();
+
+        foreach ($lang as $key => $l_code) {
+            $insertData_lang = array();
+            $insertData_lang['team_id'] = $team_id;
+            $insertData_lang['language'] = $l_code->language_code;
+            $insertData_lang['team_name'] = $team_name;
+            $this->General_Model->insert_data('teams_lang', $insertData_lang);
+        }
     }
+
+}
+
+private function get_stadium_row($stadium_name,$stadium_type)
+{    
+     $check_stadium =  $this->Tixstock_Model->get_venues($stadium_name)->row();
+    
+    if (!$check_stadium) {
+        $insertData['stadium_name'] = $stadium_name;
+        $insertData['stadium_type'] = $stadium_type;
+        $insertData['create_date'] = strtotime(date('Y-m-d H:i:s'));
+        $insertData['status'] = 1;     
+        $insertData['source_type'] = "Xs2event";
+        $insertData['store_id'] = $this->session->userdata('storefront')->admin_id;
+        $this->General_Model->insert_data('stadium', $insertData);    
+       
+    }
+
+}
+
+//
+
    
+
+    
 }
 ?>
