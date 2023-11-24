@@ -12,6 +12,14 @@ $adminId = $this->session->userdata('storefront')->admin_id;
 
 $branches = $app['branches'];
 
+$role = $this->session->userdata('role');
+
+if ($role == 13 && !empty($branches)) {
+    $branches = array_filter($branches, function ($value) {
+        return $value->admin_name == 'Tixtransfer';
+    });
+}
+
 if(!empty($branches))
 {
    usort($branches, function ($a, $b) use ($adminId) {
