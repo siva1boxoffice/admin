@@ -7074,7 +7074,7 @@ public function get_seat_category_main()
 	public function get_selected_teams($catgory)
 	{
 
-		$this->db->select('teams.id,teams_lang.team_name')->from('teams')->join('teams_lang', 'teams_lang.team_id = teams.id', 'left');
+		$this->db->select('teams.id,teams.source_type,teams_lang.team_name')->from('teams')->join('teams_lang', 'teams_lang.team_id = teams.id', 'left');
 		$this->db->where('teams.status',1);
 		$this->db->where('category='.$catgory);
 		$this->db->where('teams_lang.language', $this->session->userdata('language_code'));	
@@ -7085,7 +7085,7 @@ public function get_seat_category_main()
 
 	public function get_selected_stadium($catgory)
 	{
-		$this->db->select('stadium_name,s_id');
+		$this->db->select('stadium_name,s_id,source_type');
 		$this->db->from('stadium');
 		$this->db->where('category='.$catgory);
 		$this->db->order_by('stadium.stadium_name', 'ASC');
