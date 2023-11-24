@@ -2695,7 +2695,7 @@ public function get_country_name(){
 								$this->db->insert('teams_lang', $updateData_lang);
 							
 							} else {
-								$this->General_Model->update('teams_lang', array('team_id' => $teamId, 'language' => $this->session->userdata('language_code')), $updateData_lang);
+								$this->General_Model->update('teams_lang', array('team_id' => $teamId, 'language' => $this->session->userdata('language_code'),"store_id"=>$this->session->userdata('storefront')->admin_id), $updateData_lang);
 							}
 
 							$response = array('status' => 1, 'msg' => 'SEO data updated Successfully.' . $msg, 'redirect_url' => base_url() . 'settings/teams/add_team/'.$teamId);
@@ -2979,8 +2979,27 @@ public function get_country_name(){
 						$this->General_Model->update('teams', array('id' => $teamId), $updateData);
 
 					
+						$this->db->select('*');
+							$this->db->from('teams_lang');
+							$this->db->where('team_id', $teamId);
+							$this->db->where('store_id', $this->session->userdata('storefront')->admin_id);
+							$this->db->where('language', $this->session->userdata('language_code'));
+							$query = $this->db->get();
+							// echo $this->db->last_query();exit;
+							if ($query->num_rows() == 0) {							
+								$updateData_lang['team_id'] = $teamId;
+								$updateData_lang['language'] = $this->session->userdata('language_code');						
+								$updateData_lang['store_id'] = $this->session->userdata('storefront')->admin_id;	
 											
-						$this->General_Model->update('teams_lang', array('team_id' => $teamId, 'language' => $this->session->userdata('language_code')), $updateData_lang);
+								$this->db->insert('teams_lang', $updateData_lang);
+							
+							} else {
+								$this->General_Model->update('teams_lang', array('team_id' => $teamId, 'language' => $this->session->userdata('language_code')), $updateData_lang);
+
+							}
+
+											
+						//$this->General_Model->update('teams_lang', array('team_id' => $teamId, 'language' => $this->session->userdata('language_code')), $updateData_lang);
 
 						$response = array('status' => 1, 'msg' => 'Team data updated Successfully.' . $msg, 'redirect_url' => base_url() . 'settings/teams/add_team/'.$teamId);
 						echo json_encode($response);
