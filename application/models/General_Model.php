@@ -2886,7 +2886,8 @@ public function getOrderData_v2()
 		$this->db->where('tournament_lang.language', $this->session->userdata('language_code'));
 		//$this->db->where('tournament_lang.store_id', $this->session->userdata('storefront')->admin_id);
 		$this->db->where('game_category_lang.language', $this->session->userdata('language_code'));
-		$this->db->group_by('tournament_lang.id');
+		// $this->db->group_by('tournament_lang.id');
+		$this->db->group_by('tournament_lang.tournament_id');
 		if (!empty($where_array)) {
 			foreach ($where_array as $columnkey => $value) {
 				$this->db->where($columnkey, $value);
