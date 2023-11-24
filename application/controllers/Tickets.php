@@ -3031,7 +3031,7 @@ public function get_items()
 
 			$event_name='<a href="'.base_url().'event/matches/add_match/'.$encode_id.'" >'.$match_name.'</a>';
 			$event_date=date('d F Y',strtotime($record->match_date))."<br/> <center>".date('H:i',strtotime($record->match_date)).'</center>';
-			//$report_date=date('d F Y',strtotime($record->date_time_creation))."<br/> <center>".date('H:i',strtotime($record->date_time_creation)).'</center>';		
+			//$report_date=date('d F Y',strtotime($record->date_time_creation))."<br/> <center>".date('H:i',strtotime($record->date_time_creation)).'</center>';;		
 			$input = $record->date_time_creation;
 			$report_date ="<center>---</center>";
 			$dateTime = DateTime::createFromFormat('Y-m-d H:i:s', $input);	

@@ -646,7 +646,7 @@ public function updateFeedsEvents($proceed = false)
                             $data['performers'] = $performer_data['performers'];
                         }
                         
-                        //$performer_data = $this->updatePerformers($performer_data,$main_category);
+                        //$performer_data = $this->updatePerformers($performer_data,$main_category);;
                         $performer_data = $this->updatePerformers($data,$main_category);
                         $team_1_id      = $performer_data['team_1_id'];
                         $team_2_id      = $performer_data['team_2_id'];
