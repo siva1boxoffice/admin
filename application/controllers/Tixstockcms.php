@@ -496,7 +496,7 @@ public function updateFeedsTickets($proceed = false)
                                     $price_type         = $listing['proceed_price']['currency'];
                                     $price              = $listing['proceed_price']['amount'];
 
-                                    $ticket_category_id = $this->stadiumCategory_update($ticket_category);
+                                    $ticket_category_id = $this->stadiumCategory_update($ticket_category,$match_info->venue);
                                     $ticket_block_id    = $this->stadiumBlock_update($match_info->m_id,$match_info->venue,$ticket_category_id,$ticket_section);
                                     $row                = $listing['seat_details']['row'];
 
@@ -646,7 +646,7 @@ public function updateFeedsEvents($proceed = false)
                             $data['performers'] = $performer_data['performers'];
                         }
                         
-                        //$performer_data = $this->updatePerformers($performer_data,$main_category);;
+                        //$performer_data = $this->updatePerformers($performer_data,$main_category);
                         $performer_data = $this->updatePerformers($data,$main_category);
                         $team_1_id      = $performer_data['team_1_id'];
                         $team_2_id      = $performer_data['team_2_id'];
@@ -1017,7 +1017,10 @@ error_reporting(E_ALL);*/
                                     $price              = $listing['proceed_price']['amount'];
 
                                     $ticket_category_id = $this->stadiumCategory_update_v1($stadium,$ticket_category,$match_info->venue);
-
+                                    if($ticket_category_id == ""){
+                                    $ticket_category_id = $this->stadiumCategory_update($ticket_category,$match_info->venue);
+                                    }
+                                    
                                     $ticket_block_id    = $this->stadiumBlock_update($match_info->m_id,$match_info->venue,$ticket_category_id,$ticket_section);
                                     $row                = $listing['seat_details']['row'];
 
@@ -1672,7 +1675,7 @@ public function stadiumBlock_update($match_id,$stadium_id,$category_id,$section)
 
 }
 
-public function stadiumCategory_update($category){
+public function stadiumCategory_update($category,$stadium_id=''){
 
     $language_array = $this->language_array;
     $category_data  =   $this->Tssa_Model->get_seat_category($category);
@@ -1702,6 +1705,13 @@ public function stadiumCategory_update($category){
         $lang_category_id = $this->Tssa_Model->save_stadium_seats_lang($stadium_seats); 
 
         }
+
+          $seat_category_colorcode_data =  array(
+                    'stadium_id'         => $stadium_id,
+                    'category_id'        => $category_id,
+                    'color_code'         => 'rgb(0, 0, 0)'
+                );
+          $this->Tixstock_Model->insert_data('stadium_color_category',$seat_category_colorcode_data);
 
 
                             }    

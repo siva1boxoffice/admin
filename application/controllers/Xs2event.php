@@ -8,6 +8,8 @@ class Xs2event extends CI_Controller {
 
         parent::__construct();
         $this->load->model('Tixstock_Model');
+        $this->load->model('Tssa_Model');
+        $this->load->model('General_Model');
         $this->language_array = array('en','ar');
         $this->ticket_type = array('eticket' => 2,'paper' => 3,'appticket' => 4,'paper-ticket' => 3,'collection-stadium' => 1,'other' => 1);
         $this->split_type = array('no_max_minus_1' => 4,'No Preferences' => 5,'All Together' => 2,'pairs_only' => 3);
@@ -16,234 +18,234 @@ class Xs2event extends CI_Controller {
 
       public function get_countries($page=1){
 
-		$method   = "GET";
-		$post_url = XS2EVENT_APIURL.'countries?page_size=10&page='.$page;
+        $method   = "GET";
+        $post_url = XS2EVENT_APIURL.'countries?page_size=10&page='.$page;
 
-		$country_responses = $this->process_curl_request('countries',$method,$post_url);
+        $country_responses = $this->process_curl_request('countries',$method,$post_url);
 
-	    $next 			 = explode('page=',$country_responses['pagination']['next_page']);
+        $next            = explode('page=',$country_responses['pagination']['next_page']);
         $next_page       = ($next[1] != "") ? ($next[1]) : 1;
       
-		if(!empty($country_responses['countries'])){
-    		
-    		foreach($country_responses['countries'] as $country_response){
+        if(!empty($country_responses['countries'])){
+            
+            foreach($country_responses['countries'] as $country_response){
 
-    			$country_exists = $this->General_Model->getAllItemTable_Array('xs2event_countries', array('country_code' => trim($country_response['country'])))->row();
-		        $country_id = $country_exists->country_id;
-		        if(@$country_id == ''){
+                $country_exists = $this->General_Model->getAllItemTable_Array('xs2event_countries', array('country_code' => trim($country_response['country'])))->row();
+                $country_id = $country_exists->country_id;
+                if(@$country_id == ''){
 
-		            $insertsData['country_code'] 	= trim($country_response['country']);
-		            $country_id                 	= $this->Tixstock_Model->insert_data('xs2event_countries',$insertsData);
+                    $insertsData['country_code']    = trim($country_response['country']);
+                    $country_id                     = $this->Tixstock_Model->insert_data('xs2event_countries',$insertsData);
 
-		        }
-    		}
+                }
+            }
 
-		
-	}
-		if($next_page > $page){
-			$this->get_countries($next_page);
-	    	
-		}
-	echo "COUNTRY DATA UPDATED SUCCESSFULLY.";exit;	
+        
+    }
+        if($next_page > $page){
+            $this->get_countries($next_page);
+            
+        }
+    echo "COUNTRY DATA UPDATED SUCCESSFULLY.";exit; 
     }
 
 
           public function get_cities($country="GBR",$page=1){
 
-		$method   = "GET";
-		$post_url = XS2EVENT_APIURL.'cities?country='.$country.'&page_size=100&page='.$page;
+        $method   = "GET";
+        $post_url = XS2EVENT_APIURL.'cities?country='.$country.'&page_size=100&page='.$page;
 
-		$city_responses = $this->process_curl_request('cities',$method,$post_url);
+        $city_responses = $this->process_curl_request('cities',$method,$post_url);
 
-	    $next 			 = explode('page=',$city_responses['pagination']['next_page']);
+        $next            = explode('page=',$city_responses['pagination']['next_page']);
         $next_page       = ($next[1] != "") ? ($next[1]) : 1;
       
-		if(!empty($city_responses['cities'])){
-    		
-    		foreach($city_responses['cities'] as $city_response){
+        if(!empty($city_responses['cities'])){
+            
+            foreach($city_responses['cities'] as $city_response){
 
-    			$city_exists = $this->General_Model->getAllItemTable_Array('xs2event_cities', array('country' => trim($city_response['country']),'city' => trim($city_response['city'])))->row();
+                $city_exists = $this->General_Model->getAllItemTable_Array('xs2event_cities', array('country' => trim($city_response['country']),'city' => trim($city_response['city'])))->row();
 
-		        $city_id = $city_exists->city_id;
-		        if(@$city_id == ''){
+                $city_id = $city_exists->city_id;
+                if(@$city_id == ''){
 
-		            $insertsData['country'] 	= trim($city_response['country']);
-		            $insertsData['city'] 		= trim($city_response['city']);
-		            $country_id                 	= $this->Tixstock_Model->insert_data('xs2event_cities',$insertsData);
+                    $insertsData['country']     = trim($city_response['country']);
+                    $insertsData['city']        = trim($city_response['city']);
+                    $country_id                     = $this->Tixstock_Model->insert_data('xs2event_cities',$insertsData);
 
-		        }
-    		}
+                }
+            }
 
-		
-	}
-		if($next_page > $page){
-			$this->get_cities($next_page);
-	    	
-		}
-	echo "CITY DATA UPDATED SUCCESSFULLY.";exit;	
+        
+    }
+        if($next_page > $page){
+            $this->get_cities($next_page);
+            
+        }
+    echo "CITY DATA UPDATED SUCCESSFULLY.";exit;    
     }
 
 
     public function get_sports(){
 
-		$method   = "GET";
-		$post_url = XS2EVENT_APIURL.'sports';
-		$sports_responses = $this->process_curl_request('sports',$method,$post_url);
-		if(!empty($sports_responses['sports'])){
-    		foreach($sports_responses['sports'] as $sports_response){
-    			$xs2events_count = $this->General_Model->getAllItemTable_Array('xs2event_categories', array('category' => trim($sports_response['sport_id'])))->num_rows();
-    			if($xs2events_count == 0){
-    				$category_data = array('category' => trim($sports_response['sport_id']));
-    				$this->General_Model->insert_data('xs2event_categories', $category_data);
-    			}
-    			
-    		}
+        $method   = "GET";
+        $post_url = XS2EVENT_APIURL.'sports';
+        $sports_responses = $this->process_curl_request('sports',$method,$post_url);
+        if(!empty($sports_responses['sports'])){
+            foreach($sports_responses['sports'] as $sports_response){
+                $xs2events_count = $this->General_Model->getAllItemTable_Array('xs2event_categories', array('category' => trim($sports_response['sport_id'])))->num_rows();
+                if($xs2events_count == 0){
+                    $category_data = array('category' => trim($sports_response['sport_id']));
+                    $this->General_Model->insert_data('xs2event_categories', $category_data);
+                }
+                
+            }
 
-		
-	}
-    	echo "SPORTS DATA UPDATED SUCCESSFULLY.";exit;	
+        
+    }
+        echo "SPORTS DATA UPDATED SUCCESSFULLY.";exit;  
     }
 
 
      public function get_teams($tournament_id = "21d6af0ac4414efeabef87addce963e5_trn",$page = 1){
 
-		$method   = "GET";
-		$post_url = XS2EVENT_APIURL.'teams?tournament_id='.$tournament_id.'&page_size=10&page='.$page;
+        $method   = "GET";
+        $post_url = XS2EVENT_APIURL.'teams?tournament_id='.$tournament_id.'&page_size=10&page='.$page;
 
-		$team_responses = $this->process_curl_request('teams',$method,$post_url);
+        $team_responses = $this->process_curl_request('teams',$method,$post_url);
 
-	    $next 			 = explode('page=',$team_responses['pagination']['next_page']);
+        $next            = explode('page=',$team_responses['pagination']['next_page']);
         $next_page       = ($next[1] != "") ? ($next[1]) : 1;
       
-		if(!empty($team_responses['teams'])){
-    		
-    		foreach($team_responses['teams'] as $team_response){
-	    		if($team_response['official_name'] == "soccer"){
-	    			$category = 1;
-	    		}
-			
-			$data['team_name']      	= trim($team_response['official_name']);
-			$data['api_unique_id'] 		= trim($team_response['team_id']);
+        if(!empty($team_responses['teams'])){
+            
+            foreach($team_responses['teams'] as $team_response){
+                if($team_response['official_name'] == "soccer"){
+                    $category = 1;
+                }
+            
+            $data['team_name']          = trim($team_response['official_name']);
+            $data['api_unique_id']      = trim($team_response['team_id']);
 
-    			$this->updatePerformers($data,$category);
-    		}
+                $this->updatePerformers($data,$category);
+            }
 
-		
-	}
-		if($next_page > $page){
-			$this->get_teams($tournament_id,$next_page);
-	    	
-		}
-		return true;
-	//echo "VENUE DATA UPDATED SUCCESSFULLY.";exit;	
+        
+    }
+        if($next_page > $page){
+            $this->get_teams($tournament_id,$next_page);
+            
+        }
+        return true;
+    //echo "VENUE DATA UPDATED SUCCESSFULLY.";exit; 
     }
 
     public function get_tournament_by_category($page=1){
 
-    	$xs2events = $this->General_Model->getAllItemTable_Array('xs2event_categories', array('parent_category' => null))->result();
-    	
-    	$method   		= "GET";
-    	$current_year   = date('Y');
-    	foreach($xs2events as $xs2event){ 
-    		//$post_url .= '&sport_type=motorsport';
-    		$post_url = XS2EVENT_APIURL.'tournaments?page_size=10&page='.$page.'&date_start=ge%3A'.$current_year.'-01-01&sport_type='.$xs2event->category;
-    		$tournaments = $this->process_curl_request('tournaments',$method,$post_url);
-    		$next 			 = explode('page=',$tournaments['pagination']['next_page']);
-        	$next_page       = ($next[1] != "") ? ($next[1]) : 1;
-        	
-    		if(!empty($tournaments['tournaments'])){
-	    		foreach($tournaments['tournaments'] as $tournament){
-	    			$xs2events_count = $this->General_Model->getAllItemTable_Array('xs2event_categories', array('category' =>$tournament['official_name'],'unique_id' => $tournament['tournament_id']))->num_rows();
-	    			if($xs2events_count == 0){
-	    				$category_data = array('category' => $tournament['official_name'],'unique_id' => $tournament['tournament_id'],'parent_category' => $xs2event->id);
-	    				$this->General_Model->insert_data('xs2event_categories', $category_data);
-	    			}
-	    			
-	    		}
+        $xs2events = $this->General_Model->getAllItemTable_Array('xs2event_categories', array('parent_category' => null))->result();
+        
+        $method         = "GET";
+        $current_year   = date('Y');
+        foreach($xs2events as $xs2event){ 
+            //$post_url .= '&sport_type=motorsport';
+            $post_url = XS2EVENT_APIURL.'tournaments?page_size=10&page='.$page.'&date_start=ge%3A'.$current_year.'-01-01&sport_type='.$xs2event->category;
+            $tournaments = $this->process_curl_request('tournaments',$method,$post_url);
+            $next            = explode('page=',$tournaments['pagination']['next_page']);
+            $next_page       = ($next[1] != "") ? ($next[1]) : 1;
+            
+            if(!empty($tournaments['tournaments'])){
+                foreach($tournaments['tournaments'] as $tournament){
+                    $xs2events_count = $this->General_Model->getAllItemTable_Array('xs2event_categories', array('category' =>$tournament['official_name'],'unique_id' => $tournament['tournament_id']))->num_rows();
+                    if($xs2events_count == 0){
+                        $category_data = array('category' => $tournament['official_name'],'unique_id' => $tournament['tournament_id'],'parent_category' => $xs2event->id);
+                        $this->General_Model->insert_data('xs2event_categories', $category_data);
+                    }
+                    
+                }
 
-    		}
-    	}
-    	if($next_page > $page){
-			$this->get_tournament_by_category($next_page);
-	    	
-		}
-    	echo "CATEGORY UPDATED SUCCESSFULLY.";exit;	
+            }
+        }
+        if($next_page > $page){
+            $this->get_tournament_by_category($next_page);
+            
+        }
+        echo "CATEGORY UPDATED SUCCESSFULLY.";exit; 
     }
 
 
 
     public function update_all_venues(){
 
-    	$xs2countries = $this->General_Model->getAllItemTable('xs2event_countries')->result();
+        $xs2countries = $this->General_Model->getAllItemTable('xs2event_countries')->result();
 
-    	if(!empty($xs2countries)){
-    		foreach($xs2countries as $xs2country){
-    			if($xs2country->country_code != ""){
-    				$this->get_venues($xs2country->country_code);
-    			}
-    		}
+        if(!empty($xs2countries)){
+            foreach($xs2countries as $xs2country){
+                if($xs2country->country_code != ""){
+                    $this->get_venues($xs2country->country_code);
+                }
+            }
 
-    	}
-    	echo "VENUE DATA UPDATED SUCCESSFULLY.";exit;	
+        }
+        echo "VENUE DATA UPDATED SUCCESSFULLY.";exit;   
     }
 
 
 
     public function get_venues($country_code = "GBR",$page = 1){
 
-		$method   = "GET";
-		$post_url = XS2EVENT_APIURL.'venues?country='.$country_code.'&page_size=10&page='.$page;
+        $method   = "GET";
+        $post_url = XS2EVENT_APIURL.'venues?country='.$country_code.'&page_size=10&page='.$page;
 
-		$venues_response = $this->process_curl_request('venues',$method,$post_url);
+        $venues_response = $this->process_curl_request('venues',$method,$post_url);
 
-	    $next 			 = explode('page=',$venues_response['pagination']['next_page']);
+        $next            = explode('page=',$venues_response['pagination']['next_page']);
         $next_page       = ($next[1] != "") ? ($next[1]) : 1;
       
-		if(!empty($venues_response['venues'])){
-    		
-    		foreach($venues_response['venues'] as $venues_response){
+        if(!empty($venues_response['venues'])){
+            
+            foreach($venues_response['venues'] as $venues_response){
 
-    			$category = 1;
+                $category = 1;
 
-    			$stadium_exists = $this->General_Model->getAllItemTable_Array('api_stadium', array('stadium_name' => trim($venues_response['official_name']),'source_type' => 'xs2event','category' => $category))->row();
-		        $tmp_stadium_id = $stadium_exists->stadium_id;
-		        $venue_id 		= $stadium_exists->api_unique_id;;
-		        if(@$tmp_stadium_id == ''){
+                $stadium_exists = $this->General_Model->getAllItemTable_Array('api_stadium', array('stadium_name' => trim($venues_response['official_name']),'source_type' => 'xs2event','category' => $category))->row();
+                $tmp_stadium_id = $stadium_exists->stadium_id;
+                $venue_id       = $stadium_exists->api_unique_id;;
+                if(@$tmp_stadium_id == ''){
 
-		            $insertsData['stadium_name'] 	= trim($venues_response['official_name']);
-		            $insertsData['map_url'] 		= '';
-		            $insertsData['api_unique_id']  	= trim($venues_response['venue_id']);
-		            $insertsData['merge_status'] 	= 0;
-		            $insertsData['source_type'] 	= 'xs2event';
-		            if($category != ""){
-		            $insertsData['category'] 		= $category;
-		            }
-		            $tmp_stadium_id                = $this->Tixstock_Model->insert_data('api_stadium',$insertsData);
-		            $venue_id = trim($venues_response['venue_id']);
+                    $insertsData['stadium_name']    = trim($venues_response['official_name']);
+                    $insertsData['map_url']         = '';
+                    $insertsData['api_unique_id']   = trim($venues_response['venue_id']);
+                    $insertsData['merge_status']    = 0;
+                    $insertsData['source_type']     = 'xs2event';
+                    if($category != ""){
+                    $insertsData['category']        = $category;
+                    }
+                    $tmp_stadium_id                = $this->Tixstock_Model->insert_data('api_stadium',$insertsData);
+                    $venue_id = trim($venues_response['venue_id']);
 
-		        }
+                }
 
-		       // $this->update_stadium_categories($tmp_stadium_id,$venue_id);
-    		}
+               // $this->update_stadium_categories($tmp_stadium_id,$venue_id);
+            }
 
-		
-	}
-		if($next_page > $page){
-			$this->get_venues($country_code,$next_page);
-	    	
-		}
-		return true;
-	//echo "VENUE DATA UPDATED SUCCESSFULLY.";exit;	
+        
+    }
+        if($next_page > $page){
+            $this->get_venues($country_code,$next_page);
+            
+        }
+        return true;
+    //echo "VENUE DATA UPDATED SUCCESSFULLY.";exit; 
     }
 
      public function update_stadium_categories($stadium_id,$venue_id,$page = 1){
 
-     	$post_url = XS2EVENT_APIURL.'categories?page_size=100&page='.$page.'&venue_id='.$venue_id;
+        $post_url = XS2EVENT_APIURL.'categories?page_size=100&page='.$page.'&venue_id='.$venue_id;
 
         $venue_response = $this->process_curl_request("categories","GET",$post_url);
         $venue_details = @$venue_response['categories'];
 
-       	$next 			 = explode('page=',$venue_response['pagination']['next_page']);
+        $next            = explode('page=',$venue_response['pagination']['next_page']);
         $next_page       = ($next[1] != "") ? ($next[1]) : 1;
 
             foreach($venue_details as $venue_detail){
@@ -264,10 +266,10 @@ class Xs2event extends CI_Controller {
         }
 
         if($next_page > $page){
-			$this->update_stadium_categories($stadium_id,$venue_id,$next_page);
-	    	
-		}
-		return true;
+            $this->update_stadium_categories($stadium_id,$venue_id,$next_page);
+            
+        }
+        return true;
 
      }
     
@@ -297,13 +299,13 @@ class Xs2event extends CI_Controller {
         $tmp_stadium_id = $stadium_exists->stadium_id;
         if(@$tmp_stadium_id == ''){
 
-            $insertsData['stadium_name'] 	= $venue;
-            $insertsData['map_url'] 		= '';
-            $insertsData['api_unique_id']  	= $venue_id;
-            $insertsData['merge_status'] 	= 0;
-            $insertsData['source_type'] 	= 'xs2event';
+            $insertsData['stadium_name']    = $venue;
+            $insertsData['map_url']         = '';
+            $insertsData['api_unique_id']   = $venue_id;
+            $insertsData['merge_status']    = 0;
+            $insertsData['source_type']     = 'xs2event';
             if($category != ""){
-            $insertsData['category'] 		= $category;
+            $insertsData['category']        = $category;
             }
             $tmp_stadium_id                = $this->Tixstock_Model->insert_data('api_stadium',$insertsData);
 
@@ -341,26 +343,26 @@ class Xs2event extends CI_Controller {
      public function updatePerformers($data,$category='')
     { 
         
-        $team_name 		= $data['team_name'];
+        $team_name      = $data['team_name'];
         $api_unique_id  = $data['api_unique_id'];
         if($team_name != ""){
                 
-                	$teams_exists = $this->General_Model->getAllItemTable_Array('api_teams', array('team_name' => $team_name,'source_type' => 'xs2event','category' => $category))->row();
-                	$team_id = @$teams_exists->team_id;
+                    $teams_exists = $this->General_Model->getAllItemTable_Array('api_teams', array('team_name' => $team_name,'source_type' => 'xs2event','category' => $category))->row();
+                    $team_id = @$teams_exists->team_id;
 
-	                if(@$team_id == ''){
+                    if(@$team_id == ''){
 
-	                $insertsData['team_name'] 		= $team_name;
-	                $insertsData['api_unique_id']  	= $api_unique_id;
-	                $insertsData['merge_status'] 	= 0;
-	                $insertsData['source_type'] 	= 'xs2event';
-		                if($category != ""){
-		                $insertsData['category'] = $category;
-		                }
-	                	$team_id = $this->Tixstock_Model->insert_data('api_teams',$insertsData);
-	                	
-	                }
-	                return $team_id;
+                    $insertsData['team_name']       = $team_name;
+                    $insertsData['api_unique_id']   = $api_unique_id;
+                    $insertsData['merge_status']    = 0;
+                    $insertsData['source_type']     = 'xs2event';
+                        if($category != ""){
+                        $insertsData['category'] = $category;
+                        }
+                        $team_id = $this->Tixstock_Model->insert_data('api_teams',$insertsData);
+                        
+                    }
+                    return $team_id;
            
                 }
                 
@@ -379,11 +381,11 @@ class Xs2event extends CI_Controller {
 
                 $insertsData['tournament_name']   = $tournament_name;
                 $insertsData['api_unique_id']     = $tournaments_id;
-                $insertsData['merge_status'] 	  = 0;
-                $insertsData['source_type'] 	  = 'xs2event';
-	                if($category != ""){
-	                	$insertsData['category']  = $category;
-	                }
+                $insertsData['merge_status']      = 0;
+                $insertsData['source_type']       = 'xs2event';
+                    if($category != ""){
+                        $insertsData['category']  = $category;
+                    }
                 $tournament_id = $this->Tixstock_Model->insert_data('api_tournaments',$insertsData);
 
                 }
@@ -392,8 +394,8 @@ class Xs2event extends CI_Controller {
 
     public function updateFeedsEvents($proceed = false)
     {
-    	
-    	
+        
+        
         $category_name               = $_POST['category_name'];
 
         $tournaments = $this->General_Model->getAllItemTable_Array('xs2event_categories', array('unique_id' => $category_name))->row();
@@ -408,10 +410,10 @@ class Xs2event extends CI_Controller {
             $response['error']  = "Invalid request data.";
        }
        else{  
-            $page       	= ($_POST['page'] != "") ? ($_POST['page']) : 1;
+            $page           = ($_POST['page'] != "") ? ($_POST['page']) : 1;
             $category_name  = $_POST['category_name'];
-			$date_start 	= date('Y-m-d');
-			$method   		= "GET";
+            $date_start     = date('Y-m-d');
+            $method         = "GET";
             $post_url = XS2EVENT_APIURL.'events?page_size=10&page='.$page.'&date_start=ge%3A'.$date_start.'&tournament_id='.$category_name;
 
             try
@@ -419,7 +421,7 @@ class Xs2event extends CI_Controller {
 
             $feed_response = $this->process_curl_request("events",$method,$post_url);
             $match_data = array();
-            $next 			 = explode('page=',$feed_response['pagination']['next_page']);
+            $next            = explode('page=',$feed_response['pagination']['next_page']);
             $next_page       = ($next[1] != "") ? ($next[1]) : 1;
             
 
@@ -436,37 +438,37 @@ class Xs2event extends CI_Controller {
                                 echo json_encode($response);exit;
                             }
                              else if($tournament_category[0]->category == "" && $data['tournament_name'] != "Rugby World Cup"){
-                             	 $parent_tournament_name = $tournament_category[0]->tournament_name;
+                                 $parent_tournament_name = $tournament_category[0]->tournament_name;
                                  $main_category = 1;
                              }
                             else{
-                            	$parent_tournament_name = $tournament_category[0]->tournament_name;
+                                $parent_tournament_name = $tournament_category[0]->tournament_name;
                                 $main_category = $tournament_category[0]->category;
                             }
                             
                            
                             $no_of_tickets = $data['number_of_tickets'] ? $data['number_of_tickets'] : 0;
                             if($data['venue_name'] != "" && $data['venue_id'] != ""){
-	                            $venues     = $data['venue_name'];
-	                            $venue_id   = $data['venue_id'];
-	                            $stadium_id = $this->updateVenues($venues,$venue_id,$main_category);
-                        	}
+                                $venues     = $data['venue_name'];
+                                $venue_id   = $data['venue_id'];
+                                $stadium_id = $this->updateVenues($venues,$venue_id,$main_category);
+                            }
                             
-							if($data['hometeam_name'] != "" && $data['hometeam_id'] != ""){
-								$team_data  	= array('team_name' => $data['hometeam_name'],'api_unique_id' => $data['hometeam_id']);
-								$team_1_id = $this->updatePerformers($team_data,$main_category);
-							}
+                            if($data['hometeam_name'] != "" && $data['hometeam_id'] != ""){
+                                $team_data      = array('team_name' => $data['hometeam_name'],'api_unique_id' => $data['hometeam_id']);
+                                $team_1_id = $this->updatePerformers($team_data,$main_category);
+                            }
 
-							if($data['visiting_name'] != "" && $data['visiting_id'] != ""){
-								$team_data  	= array('team_name' => $data['visiting_name'],'api_unique_id' => $data['visiting_id']);
-								$team_2_id = $this->updatePerformers($team_data,$main_category);
-							}
+                            if($data['visiting_name'] != "" && $data['visiting_id'] != ""){
+                                $team_data      = array('team_name' => $data['visiting_name'],'api_unique_id' => $data['visiting_id']);
+                                $team_2_id = $this->updatePerformers($team_data,$main_category);
+                            }
 
-							if($data['tournament_name'] != "" && $data['tournament_id'] != ""){
+                            if($data['tournament_name'] != "" && $data['tournament_id'] != ""){
 
-                        	
-                        		$tournament_data  	= array('tournament_name' => $data['tournament_name'],'tournament_id' => $data['tournament_id']);
-                        		$tournament_id  = $this->updateTournaments($tournament_data,$main_category);
+                            
+                                $tournament_data    = array('tournament_name' => $data['tournament_name'],'tournament_id' => $data['tournament_id']);
+                                $tournament_id  = $this->updateTournaments($tournament_data,$main_category);
 
                             }  
                            
@@ -476,9 +478,9 @@ class Xs2event extends CI_Controller {
                
                             if($team_1_id != "" && $team_2_id != ""){
                         
-                        		if($stadium_id != "" && $team_1_id != "" && $team_2_id != "" && $tournament_id != ""){
+                                if($stadium_id != "" && $team_1_id != "" && $team_2_id != "" && $tournament_id != ""){
                             $tournament_name = $data['tournament_name'];
-                            $stadium_name 	 = $data['venue_name'];
+                            $stadium_name    = $data['venue_name'];
 
                             $teams_exists = $this->General_Model->getAllItemTable_Array('api_teams', array('team_id' => $team_1_id,'source_type' => 'xs2event','category' => $main_category))->row();
                             $team_1_name = $teams_exists->team_name;
@@ -545,7 +547,7 @@ class Xs2event extends CI_Controller {
                         if($main_category == 1){
                             $event_type = "match";
                         }
-                        $datatime['datetime'] 	   = $data['date_start'];
+                        $datatime['datetime']      = $data['date_start'];
                         $boxoffice_match_id        = $this->updateApiEvents($datatime,$boxoffice_tournament_id,$boxoffice_team_a,$boxoffice_team_b,$boxoffice_stadium_id,$event_type);
                         if($boxoffice_match_id == ""){
                             $boxoffice_match_id        = $this->updateApiEvents($datatime,$boxoffice_tournament_id,$boxoffice_team_b,$boxoffice_team_a,$boxoffice_stadium_id,$event_type,1);
@@ -622,7 +624,7 @@ class Xs2event extends CI_Controller {
                        
                         $api_events_tickets = $this->General_Model->getAllItemTable_Array('api_events', array('api_unique_id' => $data['event_id'],'category' => $main_category))->row();
                         if(@$api_events_tickets->id != ""){
-                        	
+                            
                             $event_id                  = $api_events_tickets->id;
                             $table                     = "api_events";
                             $wheres                    = array('id' => $api_events_tickets->id);
@@ -644,7 +646,7 @@ class Xs2event extends CI_Controller {
 
                         }
                         else{
-                        	
+                            
                             $event_id = $this->Tixstock_Model->insert_data('api_events',$event_data);
                             
                             if($boxoffice_match_id != ""){
@@ -719,27 +721,27 @@ class Xs2event extends CI_Controller {
 
      public function updateEventsData($proceed = false)
     {
-    	ini_set('memory_limit','2048M');
-    	$ticket_type = $this->ticket_type;
+        ini_set('memory_limit','2048M');
+        $ticket_type = $this->ticket_type;
         $split_type  = $this->split_type;
-    	
-    	if ($proceed == false) {
+        
+        if ($proceed == false) {
             $response['status'] = 0;
             $response['error_code'] = 403;
             $response['error']  = "Invalid request data.";
        }
        else{  
-       	$page       = ($_POST['page'] != "") ? ($_POST['page']) : 1;
-    	$tournament = $_POST['category_name']; 
-    	$date_start = date('Y-m-d');
-    	$method   	= "GET";
-    	if($tournament != ""){
+        $page       = ($_POST['page'] != "") ? ($_POST['page']) : 1;
+        $tournament = $_POST['category_name']; 
+        $date_start = date('Y-m-d');
+        $method     = "GET";
+        if($tournament != ""){
 
-    		$post_url = XS2EVENT_APIURL.'events?page_size=12&page='.$page.'&date_start=ge%3A'.$date_start.'&tournament_id='.$tournament;
-    		try
+            $post_url = XS2EVENT_APIURL.'events?page_size=12&page='.$page.'&date_start=ge%3A'.$date_start.'&tournament_id='.$tournament;
+            try
             { 
-    		$feed_response   = $this->process_curl_request('events',$method,$post_url);
-    		 $match_data = array(); 
+            $feed_response   = $this->process_curl_request('events',$method,$post_url);
+             $match_data = array(); 
             $next = explode('page=',$feed_response['pagination']['next_page']);
             $next_page       = ($next[1] != "") ? ($next[1]) : 1;
           // echo "feed_response <pre>";print_r($feed_response['links']['next']);exit;
@@ -768,29 +770,29 @@ class Xs2event extends CI_Controller {
                             /*$match_name_full     = $data['name'];
                             $data['performers']  = explode("vs",$match_name_full);*/
                             if($data['venue_name'] != "" && $data['venue_id'] != ""){
-	                            $venues     = $data['venue_name'];
-	                            $venue_id   = $data['venue_id'];
-	                            $venue_data = $this->updateVenues($venues,$venue_id,$main_category);
-                        	}
+                                $venues     = $data['venue_name'];
+                                $venue_id   = $data['venue_id'];
+                                $venue_data = $this->updateVenues($venues,$venue_id,$main_category);
+                            }
                             
-							if($data['hometeam_name'] != "" && $data['hometeam_id'] != ""){
-								$team_data  	= array('team_name' => $data['hometeam_name'],'api_unique_id' => $data['hometeam_id']);
-								$this->updatePerformers($team_data,$main_category);
-							}
+                            if($data['hometeam_name'] != "" && $data['hometeam_id'] != ""){
+                                $team_data      = array('team_name' => $data['hometeam_name'],'api_unique_id' => $data['hometeam_id']);
+                                $this->updatePerformers($team_data,$main_category);
+                            }
 
-							if($data['visiting_name'] != "" && $data['visiting_id'] != ""){
-								$team_data  	= array('team_name' => $data['visiting_name'],'api_unique_id' => $data['visiting_id']);
-								$this->updatePerformers($team_data,$main_category);
-							}
+                            if($data['visiting_name'] != "" && $data['visiting_id'] != ""){
+                                $team_data      = array('team_name' => $data['visiting_name'],'api_unique_id' => $data['visiting_id']);
+                                $this->updatePerformers($team_data,$main_category);
+                            }
                               
                             
                             //$performers     = $data['performers'];
 
                           if($data['tournament_name'] != "" && $data['tournament_id'] != ""){
 
-                        	
-                        		$tournament_data  	= array('tournament_name' => $data['tournament_name'],'tournament_id' => $data['tournament_id']);
-                        		$tournament_id  = $this->updateTournaments($tournament_data,$main_category);
+                            
+                                $tournament_data    = array('tournament_name' => $data['tournament_name'],'tournament_id' => $data['tournament_id']);
+                                $tournament_id  = $this->updateTournaments($tournament_data,$main_category);
 
                             }
                        
@@ -812,7 +814,7 @@ class Xs2event extends CI_Controller {
                          echo json_encode($response);exit;
             }
 
-    		}
+            }
             catch(BP\InsureHubApiNotFoundException $validationException){
             $error = $validationException->errorMessage();
             $this->custom_error_log($error);
@@ -837,12 +839,66 @@ class Xs2event extends CI_Controller {
             $error = $exception->getMessage();
             $this->custom_error_log($error);
             }
-    		
-    	}
+            
+        }
     }
-    	
-    	echo "updateEventsData";exit;
+        
+        echo "updateEventsData";exit;
     }
+
+    public function stadiumCategory_update($category,$stadium_id=''){
+
+    $language_array = $this->language_array;
+    $category_data  =   $this->Tssa_Model->get_seat_category($category);
+
+    if($category_data == ""){
+
+        $seat_category_data =  array(
+        'seat_category'         => $category,
+        'status'                => 1,
+        'create_date'           => time(),
+        'event_type'            => 'match',
+        'source_type'           => 'xs2event'
+
+        );
+
+        $category_id = $this->Tssa_Model->save_seat_category($seat_category_data);
+        if($category_id != ""){
+
+        foreach($language_array as $language){
+        
+        $stadium_seats =  array(
+        'seat_category'         => $category,
+        'stadium_seat_id'       => $category_id,
+        'language'              => $language
+
+        ); 
+        $lang_category_id = $this->Tssa_Model->save_stadium_seats_lang($stadium_seats); 
+
+        }
+
+          $seat_category_colorcode_data =  array(
+                    'stadium_id'         => $stadium_id,
+                    'category_id'        => $category_id,
+                    'color_code'         => 'rgb(0, 0, 0)'
+                );
+          $this->Tixstock_Model->insert_data('stadium_color_category',$seat_category_colorcode_data);
+
+
+                            }    
+        return $category_id;                           
+    }
+    else{
+
+        $category_id =  $category_data->stadium_seat_id;
+        return $category_id;
+
+    }
+
+        
+
+
+}
 
     public function stadiumCategory_update_v1($stadium_id,$category,$category_id,$onebox_stadium_id){
 
@@ -874,14 +930,14 @@ class Xs2event extends CI_Controller {
 
         if($action == "pull"){
 
-        	if($_POST['api_id'] == "xs2event"){
+            if($_POST['api_id'] == "xs2event"){
 
-	        	$event_ids 		= $_POST['event_id'];
-	        	$ticket_count 	= 0;
+                $event_ids      = $_POST['event_id'];
+                $ticket_count   = 0;
             foreach($event_ids as $event_id){
 
                  $api_events_tickets = $this->General_Model->getAllItemTable_Array('api_events', array('id' => $event_id))->row();
-                 $stadium 			 = $api_events_tickets->stadium;
+                 $stadium            = $api_events_tickets->stadium;
             
             if($api_events_tickets->api_unique_id != ""){
             
@@ -900,34 +956,34 @@ class Xs2event extends CI_Controller {
                         $seller_tickets = [];
                         foreach ($feed_response['tickets'] as $datakey => $listing) {
                               
-                        			//echo "<pre>";print_r($listing);exit;
+                                    //echo "<pre>";print_r($listing);exit;
                                 $match_info = $this->General_Model->getAllItemTable_Array('match_info', array('xs2event_id' => $listing['event_id']))->row();
                                 if(!empty($match_info)){ 
 
                                     $ticket_type_xs2event              = $listing['type_ticket'];
-                                	$flags                             = $listing['flags'];
-                                	if(empty($flags)){
-                                		$split_type_data 			   = "No Preferences";
-                                	}
-                                	else{
-                                		$split_type_data 			   = $flags[0];
-                                	}
-                                	$ticketid           	= mt_rand(1000, 9999) . '_' . mt_rand(100000, 999999);
-                                    $ticket_group_id    	= mt_rand(100000, 999999);
-                                    $ticket_category    	= $listing['category_name'];
+                                    $flags                             = $listing['flags'];
+                                    if(empty($flags)){
+                                        $split_type_data               = "No Preferences";
+                                    }
+                                    else{
+                                        $split_type_data               = $flags[0];
+                                    }
+                                    $ticketid               = mt_rand(1000, 9999) . '_' . mt_rand(100000, 999999);
+                                    $ticket_group_id        = mt_rand(100000, 999999);
+                                    $ticket_category        = $listing['category_name'];
                                     $category_id            = $listing['category_id'];
-                                    $quantity           	= $listing['stock'];
-                                    $price_type         	= $listing['currency_code'];
-                                    $price 					= $listing['face_value'];
-                                    $description_supplier 	= $listing['description_supplier'];
+                                    $quantity               = $listing['stock'];
+                                    $price_type             = $listing['currency_code'];
+                                    $price                  = $listing['face_value'];
+                                    $description_supplier   = $listing['description_supplier'];
                                     $listing_notes = array();
                                     if($description_supplier != ""){
-                                    	$description_supplier = explode('- ',$description_supplier);
+                                        $description_supplier = explode('- ',$description_supplier);
 
-                                    	 foreach($description_supplier as $restrictions_benefits_option){
-                                    	 	if(trim($restrictions_benefits_option) != ""){
-                                    	 	  $listing_notes[] = trim($restrictions_benefits_option);	
-                                    	 	}
+                                         foreach($description_supplier as $restrictions_benefits_option){
+                                            if(trim($restrictions_benefits_option) != ""){
+                                              $listing_notes[] = trim($restrictions_benefits_option);   
+                                            }
                                            
                                         }
 
@@ -945,6 +1001,9 @@ class Xs2event extends CI_Controller {
                                         
                                     }
                                     $ticket_category_id = $this->stadiumCategory_update_v1($stadium,$ticket_category,$category_id,$match_info->venue);
+                                    if($ticket_category_id == ""){
+                                    $ticket_category_id = $this->stadiumCategory_update($stadium,$ticket_category,$category_id,$match_info->venue);
+                                    }
                                     /*echo 'ticket_type_data = '.$ticket_type_data;
                                     echo "<pre>";print_r($ticket_type);exit;*/
                                     if($split_type[$split_type_data] != "" && $ticket_type[$ticket_type_xs2event] != ""){
@@ -1009,255 +1068,255 @@ class Xs2event extends CI_Controller {
             }
             }
             }
-        		
-        	}
-        	
-        	if($ticket_count == 0){
-		                    $msg = "No Tickets Updated.";
-		                    $response['next'] = $next_page;
-		                    $response['status'] = 0;
-		                    $response['msg'] = $msg;
-                    		echo json_encode($response);exit;
+                
+            }
+            
+            if($ticket_count == 0){
+                            $msg = "No Tickets Updated.";
+                            $response['next'] = $next_page;
+                            $response['status'] = 0;
+                            $response['msg'] = $msg;
+                            echo json_encode($response);exit;
                     }else{
-		                    $msg = $ticket_count." Tickets Updated successfully.";
-		                    $response['next'] = $next_page;
-		                    $response['status'] = 1;
-		                    $response['msg'] = $msg;
-		                    echo json_encode($response);exit;  
+                            $msg = $ticket_count." Tickets Updated successfully.";
+                            $response['next'] = $next_page;
+                            $response['status'] = 1;
+                            $response['msg'] = $msg;
+                            echo json_encode($response);exit;  
             }
 
         }
-	    else{
-	        
-	        if(!empty($_POST['add_event_id'])){
+        else{
+            
+            if(!empty($_POST['add_event_id'])){
 
-	          $eventsids 	 =   $_POST['add_event_id'];
-	          $updated_count = 0;
+              $eventsids     =   $_POST['add_event_id'];
+              $updated_count = 0;
 
-	          foreach ($eventsids as $eventsid) {
-	              
-	              $api_events_tickets = $this->General_Model->getAllItemTable_Array('api_events', array('id' => $eventsid))->row();
+              foreach ($eventsids as $eventsid) {
+                  
+                  $api_events_tickets = $this->General_Model->getAllItemTable_Array('api_events', array('id' => $eventsid))->row();
 
-	              $tournament_id     = $api_events_tickets->tournament;
-	              $team_a            = $api_events_tickets->team_a;
-	              $team_b            = $api_events_tickets->team_b;
-	              $stadium_id        = $api_events_tickets->stadium;
-	              $match_date        = $api_events_tickets->match_date;
-	              $match_date_time   = $api_events_tickets->match_date_time;
-	              $api_unique_id     = $api_events_tickets->api_unique_id;
-	              $main_category     = $api_events_tickets->category;
+                  $tournament_id     = $api_events_tickets->tournament;
+                  $team_a            = $api_events_tickets->team_a;
+                  $team_b            = $api_events_tickets->team_b;
+                  $stadium_id        = $api_events_tickets->stadium;
+                  $match_date        = $api_events_tickets->match_date;
+                  $match_date_time   = $api_events_tickets->match_date_time;
+                  $api_unique_id     = $api_events_tickets->api_unique_id;
+                  $main_category     = $api_events_tickets->category;
 
-	              $match_date_time   = date("Y-m-d H:i:s",strtotime($match_date_time));
-	              $match_time        = date("H:i:s",strtotime($match_date_time));
+                  $match_date_time   = date("Y-m-d H:i:s",strtotime($match_date_time));
+                  $match_time        = date("H:i:s",strtotime($match_date_time));
 
-	              $stadium_exists = $this->General_Model->getAllItemTable_Array('api_stadium', array('stadium_id' => $stadium_id,'category' => $main_category))->row();
+                  $stadium_exists = $this->General_Model->getAllItemTable_Array('api_stadium', array('stadium_id' => $stadium_id,'category' => $main_category))->row();
 
-	              $tournament_exists = $this->General_Model->getAllItemTable_Array('api_tournaments', array('tournament_id' => $tournament_id,'category' => $main_category))->row();
+                  $tournament_exists = $this->General_Model->getAllItemTable_Array('api_tournaments', array('tournament_id' => $tournament_id,'category' => $main_category))->row();
 
-	              $team_exists_a = $this->General_Model->getAllItemTable_Array('api_teams', array('team_name' => $team_a,'category' => $main_category))->row();
-	              $team_exists_b = $this->General_Model->getAllItemTable_Array('api_teams', array('team_name' => $team_b,'category' => $main_category))->row();
+                  $team_exists_a = $this->General_Model->getAllItemTable_Array('api_teams', array('team_name' => $team_a,'category' => $main_category))->row();
+                  $team_exists_b = $this->General_Model->getAllItemTable_Array('api_teams', array('team_name' => $team_b,'category' => $main_category))->row();
 
-	              //echo "<pre>";print_r($tournament_exists);exit;
+                  //echo "<pre>";print_r($tournament_exists);exit;
 
                   $this->get_team_row($team_a, $main_category);
                   $this->get_team_row($team_a, $main_category);
                   $this->get_stadium_row($stadium_exists->stadium_name,1);
 
-	              if($stadium_exists->stadium_id != "" && $team_exists_a->team_id != "" && $team_exists_b->team_id != "" && $tournament_exists->tournament_id != ""){
+                  if($stadium_exists->stadium_id != "" && $team_exists_a->team_id != "" && $team_exists_b->team_id != "" && $tournament_exists->tournament_id != ""){
 
 
-	                    $boxoffice_team_exists = $this->General_Model->get_team_exist($team_a,$main_category)->row();
-	                    $boxoffice_team_a = $boxoffice_team_exists->team_id;
+                        $boxoffice_team_exists = $this->General_Model->get_team_exist($team_a,$main_category)->row();
+                        $boxoffice_team_a = $boxoffice_team_exists->team_id;
 
-	                    $boxoffice_team_exists = $this->General_Model->get_team_exist($team_b,$main_category)->row();
-	                    $boxoffice_team_b = $boxoffice_team_exists->team_id;
-	                     $boxoffice_stadium_exists = $this->General_Model->getAllItemTable_Array('stadium', array('stadium_name' => $stadium_exists->stadium_name,'category' => $main_category))->row();
-	                     $boxoffice_stadium_id = $boxoffice_stadium_exists->s_id;
+                        $boxoffice_team_exists = $this->General_Model->get_team_exist($team_b,$main_category)->row();
+                        $boxoffice_team_b = $boxoffice_team_exists->team_id;
+                         $boxoffice_stadium_exists = $this->General_Model->getAllItemTable_Array('stadium', array('stadium_name' => $stadium_exists->stadium_name,'category' => $main_category))->row();
+                         $boxoffice_stadium_id = $boxoffice_stadium_exists->s_id;
 
-	                     $boxoffice_tournament_exists = $this->General_Model->get_tournaments_exist($tournament_exists->tournament_name,$main_category)->row();
-	                     $boxoffice_tournament_id = $boxoffice_tournament_exists->tournament_id;
-	                    
-	                    
-	                    
-	                     if($boxoffice_tournament_id == ""){
+                         $boxoffice_tournament_exists = $this->General_Model->get_tournaments_exist($tournament_exists->tournament_name,$main_category)->row();
+                         $boxoffice_tournament_id = $boxoffice_tournament_exists->tournament_id;
+                        
+                        
+                        
+                         if($boxoffice_tournament_id == ""){
 
-	                        $boxoffice_tournament_exists = $this->General_Model->getAllItemTable_Array('merge_api_content', array('api_content_id' => $tournament_exists->tournament_id,'source_type' => 'xs2event','content_type' => 'tournament'))->row();
-	                     $boxoffice_tournament_id = $boxoffice_tournament_exists->content_id;
+                            $boxoffice_tournament_exists = $this->General_Model->getAllItemTable_Array('merge_api_content', array('api_content_id' => $tournament_exists->tournament_id,'source_type' => 'xs2event','content_type' => 'tournament'))->row();
+                         $boxoffice_tournament_id = $boxoffice_tournament_exists->content_id;
 
-	                     } 
-	                     
-	                     
-	                     if($boxoffice_team_a == ""){
+                         } 
+                         
+                         
+                         if($boxoffice_team_a == ""){
 
-	                        $boxoffice_team_exists = $this->General_Model->getAllItemTable_Array('merge_api_content', array('api_content_id' => $team_exists_a->team_id,'source_type' => 'xs2event','content_type' => 'team'))->row();
-	                        $boxoffice_team_a = $boxoffice_team_exists->content_id;
+                            $boxoffice_team_exists = $this->General_Model->getAllItemTable_Array('merge_api_content', array('api_content_id' => $team_exists_a->team_id,'source_type' => 'xs2event','content_type' => 'team'))->row();
+                            $boxoffice_team_a = $boxoffice_team_exists->content_id;
 
-	                     } 
-	                      
-	                     if($boxoffice_team_b == ""){
+                         } 
+                          
+                         if($boxoffice_team_b == ""){
 
-	                        $boxoffice_team_exists = $this->General_Model->getAllItemTable_Array('merge_api_content', array('api_content_id' => $team_exists_b->team_id,'source_type' => 'xs2event','content_type' => 'team'))->row();
-	                        $boxoffice_team_b = $boxoffice_team_exists->content_id;
+                            $boxoffice_team_exists = $this->General_Model->getAllItemTable_Array('merge_api_content', array('api_content_id' => $team_exists_b->team_id,'source_type' => 'xs2event','content_type' => 'team'))->row();
+                            $boxoffice_team_b = $boxoffice_team_exists->content_id;
 
-	                     } 
-	                     
-	                     
-	                     if($boxoffice_stadium_id == ""){
+                         } 
+                         
+                         
+                         if($boxoffice_stadium_id == ""){
 
-	                        $boxoffice_stadium_exists = $this->General_Model->getAllItemTable_Array('merge_api_content', array('api_content_id' => $stadium_exists->stadium_id,'source_type' => 'xs2event','content_type' => 'stadium'))->row();
-	                        $boxoffice_stadium_id = $boxoffice_stadium_exists->content_id;
+                            $boxoffice_stadium_exists = $this->General_Model->getAllItemTable_Array('merge_api_content', array('api_content_id' => $stadium_exists->stadium_id,'source_type' => 'xs2event','content_type' => 'stadium'))->row();
+                            $boxoffice_stadium_id = $boxoffice_stadium_exists->content_id;
 
-	                     }
+                         }
 
-	                 
-	                      $match_exists = $this->General_Model->check_match_exists($boxoffice_tournament_id,$boxoffice_team_a,$boxoffice_team_b,$boxoffice_stadium_id)->row();
+                     
+                          $match_exists = $this->General_Model->check_match_exists($boxoffice_tournament_id,$boxoffice_team_a,$boxoffice_team_b,$boxoffice_stadium_id)->row();
 
 
-	                     if($boxoffice_tournament_id != "" && $boxoffice_team_a != "" && $boxoffice_team_b != "" && $boxoffice_stadium_id != ""){ 
-	
-	                        if(empty($match_exists)){
+                         if($boxoffice_tournament_id != "" && $boxoffice_team_a != "" && $boxoffice_team_b != "" && $boxoffice_stadium_id != ""){ 
+    
+                            if(empty($match_exists)){
 
-	                        $stadium_details = $this->General_Model->getAllItemTable_Array('stadium', array('s_id' => $boxoffice_stadium_id))->row();
+                            $stadium_details = $this->General_Model->getAllItemTable_Array('stadium', array('s_id' => $boxoffice_stadium_id))->row();
 
-	                         $boxoffice_tournament = $this->General_Model->getAllItemTable_Array('tournament_lang', array('tournament_id' => $boxoffice_tournament_id,'language' => 'en'))->row();
-	                        $boxoffice_tournament_name = $boxoffice_tournament->tournament_name;
+                             $boxoffice_tournament = $this->General_Model->getAllItemTable_Array('tournament_lang', array('tournament_id' => $boxoffice_tournament_id,'language' => 'en'))->row();
+                            $boxoffice_tournament_name = $boxoffice_tournament->tournament_name;
 
-	                        $boxoffice_team = $this->General_Model->getAllItemTable_Array('teams_lang', array('team_id' => $boxoffice_team_a,'language' => 'en'))->row();
-	                        $boxoffice_team_a_name = $boxoffice_team->team_name;
+                            $boxoffice_team = $this->General_Model->getAllItemTable_Array('teams_lang', array('team_id' => $boxoffice_team_a,'language' => 'en'))->row();
+                            $boxoffice_team_a_name = $boxoffice_team->team_name;
 
-	                        $boxoffice_team = $this->General_Model->getAllItemTable_Array('teams_lang', array('team_id' => $boxoffice_team_b,'language' => 'en'))->row();
-	                        $boxoffice_team_b_name = $boxoffice_team->team_name;
+                            $boxoffice_team = $this->General_Model->getAllItemTable_Array('teams_lang', array('team_id' => $boxoffice_team_b,'language' => 'en'))->row();
+                            $boxoffice_team_b_name = $boxoffice_team->team_name;
 
-	                        $boxoffice_tournament_name = str_replace(' ','-', $boxoffice_tournament_name);
-	                        $boxoffice_team_a_name = str_replace(' ','-', $boxoffice_team_a_name);
-	                        $boxoffice_team_b_name = str_replace(' ','-', $boxoffice_team_b_name);
-	                        if($main_category == 3){
-	                            $team_slug =  strtolower($boxoffice_tournament_name).'-'.strtolower($boxoffice_team_a_name.'-vs-'.$boxoffice_team_b_name.'-tickets');
-	                        }
-	                        else{
-	                            $team_slug =  strtolower($boxoffice_team_a_name.'-vs-'.$boxoffice_team_b_name.'-tickets');
-	                        }
-	                        
-	                        $match_name_full = $boxoffice_team_a_name.' vs '.$boxoffice_team_b_name;
-	                        //echo 'team_slug='.$team_slug;exit;
-	                        $other_event_category = "";
-	                        if($api_events_tickets->tixstock_parent_category == "Rugby World Cup"){
-	                            $other_event_category = 18;
-	                        }
-	                     
-	                       
-	                        $eventtype = ($main_category == 1) ? "match" : "other";
-	                        $match_data = array();
-	                        $match_data['category']                 = $main_category;
-	                        $match_data['match_name']               = $match_name_full;
-	                        $match_data['team_1']                   = $boxoffice_team_a;
-	                        $match_data['team_2']                   = $boxoffice_team_b;
-	                        $match_data['hometown']                 = $boxoffice_team_a;
-	                        $match_data['tournament']               = $boxoffice_tournament_id;
-	                        $match_data['slug']                     = $team_slug;
-	                        $match_data['status']                   = 1;
-	                        $match_data['availability']             = 1;
-	                        $match_data['matchticket']              = 500;
-	                        $match_data['match_date']               = $match_date_time;
-	                        $match_data['match_time']               = $match_time;
-	                        $match_data['venue']                    = $boxoffice_stadium_id;
-	                        $match_data['city']                     = @$stadium_details->city;
-	                        $match_data['state']                    = @$stadium_details->city;
-	                        $match_data['country']                  = @$stadium_details->country;
-	                        $match_data['create_date']              = @strtotime(date("Y-m-d H:i:s"));
-	                        $match_data['event_type']               = $eventtype;
-	                        $match_data['daysremaining']            = 1;
-	                        $match_data['tixstock_status']          = 1;
-	                        $match_data['oneclicket_status']        = 1;
-	                        $match_data['xs2event_status']        	= 1;
-	                        $match_data['other_event_category']     = $other_event_category;
-	                        $match_data['price_type']               = "EUR";
-	                        $match_data['store_id']                 = $this->session->userdata('storefront')->admin_id;
-	                        $match_data['tixstock_id']              = "";
-	                        $match_data['oneclicket_id']            = "";
-	                        $match_data['xs2event_id']              = $api_unique_id;
-	                        $match_data['tixstock_update_date']     =  date('Y-m-d', strtotime('-1 day', strtotime(date("Y-m-d H:i:s"))));
-	                        $match_data['source_type']              = "xs2event";
-	                        $match_data['oneboxoffice_status']      = 1;
-	                        $match_data['add_by']                   = 1;
-	                        $match_id = $this->General_Model->insert_data('match_info', $match_data);
-	                        
-	                    if($match_id != ""){
-	                         $this->update_match_settings($match_id,$boxoffice_tournament_id);
-	                         $updated_count = $updated_count + 1;
-	                    $lang = $this->General_Model->getAllItemTable('language', 'store_id', $this->session->userdata('storefront')->admin_id)->result();
+                            $boxoffice_tournament_name = str_replace(' ','-', $boxoffice_tournament_name);
+                            $boxoffice_team_a_name = str_replace(' ','-', $boxoffice_team_a_name);
+                            $boxoffice_team_b_name = str_replace(' ','-', $boxoffice_team_b_name);
+                            if($main_category == 3){
+                                $team_slug =  strtolower($boxoffice_tournament_name).'-'.strtolower($boxoffice_team_a_name.'-vs-'.$boxoffice_team_b_name.'-tickets');
+                            }
+                            else{
+                                $team_slug =  strtolower($boxoffice_team_a_name.'-vs-'.$boxoffice_team_b_name.'-tickets');
+                            }
+                            
+                            $match_name_full = $boxoffice_team_a_name.' vs '.$boxoffice_team_b_name;
+                            //echo 'team_slug='.$team_slug;exit;
+                            $other_event_category = "";
+                            if($api_events_tickets->tixstock_parent_category == "Rugby World Cup"){
+                                $other_event_category = 18;
+                            }
+                         
+                           
+                            $eventtype = ($main_category == 1) ? "match" : "other";
+                            $match_data = array();
+                            $match_data['category']                 = $main_category;
+                            $match_data['match_name']               = $match_name_full;
+                            $match_data['team_1']                   = $boxoffice_team_a;
+                            $match_data['team_2']                   = $boxoffice_team_b;
+                            $match_data['hometown']                 = $boxoffice_team_a;
+                            $match_data['tournament']               = $boxoffice_tournament_id;
+                            $match_data['slug']                     = $team_slug;
+                            $match_data['status']                   = 1;
+                            $match_data['availability']             = 1;
+                            $match_data['matchticket']              = 500;
+                            $match_data['match_date']               = $match_date_time;
+                            $match_data['match_time']               = $match_time;
+                            $match_data['venue']                    = $boxoffice_stadium_id;
+                            $match_data['city']                     = @$stadium_details->city;
+                            $match_data['state']                    = @$stadium_details->city;
+                            $match_data['country']                  = @$stadium_details->country;
+                            $match_data['create_date']              = @strtotime(date("Y-m-d H:i:s"));
+                            $match_data['event_type']               = $eventtype;
+                            $match_data['daysremaining']            = 1;
+                            $match_data['tixstock_status']          = 1;
+                            $match_data['oneclicket_status']        = 1;
+                            $match_data['xs2event_status']          = 1;
+                            $match_data['other_event_category']     = $other_event_category;
+                            $match_data['price_type']               = "EUR";
+                            $match_data['store_id']                 = $this->session->userdata('storefront')->admin_id;
+                            $match_data['tixstock_id']              = "";
+                            $match_data['oneclicket_id']            = "";
+                            $match_data['xs2event_id']              = $api_unique_id;
+                            $match_data['tixstock_update_date']     =  date('Y-m-d', strtotime('-1 day', strtotime(date("Y-m-d H:i:s"))));
+                            $match_data['source_type']              = "xs2event";
+                            $match_data['oneboxoffice_status']      = 1;
+                            $match_data['add_by']                   = 1;
+                            $match_id = $this->General_Model->insert_data('match_info', $match_data);
+                            
+                        if($match_id != ""){
+                             $this->update_match_settings($match_id,$boxoffice_tournament_id);
+                             $updated_count = $updated_count + 1;
+                        $lang = $this->General_Model->getAllItemTable('language', 'store_id', $this->session->userdata('storefront')->admin_id)->result();
 
-	                    foreach ($lang as $key => $l_code) {
-	                        $insertData_lang = array();
-	                        $insertData_lang['match_id'] = $match_id;
-	                        $insertData_lang['language'] = $l_code->language_code;
-	                        $insertData_lang['match_name'] = trim($match_name_full);
-	                        $insertData_lang['match_label'] = '';
+                        foreach ($lang as $key => $l_code) {
+                            $insertData_lang = array();
+                            $insertData_lang['match_id'] = $match_id;
+                            $insertData_lang['language'] = $l_code->language_code;
+                            $insertData_lang['match_name'] = trim($match_name_full);
+                            $insertData_lang['match_label'] = '';
                             $insertData_lang['store_id'] =   $this->session->userdata('storefront')->admin_id;
                           
 
 
-	                        $team1 = $this->General_Model->getid('teams', array('teams.id' => $boxoffice_team_a, 'teams_lang.language' => $l_code->language_code))->row();
+                            $team1 = $this->General_Model->getid('teams', array('teams.id' => $boxoffice_team_a, 'teams_lang.language' => $l_code->language_code))->row();
 
-	                        $team2 = $this->General_Model->getid('teams', array('teams.id' => $boxoffice_team_b, 'teams_lang.language' => $l_code->language_code))->row();
+                            $team2 = $this->General_Model->getid('teams', array('teams.id' => $boxoffice_team_b, 'teams_lang.language' => $l_code->language_code))->row();
 
-	                        $tournament = $this->General_Model->getid('tournament', array('tournament.t_id' => $boxoffice_tournament_id, 'tournament_lang.language' => $l_code->language_code))->row();
+                            $tournament = $this->General_Model->getid('tournament', array('tournament.t_id' => $boxoffice_tournament_id, 'tournament_lang.language' => $l_code->language_code))->row();
 
-	                        $stadium = $this->General_Model->getid('stadium', array('stadium.s_id' => $boxoffice_stadium_id))->row();
+                            $stadium = $this->General_Model->getid('stadium', array('stadium.s_id' => $boxoffice_stadium_id))->row();
 
-	                        if ($l_code->language_code == "en") {
-	                            $insertData_lang['meta_title'] = $team1->team_name . " vs " . $team2->team_name . " Tickets | " . date('d/m/Y', strtotime($match_date_time)) . " | 1BoxOffice.com";
+                            if ($l_code->language_code == "en") {
+                                $insertData_lang['meta_title'] = $team1->team_name . " vs " . $team2->team_name . " Tickets | " . date('d/m/Y', strtotime($match_date_time)) . " | 1BoxOffice.com";
 
-	                            $description = 'Buy ' . $team1->team_name . ' vs ' . $team2->team_name . ' tickets for the ' . $tournament->tournament_name . ' game being played on ' . date('d/m/Y', strtotime($match_date_time)) . ' at ' . $stadium->stadium_name . '. 1BoxOffice offers a wide range of ' . $team1->team_name . ' vs ' . $team2->team_name . ' tickets that suits most football fans budget. Contact 1BoxOffice today for more information on how to buy ' . $team1->team_name . ' tickets!';
+                                $description = 'Buy ' . $team1->team_name . ' vs ' . $team2->team_name . ' tickets for the ' . $tournament->tournament_name . ' game being played on ' . date('d/m/Y', strtotime($match_date_time)) . ' at ' . $stadium->stadium_name . '. 1BoxOffice offers a wide range of ' . $team1->team_name . ' vs ' . $team2->team_name . ' tickets that suits most football fans budget. Contact 1BoxOffice today for more information on how to buy ' . $team1->team_name . ' tickets!';
 
-	                        } else {
-	                            $insertData_lang['meta_title'] = "تذاكر   " . $team1->team_name . " - " . $team2->team_name . " | " . date('d/m/Y', strtotime($match_date_time)) . " | ";
+                            } else {
+                                $insertData_lang['meta_title'] = "تذاكر   " . $team1->team_name . " - " . $team2->team_name . " | " . date('d/m/Y', strtotime($match_date_time)) . " | ";
 
 
-	                            $description = ' اشتر تذاكر مباراة   ' . $team1->team_name . ' - ' . $team2->team_name . '  لمباراة   ' . $tournament->tournament_name . '  التي ستُلعب في   ' . date('d/m/Y', strtotime($match_date_time)) . ' على    ' . $stadium->stadium_name_ar . '. نقدم مجموعة واسعة من تذاكر   ' . $team1->team_name . ' - ' . $team2->team_name . ' بأسعار مدروسة مناسبة  لعشاق كرة القدم. قم بزيارة موقعنا  www.1boxoffice.com لمزيد من المعلومات حول كيفية شراء تذاكر   ' . $team1->team_name . '!';
-	                        }
+                                $description = ' اشتر تذاكر مباراة   ' . $team1->team_name . ' - ' . $team2->team_name . '  لمباراة   ' . $tournament->tournament_name . '  التي ستُلعب في   ' . date('d/m/Y', strtotime($match_date_time)) . ' على    ' . $stadium->stadium_name_ar . '. نقدم مجموعة واسعة من تذاكر   ' . $team1->team_name . ' - ' . $team2->team_name . ' بأسعار مدروسة مناسبة  لعشاق كرة القدم. قم بزيارة موقعنا  www.1boxoffice.com لمزيد من المعلومات حول كيفية شراء تذاكر   ' . $team1->team_name . '!';
+                            }
 
-	                        $insertData_lang['description'] = $description;
-	                        $insertData_lang['meta_description'] = $description;
+                            $insertData_lang['description'] = $description;
+                            $insertData_lang['meta_description'] = $description;
 
-	                        $this->General_Model->insert_data('match_info_lang', $insertData_lang);
-	                    }
-	                }
-	                    }
-	                        
+                            $this->General_Model->insert_data('match_info_lang', $insertData_lang);
+                        }
+                    }
+                        }
+                            
 
-	                     }
-	                     else{ 
-	                        $array_msg[] = 'Please Merge Tournament,Teams,Stadium for '.$api_events_tickets->event_name;
-	                     }
-	                     
-	                    
+                         }
+                         else{ 
+                            $array_msg[] = 'Please Merge Tournament,Teams,Stadium for '.$api_events_tickets->event_name;
+                         }
+                         
+                        
 
-	                        } 
+                            } 
 
-	              
-	          }
-	          $first_array_msg = "Total ".$updated_count." events saved to 1boxoffice.";
-	          
-	          if(!empty($array_msg)){
-	            array_unshift( $array_msg, $first_array_msg );
-	          }
-	          else{
-	            $array_msg[0] = $first_array_msg;
-	          }
-	          //
-	            
-	            $msg = implode("<br>", $array_msg);
-	            $response['msg'] = $msg;
-	            $response['status'] = 1;
-	            echo json_encode($response);exit;
-	        }
-	        else{
-	            $msg = "Invalid information selected.";
-	            $response['status'] = 0;
-	            echo json_encode($response);exit;
-	        }
-	    }
+                  
+              }
+              $first_array_msg = "Total ".$updated_count." events saved to 1boxoffice.";
+              
+              if(!empty($array_msg)){
+                array_unshift( $array_msg, $first_array_msg );
+              }
+              else{
+                $array_msg[0] = $first_array_msg;
+              }
+              //
+                
+                $msg = implode("<br>", $array_msg);
+                $response['msg'] = $msg;
+                $response['status'] = 1;
+                echo json_encode($response);exit;
+            }
+            else{
+                $msg = "Invalid information selected.";
+                $response['status'] = 0;
+                echo json_encode($response);exit;
+            }
+        }
        
     }
 
@@ -1274,7 +1333,7 @@ class Xs2event extends CI_Controller {
 
         if($ticket_details_id == ""){
 
-            $create_date 					= time();
+            $create_date                    = time();
             $insertData['ticket_name']      = $data;
             $insertData['source_type']      = 'xs2event';
             $insertData['ticket_type']      = '1';
@@ -1288,12 +1347,12 @@ class Xs2event extends CI_Controller {
 
                       foreach($language_array as $language){
                     
-		                    $language_data = array(
-		                        'ticket_details_id'     => $ticket_details_id,
-		                        'language'              => $language,
-		                        'ticket_name'           => $data
+                            $language_data = array(
+                                'ticket_details_id'     => $ticket_details_id,
+                                'language'              => $language,
+                                'ticket_name'           => $data
 
-		                    );
+                            );
 
                     $ticket_lang_id =  $this->Tixstock_Model->insert_data('ticket_details_lang',$language_data);
                                                     }
@@ -1409,16 +1468,16 @@ class Xs2event extends CI_Controller {
             ));
 
             $response = curl_exec($curl);
-	        if (!file_exists("xs2event_logs/".$service)) { 
-	        mkdir("xs2event_logs/".$service, 0777, true);
-	        } 
-	        $time = strtotime(date("Ymdhis"));
-	        $fp = fopen("xs2event_logs/".$service."/".$time.'_request.json', 'a+');
-	        fwrite($fp, $post_data);
-	        fclose($fp);
-	        $fp = fopen("xs2event_logs/".$service."/".$time.'_response.json', 'a+');
-	        fwrite($fp, $response);
-	        fclose($fp);
+            if (!file_exists("xs2event_logs/".$service)) { 
+            mkdir("xs2event_logs/".$service, 0777, true);
+            } 
+            $time = strtotime(date("Ymdhis"));
+            $fp = fopen("xs2event_logs/".$service."/".$time.'_request.json', 'a+');
+            fwrite($fp, $post_data);
+            fclose($fp);
+            $fp = fopen("xs2event_logs/".$service."/".$time.'_response.json', 'a+');
+            fwrite($fp, $response);
+            fclose($fp);
             $formatted_response = json_decode($response,1);
             return $formatted_response;
 
@@ -1439,7 +1498,7 @@ private function get_team_row($team_name, $main_category)
         $insertData['create_date'] = strtotime(date('Y-m-d H:i:s'));
         $insertData['status'] = 1;     
         $insertData['url_key'] = str_replace(" ", "-", trim($team_name));
-		$insertData['team_url'] = str_replace(" ", "-", trim($team_name));
+        $insertData['team_url'] = str_replace(" ", "-", trim($team_name));
         $insertData['source_type'] = "Xs2event";
         $insertData['store_id'] = $this->session->userdata('storefront')->admin_id;
         $team_id = $this->General_Model->insert_data('teams', $insertData);
