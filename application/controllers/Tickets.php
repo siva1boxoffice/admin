@@ -999,13 +999,13 @@ public function get_items()
 						}
 						$listings[$tkey]->block_data = $block_data;
 						$listings[$tkey]->tkt_category = $category_data;
-						$listings[$tkey]->tickets = $this->Tickets_Model->getListing_v1($listing->m_id);
+						
 						//$listings[$tkey]->tickets = $this->Tickets_Model->getbooking_tickets($listing->m_id);
 						//$listings[$tkey]->tkt_category = $category_data;
 					}
+					$listings[$tkey]->tickets = $this->Tickets_Model->getListing_v1($listing->m_id);
 				} 
 				$total_listing = $listings;
-				//echo "<pre>";print_r($listings);exit;
 				///////////////////////
 			}
 			$this->data['listings'] = $total_listing[0]->tickets;
