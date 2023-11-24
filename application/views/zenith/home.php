@@ -13,6 +13,7 @@
                      <p>We’re happy to see you again on your dashboard! </p>
                   </div>
                </div>
+               <?php if($this->session->userdata('role')!=13 ){ ?>
                <div class="col-sm-4">
                   <div class="float-sm-right mt-2 mt-sm-0 ml-sm-1 mx-sm-2">
                      <!-- <a href="#" data-toggle="modal" data-target="#add-board-modal" class="btn btn-primary mb-2"><i class="bx bx-list-ol bx-flashing mr-1"></i> Go Back</a>  -->
@@ -20,10 +21,12 @@
                        
                   </div>
                </div>
+               <?php } ?>
             </div>
                </div>
             </div>
             <!-- page content -->
+            <?php if($this->session->userdata('role')!=13 ){ ?>
             <div class="page-content-wrapper mt--45">
                <div class="container-fluid">
                   <!-- Widget  -->
@@ -264,6 +267,7 @@
                   </div>
                </div>
             </div>
+            <?php } ?>
          </div>
       </div>
       <!-- main content End -->

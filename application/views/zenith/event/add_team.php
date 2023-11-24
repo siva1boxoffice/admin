@@ -55,7 +55,7 @@
                             </li>
                             <?php if (isset($teams->id)) { ?>
                             <?php
-                            if($this->session->userdata('role') == 7 || $this->session->userdata('role') == 6 || $this->session->userdata('role') == 9){?>
+                            if($this->session->userdata('role') == 7 || $this->session->userdata('role') == 6 || $this->session->userdata('role') == 9 || $this->session->userdata('role') == 13 ){?>
                             <li class="nav-item">
                               <a href="#profile-b1" data-id="seo-content"  data-toggle="tab" aria-expanded="true" class="nav-link <?php echo $tab=="seo-content" ? "active" : ""  ;?> ">
                                 SEO Content
@@ -65,7 +65,7 @@
                         <?php } ?>
                          <?php if (isset($teams->id)) { ?>
                             <?php
-                            if($this->session->userdata('role') == 7 || $this->session->userdata('role') == 6 || $this->session->userdata('role') == 9){?>
+                            if($this->session->userdata('role') == 7 || $this->session->userdata('role') == 6 || $this->session->userdata('role') == 9 || $this->session->userdata('role') == 13 ){?>
                             <li class="nav-item">
                               <a href="#page-b1"  data-id="content"  data-toggle="tab" aria-expanded="true" class="nav-link  <?php echo $tab=="content" ? "active" : ""  ;?>">
                                 On Page Content
