@@ -643,15 +643,23 @@ public function updateFeedsEvents($proceed = false)
                         if(!empty($data['performers']) && empty($performer_data['team_1_id'])){ 
                             $performer_data['performers'][0]['name']     = trim($data['performers'][0]['name']);
                             $performer_data['performers'][1]['name']     = trim($data['performers'][1]['name']);
+                            $data['performers'] = $performer_data['performers'];
                         }
                         
-                        $performer_data = $this->updatePerformers($performer_data,$main_category);
+                        //$performer_data = $this->updatePerformers($performer_data,$main_category);
+                        $performer_data = $this->updatePerformers($data,$main_category);
                         $team_1_id      = $performer_data['team_1_id'];
                         $team_2_id      = $performer_data['team_2_id'];
                         
                         $category_name  = $data['category']['name'];
 
                         $tournament_id  = $this->updateTournaments($data['category'],$main_category);
+
+                        $boxoffice_tournament_id = "";
+                        $boxoffice_team_a        = "";
+                        $boxoffice_team_b        = "";
+                        $boxoffice_stadium_id    = "";
+                        $boxoffice_match_id      = "";
 
                         if($stadium_id != "" && $team_1_id != "" && $team_2_id != "" && $tournament_id != ""){
                             $tournament_name = $category_name;
@@ -661,12 +669,13 @@ public function updateFeedsEvents($proceed = false)
                             $teams_exists = $this->General_Model->getAllItemTable_Array('api_teams', array('team_id' => $team_2_id,'source_type' => 'tixstock','category' => $main_category))->row();
                             $team_2_name = $teams_exists->team_name;
 
-                           
+
 
                             $boxoffice_team_exists = $this->General_Model->get_team_exist($team_1_name,$main_category)->row();
                             $boxoffice_team_a = $boxoffice_team_exists->team_id;
-
+                           
                             $boxoffice_team_exists = $this->General_Model->get_team_exist($team_2_name,$main_category)->row();
+
                             $boxoffice_team_b = $boxoffice_team_exists->team_id;
                              $boxoffice_stadium_exists = $this->General_Model->getAllItemTable_Array('stadium', array('stadium_name' => $stadium_name,'category' => $main_category))->row();
                              $boxoffice_stadium_id = $boxoffice_stadium_exists->s_id;
@@ -675,6 +684,7 @@ public function updateFeedsEvents($proceed = false)
                              $boxoffice_tournament_id = $boxoffice_tournament_exists->tournament_id;
                               
                              $merge_found = 0;
+
                              if($boxoffice_tournament_id == ""){
 
                                 $boxoffice_tournament_exists = $this->General_Model->getAllItemTable_Array('merge_api_content', array('api_content_id' => $tournament_id,'source_type' => 'tixstock','content_type' => 'tournament'))->row();
@@ -684,6 +694,8 @@ public function updateFeedsEvents($proceed = false)
                              }
 
                              } 
+
+
                              
                              if($boxoffice_team_a == ""){
 
@@ -715,13 +727,16 @@ public function updateFeedsEvents($proceed = false)
                              }
 
                         } 
-                       // echo $boxoffice_tournament_id.'-'.$boxoffice_team_a.'-'.$boxoffice_team_b.'-'.$boxoffice_stadium_id;exit;
+                /*        if($data['id'] == '01hf3wgc2zwarae4drg7j7z0sf'){
+                        echo $boxoffice_tournament_id.'-'.$boxoffice_team_a.'-'.$boxoffice_team_b.'-'.$boxoffice_stadium_id;exit;
+                    }*/
                         //echo $boxoffice_tournament_id.'-'.$boxoffice_team_a.'-'.$boxoffice_team_b.'-'.$boxoffice_stadium_id;exit;
                         /*if($data['id'] == '01h2tjveg0wfnh9yf4envmg742'){
 
                             
                             echo $boxoffice_tournament_id.'-'.$boxoffice_team_a.'-'.$boxoffice_team_b.'-'.$boxoffice_stadium_id;exit;
                         }*/
+
                         $event_type = "other";
                         if($main_category == 1){
                             $event_type = "match";
@@ -748,6 +763,7 @@ public function updateFeedsEvents($proceed = false)
                             }
                             
                         }
+                                
                         
                         $match_name           = $data['name'];
                         $match_date_string    = explode('T',$data['datetime']); 
@@ -956,7 +972,6 @@ error_reporting(E_ALL);*/
             { 
 
             $feed_response = $this->process_curl_request("tickets","GET",$end_point_url);
-            
             if(!empty($feed_response['data'])){ 
                         $seller_tickets = [];
 
@@ -2517,7 +2532,7 @@ function mergecontent(){
         $insertData['create_date'] = strtotime(date('Y-m-d H:i:s'));
         $insertData['status'] = 1;     
         $insertData['url_key'] = str_replace(" ", "-", trim($team_name));
-		$insertData['team_url'] = str_replace(" ", "-", trim($team_name));
+        $insertData['team_url'] = str_replace(" ", "-", trim($team_name));
         $insertData['source_type'] = "Xs2event";
         $insertData['store_id'] = $this->session->userdata('storefront')->admin_id;
         $team_id = $this->General_Model->insert_data('teams', $insertData);
