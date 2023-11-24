@@ -2754,7 +2754,7 @@ public function get_country_name(){
 
 						$query = $this->db->get();
 						if ($query->num_rows() == 0) {							
-							$updateData_lang['tournament_id'] = $teamId;
+							$updateData_lang['team_id'] = $teamId;
 							$updateData_lang['language'] = $this->session->userdata('language_code');		
 							$updateData_lang['store_id'] = $this->session->userdata('storefront')->admin_id;					
 							$this->db->insert('teams_lang', $updateData_lang);
