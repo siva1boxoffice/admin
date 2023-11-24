@@ -249,6 +249,20 @@
                                                       </div>
                                                    </td>
                                                 </tr>
+                                                <tr>
+                                                   <td> <label for="header_footer" class="mb-0">Header / Footer <br/>Top Team</label></td>
+                                                   <td>
+                                                      <div class="form-group mb-1 cust-switch">
+                                                         No / Yes
+                                                         <div class="custom-control custom-switch">
+                                                            <input type="checkbox" id="header_footer" class="is-switch custom-control-input" name="header_footer" value="1" <?php if (isset($teams->header_top_teams)) {
+                                                            if ($teams->header_top_teams == '1') { ?> checked <?php }
+                                                            } ?> >
+                                                            <label class="custom-control-label" for="header_footer"></label>
+                                                         </div>
+                                                      </div>
+                                                   </td>
+                                                </tr>
                                              </table>
                                           </div>
                                        </div>

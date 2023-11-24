@@ -142,7 +142,7 @@ class Tixstockcms extends CI_Controller {
     {  
 
          $language_array = $this->language_array;
-          $match_name           = $data['name'];
+          $match_name           = str_replace('[','-',$data['name']);
           $tixstock_id          = $data['id'];
           $listings             = $data['listings'][0];
           $currency             = $listings['proceed_price']['currency'];
@@ -193,7 +193,7 @@ class Tixstockcms extends CI_Controller {
                 'price_type'    => $currency,
                 'add_by'        => 1,
                 'source_type'   => 'tixstock',
-                'slug'          => $slug
+                'slug'          => str_to_replace('[','-',$slug)
             );
             //echo "<pre>";print_r($tournament_data);exit;
             $match_id           =  $this->Tixstock_Model->insert_data('match_info',$match_data);
@@ -2543,7 +2543,7 @@ function mergecontent(){
         $insertData['status'] = 1;     
         $insertData['url_key'] = str_replace(" ", "-", trim($team_name));
         $insertData['team_url'] = str_replace(" ", "-", trim($team_name));
-        $insertData['source_type'] = "Xs2event";
+        $insertData['source_type'] = "tixstock";
         $insertData['store_id'] = $this->session->userdata('storefront')->admin_id;
         $team_id = $this->General_Model->insert_data('teams', $insertData);
 
@@ -2569,7 +2569,7 @@ private function get_stadium_row($stadium_name,$stadium_type)
         $insertData['stadium_type'] = $stadium_type;
         $insertData['create_date'] = strtotime(date('Y-m-d H:i:s'));
         $insertData['status'] = 1;     
-        $insertData['source_type'] = "Xs2event";
+        $insertData['source_type'] = "tixstock";
         $insertData['store_id'] = $this->session->userdata('storefront')->admin_id;
         $this->General_Model->insert_data('stadium', $insertData);    
        

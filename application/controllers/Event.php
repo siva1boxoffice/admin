@@ -2863,12 +2863,12 @@ class Event extends CI_Controller
 
 		$teams .= '<option value="">Select Team 1</option>';
 		foreach($records as $record ){
-		  $teams .= '<option value="'.$record->id.'">'.$record->team_name.'</option>';
+		  $teams .= '<option value="'.$record->id.'">'.$record->team_name." ( ".$record->source_type." )".'</option>';
 		}
 
 		$stadiums .= '<option value="">Select Venue</option>';
 		foreach($stadium_records as $stadium ){
-		  $stadiums .= '<option value="'.$stadium->s_id.'">'.$stadium->stadium_name.' - '.$stadium->s_id.'</option>';
+		  $stadiums .= '<option value="'.$stadium->s_id.'">'.$stadium->stadium_name.' - '.$stadium->s_id." ( ".$stadium->source_type." )".'</option>';
 		  
 		}
 
@@ -2906,7 +2906,7 @@ class Event extends CI_Controller
 			if($record->id == $selected_team){ 
 				$selected='selected ';
 			} 
-		  $teams .= '<option value="'.$record->id.'" '.$selected.'>'.$record->team_name.'</option>';
+		  $teams .= '<option value="'.$record->id.'" '.$selected.'>'.$record->team_name." ( ".$record->source_type." )".'</option>';
 		}
 
 		$teams2 .= '<option value="">Select Team 2</option>';
@@ -2915,7 +2915,7 @@ class Event extends CI_Controller
 			if($record->id == $selected_team2){ 
 				$selected='selected ';
 			} 
-		  $teams2 .= '<option value="'.$record->id.'" '.$selected.'>'.$record->team_name.'</option>';
+		  $teams2 .= '<option value="'.$record->id.'" '.$selected.'>'.$record->team_name." ( ".$record->source_type." )".'</option>';
 		}
 
 		$stadiums .= '<option value="">Select Venue</option>';
@@ -2924,7 +2924,7 @@ class Event extends CI_Controller
 			if($stadium->s_id == $selected_stadium){ 
 				$selected='selected ';
 			} 
-			$stadiums .= '<option value="'.$stadium->s_id.'" '.$selected.'>'.$stadium->stadium_name.' - '.$stadium->s_id.'</option>';
+			$stadiums .= '<option value="'.$stadium->s_id.'" '.$selected.'>'.$stadium->stadium_name.' - '.$stadium->s_id." ( ".$record->source_type." )".'</option>';
 		}
 
 		$tournaments .= '<option value="">Select Tournament</option>';

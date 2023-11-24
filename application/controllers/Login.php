@@ -145,10 +145,15 @@ class Login extends CI_Controller
                     'store' => $res['result']->store_id,
                     'admin_logged_in' => true,
                 );*/
-                $admin_id = 13;
+                 $admin_id = 13;
                 if ($res['result']->role_id == 7) {
                     $admin_id = $res['result']->store_id;
                 }
+                else if ($res['result']->role_id == 13) {
+                    $admin_id = 220;
+                }
+
+                
                 // if ($res['result']->admin_type_name != 'SUB ADMIN') {
                 $branches = $this->General_Model->get_admin_details($admin_id);
 
