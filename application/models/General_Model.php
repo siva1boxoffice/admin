@@ -2706,7 +2706,7 @@ public function getOrderData_v2()
 		//->join('sell_tickets', 'sell_tickets.match_id = match_info.m_id', 'left');
 		//$this->db->where('match_info_lang.language', $this->session->userdata('language_code'));
 		$this->db->where('teams_lang.language', $this->session->userdata('language_code'));
-		$this->db->where('teams_lang.store_id', $this->session->userdata('storefront')->admin_id);
+	//	$this->db->where('teams_lang.store_id', $this->session->userdata('storefront')->admin_id);
 		$this->db->where('game_category_lang.language', $this->session->userdata('language_code'));
 		$this->db->group_by('teams.id');
 		if (!empty($where_array)) {
@@ -2884,7 +2884,7 @@ public function getOrderData_v2()
 		->join('match_info', 'match_info.tournament = tournament.t_id', 'left');		
 		// ->join('sell_tickets', 'sell_tickets.match_id = match_info.m_id', 'left');
 		$this->db->where('tournament_lang.language', $this->session->userdata('language_code'));
-		$this->db->where('tournament_lang.store_id', $this->session->userdata('storefront')->admin_id);
+		//$this->db->where('tournament_lang.store_id', $this->session->userdata('storefront')->admin_id);
 		$this->db->where('game_category_lang.language', $this->session->userdata('language_code'));
 		$this->db->group_by('tournament_lang.id');
 		if (!empty($where_array)) {
