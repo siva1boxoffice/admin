@@ -2533,7 +2533,7 @@ function mergecontent(){
         $insertData['status'] = 1;     
         $insertData['url_key'] = str_replace(" ", "-", trim($team_name));
         $insertData['team_url'] = str_replace(" ", "-", trim($team_name));
-        $insertData['source_type'] = "Xs2event";
+        $insertData['source_type'] = "tixstock";
         $insertData['store_id'] = $this->session->userdata('storefront')->admin_id;
         $team_id = $this->General_Model->insert_data('teams', $insertData);
 
@@ -2559,7 +2559,7 @@ private function get_stadium_row($stadium_name,$stadium_type)
         $insertData['stadium_type'] = $stadium_type;
         $insertData['create_date'] = strtotime(date('Y-m-d H:i:s'));
         $insertData['status'] = 1;     
-        $insertData['source_type'] = "Xs2event";
+        $insertData['source_type'] = "tixstock";
         $insertData['store_id'] = $this->session->userdata('storefront')->admin_id;
         $this->General_Model->insert_data('stadium', $insertData);    
        
