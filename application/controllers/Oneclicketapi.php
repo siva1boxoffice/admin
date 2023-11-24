@@ -760,7 +760,9 @@ public function updateFeedsEvents($category_id="")
                                     if($stadium_category != ""){
                                         $ticket_category_id = $this->stadiumCategory_update_v1($stadium,$stadium_category);
                                     }
-
+                                    if($ticket_category_id == ""){
+                                        $ticket_category_id = $this->stadiumCategory_update($stadium,$stadium_category);
+                                    }
                                     
                                     $ticketid           = mt_rand(1000, 9999) . '_' . mt_rand(100000, 999999);
                                     $ticket_group_id    = mt_rand(100000, 999999);
@@ -1089,6 +1091,60 @@ public function updateFeedsEvents($category_id="")
     }
        
     }
+
+public function stadiumCategory_update($stadium_id,$category){
+
+    $language_array = $this->language_array;
+    $category_data  =   $this->Tssa_Model->get_seat_category($category);
+
+    if($category_data == ""){
+
+        $seat_category_data =  array(
+        'seat_category'         => $category,
+        'status'                => 1,
+        'create_date'           => time(),
+        'event_type'            => 'match',
+        'source_type'           => 'oneclicket'
+
+        );
+
+        $category_id = $this->Tssa_Model->save_seat_category($seat_category_data);
+        if($category_id != ""){
+
+        foreach($language_array as $language){
+        
+        $stadium_seats =  array(
+        'seat_category'         => $category,
+        'stadium_seat_id'       => $category_id,
+        'language'              => $language
+
+        ); 
+        $lang_category_id = $this->Tssa_Model->save_stadium_seats_lang($stadium_seats); 
+
+        }
+
+          $seat_category_colorcode_data =  array(
+                    'stadium_id'         => $stadium_id,
+                    'category_id'        => $category_id,
+                    'color_code'         => 'rgb(0, 0, 0)'
+                );
+          $this->Tixstock_Model->insert_data('stadium_color_category',$seat_category_colorcode_data);
+
+
+                            }    
+        return $category_id;                           
+    }
+    else{
+
+        $category_id =  $category_data->stadium_seat_id;
+        return $category_id;
+
+    }
+
+        
+
+
+}
 
 public function stadiumCategory_update_v1($stadium_id,$category){
 
