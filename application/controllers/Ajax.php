@@ -554,7 +554,7 @@ class Ajax extends CI_Controller
 
  	  		$edit_content .= "</div></div>";
  	  	
-
+ 	  		$clone ="<span  data-id='".$row->s_id."' class='badge badge-warning clone_stadium' type='button'>Clone</span>";
 	        $data[] = array( 
 			    "id"						=> $row->s_id,
 	            "staduim_name"				=> "<a href='".$stadium_url."'>".$row->stadium_name."</a>",
@@ -564,6 +564,7 @@ class Ajax extends CI_Controller
 	            "match_count"		      	=> $match_text,
 	            "status"					=> $status,
 	            "attendee_status"			=> $attendee_status,
+	            "clone"						=> $clone,
 	            "action"			    	=> $edit_content,
 
 	        ); 
