@@ -4897,7 +4897,56 @@ public function get_order_status(){
 			// }
 			// $row_count = $this->uri->segment(4);
 			// $this->loadRecord($row_count, 'stadium', 'game/stadium/list_stadium', 's_id', 'DESC', 'game/stadium_list', 'stadiums', 'stadiums', $search_text);
-		}else if ($segment == 'update_stadium_attendee_status') {
+		}
+		else if($segment =="clone_stadium"){
+			$stadiumId 			= $_POST["stadium_id"];
+			if($stadiumId){
+
+				$getStadium = $this->General_Model->getAllItemTable('stadium', 's_id', $stadiumId)->result();
+				if($getStadium){
+					foreach ($getStadium as $row) {
+			            unset($row->s_id);
+
+			            $url= "https://listmyticket.com/".$row->stadium_image;
+
+			            $svg = explode(".",$row->stadium_image);
+			            $new_svg = $svg[0].time().".".$svg[1];
+						$contents=file_get_contents($url);
+
+						$save_path = UPLOAD_PATH_PREFIX.ltrim($new_svg,"/");
+						file_put_contents($save_path,$contents);
+						$row->stadium_image = $new_svg;
+						$row->stadium_name = $row->stadium_name ." - Clone";			
+						$new_id = $this->General_Model->insert_data('stadium', $row);
+				    }
+				}
+				
+			    $getStadiumDetails = $this->General_Model->getAllItemTable('stadium_details', 'stadium_id', $stadiumId)->result();
+				if($getStadiumDetails){
+					foreach ($getStadiumDetails as $row) {
+			            unset($row->id );
+			            $row->stadium_id = $new_id;
+						$insertTable = $this->General_Model->insert_data('stadium_details', $row);
+			    	}
+				}
+				
+				$getStadiumcolorDetails = $this->General_Model->getAllItemTable('stadium_color_category', 'stadium_id', $stadiumId)->result();
+				if($getStadiumcolorDetails){
+					foreach ($getStadiumcolorDetails as $row) {
+			            unset($row->id );
+			            $row->stadium_id = $new_id;
+						$insertTable = $this->General_Model->insert_data('stadium_color_category', $row);
+			    	}
+				}
+				$response = array('status' => 1, 'msg' => 'Cloned Successfully.');
+				echo json_encode($response);die;
+
+			}
+			else{
+				echo "invalid stadium";die;
+			}
+		}
+		else if ($segment == 'update_stadium_attendee_status') {
 			
 			
 			$stadiumId 			= $_POST["stadium_id"];

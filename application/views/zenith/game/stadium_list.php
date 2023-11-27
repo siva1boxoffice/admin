@@ -197,6 +197,7 @@ img {
                                     <th class="before_none">Matches</th>
                                     <th class="before_none">Status</th>
                                     <th class="before_none">Attendee Status</th>
+                                    <th class="before_none">Clone</th>
                                     <th class="before_none">Actions</th>
                                  </tr>
                               </thead>
@@ -209,6 +210,30 @@ img {
                   </div>
          </div>
       </div>
+
+
+    
+        <!-- Modal -->
+        <div class="modal fade" id="cloneModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content confirm_delivery">
+              <div class="modal-header">
+            
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+               <h5> Are you sure you want to clone it ?  </h5>
+              </div>
+              <input type="hidden" name="stadium_modal_id" id="stadium_modal_id" value="">
+              <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-dismiss="modal">No Cancel</button>
+                <button type="button" class="btn btn-primary clone_confirm">Yes Clone</button>
+              </div>
+            </div>
+          </div>
+        </div>
 <?php $this->load->view(THEME.'common/footer');?>
 
  
@@ -306,11 +331,51 @@ img {
                         data: 'attendee_status'
                     },
                     {
+                        data: 'clone'
+                    },
+                    {
                         data: 'action'
                     },
                 ]
             });
     
+
+
+             $('body').on('click','.clone_stadium', function() {
+
+                $("#cloneModal").modal();
+                 var stadium_id = $(this).data("id");
+                 $("#stadium_modal_id").val(stadium_id) ; 
+
+             });
+
+
+             $('body').on('click','.clone_confirm', function() {
+                 var stadium_id = $("#stadium_modal_id").val() ; 
+                 $(".clone_confirm").prop('disabled', true);
+                 $(".clone_confirm").html("Please Wait...");
+                 $.ajax({
+                        url: '<?=base_url()?>game/stadium/clone_stadium',
+                        method: 'post',
+                        data: {
+                            stadium_id: stadium_id
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                             $(".clone_confirm").prop('disabled', false);
+
+                            if (data.status == 1) {
+                                swal('Cloned Successfully !', "", 'success');
+                                setTimeout(window.location.reload(), 1000);
+                            } else if (data.status == 0) {
+                                swal('Cloned Failed', "", 'error');
+                                 setTimeout(window.location.reload(), 1000);
+                            }
+
+                        }
+                    });
+             });
+
 
     $('body').on('click','.stadium_status', function() {
 

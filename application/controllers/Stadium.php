@@ -928,7 +928,7 @@ class Stadium extends CI_Controller
  	  		$edit_content  .= '<a id="branch_'.$row->s_id.'" href="javascript:void(0);" data-href="'.base_url().'stadium/delete_stadium/'.$row->s_id.'" class="dropdown-item delete_action"  onClick="delete_data('.$row->s_id.')" ><i class=" fas fa-trash mr-1"></i>&nbsp;Remove from list</a>';
 
  	  		$edit_content .= "</div></div>";
- 	  	
+ 	  		$clone ="<span  data-id='".$row->s_id."' class='badge badge-warning clone_stadium' type='button'>Clone</span>";
 
 	        $data[] = array( 
 			    "id"						=> $row->s_id,
@@ -939,6 +939,7 @@ class Stadium extends CI_Controller
 	            "match_count"		      	=> $match_text,
 	            "status"					=> $status,
 	            "attendee_status"			=> $attendee_status,
+	            "clone"						=> $clone,
 	            "action"			    	=> $edit_content,
 
 	        ); 
