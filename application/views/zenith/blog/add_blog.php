@@ -201,10 +201,33 @@
                                               <textarea class="form-control" rows="4" placeholder="Meta Description" name="meta_description" style="display: none;"><?php echo $blog_lang->meta_description;?></textarea>
                                         <?php } ?>
 
-                                  <div class="col-lg-12">
+                                  <div class="col-lg-6">
                                   <div class="form-group">
                                    <label for="simpleinput">Seo Keywords</label>
                                    <input id="choices-text-remove-button" class="form-control" value="<?php echo $blog_lang->seo_keywords;?>" name="seo_keywords" placeholder="Enter Keywords">
+                                  </div>
+                               </div>
+
+
+                               <div class="col-lg-6">
+                                  <div class="form-group">
+                                   <!-- <label for="simpleinput">Blog Tags</label>
+                                   <input id="" class="form-control" value="<?php //echo $blog_lang->seo_keywords;?>" name="blog_tags" placeholder="Enter Blog Tags"> -->
+
+                                   <label for="example-select">Select Blog Tags</label>
+                                       <select multiple class="custom-select" id="blog_tags" name="blog_tags[]"  >
+                                       <option value="">Select Blog Tags</option>
+                                       <?php foreach($blog_tags as $blog_tag){?>
+                                          <option value="<?php echo $blog_tag->blog_tag_id;?>" <?php
+                                             $blog_tag_id = explode(',', $result->blog_tag_id);
+                                                if (in_array($blog_tag->blog_tag_id, $blog_tag_id)) {
+                                                   echo 'selected';
+                                                } ?>>
+                                          <?php 
+                                             echo ($this->session->userdata('language_code') == 'en') ? $blog_tag->blog_tag_name_en : $blog_tag->blog_tag_name_ar; ?>
+                                       </option>
+                                       <?php } ?>
+                                    </select>
                                   </div>
                                </div>
 
@@ -293,4 +316,5 @@
       };
    
        new Choices(document.getElementById("choices-text-remove-button"), { delimiter: ",", editItems: !0, removeItemButton: !0 });
+       const blog_tags = new Choices('#blog_tags', { delimiter: ",",editItems: !0,removeItemButton: !0,   searchFields: ['label', 'value'] ,allowSearch: true});
 </script>
