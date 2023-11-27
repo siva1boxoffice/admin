@@ -242,6 +242,7 @@ class Blog extends CI_Controller
 			$this->data['result'] = $this->Blog_Model->getrow($table,'id','');
 			$table2 = "blog_category";
 			$this->data['category'] = $this->Blog_Model->getAllItemTable($table2,$rowno,10000,'','')->result();
+			$this->data['blog_tags'] = $results = $this->Blog_Model->getBlogTagList("", "", "", "", '',"")->result();
 			$this->load->view(THEME.'blog/add_blog', $this->data);
 		}
 		else if ($segment == 'edit') {
@@ -254,6 +255,8 @@ class Blog extends CI_Controller
 				$this->data['category'] = $this->Blog_Model->getAllItemTable($table2,$rowno,10000,'','')->result();
 				$this->data['result'] = $this->Blog_Model->getBlog($edit_cat_id);
 				$this->data['blog_lang'] = $this->Blog_Model->getBlog_lang($edit_cat_id)->row();
+				
+				$this->data['blog_tags'] = $results = $this->Blog_Model->getBlogTagList("", "", "", "", '',"")->result();
 			}
 			//echo $segment4;
 			//echo $this->db->last_query();die;
@@ -261,6 +264,9 @@ class Blog extends CI_Controller
 		}
 		else if ($segment == 'save') {
 			if ($this->input->post()) {
+
+				if(!empty($_POST['blog_tags']))
+					$_POST['blog_tags']=implode(",",$_POST['blog_tags']);
 
 					$id = $this->input->post('id');
 					if ($id == '') {
@@ -293,6 +299,7 @@ class Blog extends CI_Controller
 								'blog_status' 	    => $this->input->post('blog_status') ? $this->input->post('blog_status') : 0 , 
 								'meta_title' 		=> $this->input->post('meta_title'),
 								'meta_description'  => $this->input->post('meta_description'),
+								'blog_tag_id'  		=> $this->input->post('blog_tags'),
 								'seo_keywords' 		=> $this->input->post('seo_keywords'),
 								'created_at' 		=> date('Y-m-d h:i:s',strtotime($blogdate))
 								);
@@ -375,6 +382,7 @@ class Blog extends CI_Controller
 											'meta_title' 			=> $this->input->post('meta_title'),
 											'meta_description' 		=> $this->input->post('meta_description'),
 											'seo_keywords' 			=> $this->input->post('seo_keywords'),
+											'blog_tag_id' 			=> $this->input->post('blog_tags'),
 											'store_id' 			=> $this->session->userdata('storefront')->admin_id
 										);
 										$this->General_Model->insert_data('blog_lang', $language_data);
@@ -405,6 +413,7 @@ class Blog extends CI_Controller
 							$updateData['blog_category'] = $this->input->post('blog_category');
 							$updateData['blog_type'] = $this->input->post('blog_type');
 							$updateData['country'] = $this->input->post('country');
+							$updateData['blog_tag_id'] = $this->input->post('blog_tags');
 
 							//print_r($insert_data);
 							if (!empty($_FILES['blog_small']['name'])) {
@@ -466,6 +475,7 @@ class Blog extends CI_Controller
 								'meta_title' 			=> $this->input->post('meta_title'),
 								'meta_description' 		=> $this->input->post('meta_description'),
 								'seo_keywords' 			=> $this->input->post('seo_keywords'),
+								'blog_tag_id' 			=> $this->input->post('blog_tags'),
 							);
 
 
@@ -521,7 +531,111 @@ class Blog extends CI_Controller
 		}
 
 	}
+	public function blog_tags()
+	{
+		$idiom = $this->session->get_userdata('language');
+		$this->lang->load('message', 'english');
+		$segment = $this->uri->segment(3);
+		$table = "blog";
+		
+		if ($segment == 'add') {
+			$this->data['countries'] = $this->General_Model->getAllItemTable('countries')->result();
+			$this->data['result'] = $this->Blog_Model->getrow($table,'id','');
+			$table2 = "blog_category";
+			$this->data['category'] = $this->Blog_Model->getAllItemTable($table2,$rowno,10000,'','')->result();
+			$this->load->view(THEME.'blog/add_blog_tags', $this->data);
+		}
+		else if ($segment == 'edit') {
+			
+			$segment4 = $this->uri->segment(4);
+			if ($segment4 != "") {
+				
+				$edit_id = json_decode(base64_decode($segment4));
+				$table2 = "blog_tags";
+				 $this->data['result'] = $this->Blog_Model->getTagBlog($edit_id);
+				 
+			}
+			//echo $segment4;
+			//echo $this->db->last_query();die;
+			
 
+			$this->load->view(THEME.'blog/add_blog_tags', $this->data);
+		}
+		else if ($segment == 'save') {
+			if ($this->input->post()) {
+					$id = $this->input->post('id');
+					if ($id == '') {
+
+						$this->form_validation->set_rules('blog_tag_name_en', 'Blog Tag Name ENglish', 'required');
+						$this->form_validation->set_rules('blog_tag_name_ar', 'Blog Tag Name Arabic', 'required');	
+						if($this->form_validation->run() == false)
+						{
+							$response = array('status' => 0, 'msg' => validation_errors());
+								echo json_encode($response);
+								exit;
+						}
+						else{
+
+							$blog_tag_url = $this->input->post('blog_tag_url');
+
+							 $insert_data = array(
+								'blog_tag_name_en' 	=> $this->input->post('blog_tag_name_en'),
+								'blog_tag_name_ar' 		=> $this->input->post('blog_tag_name_ar'),
+								'blog_tag_url' 			=> $this->slugify($blog_tag_url),
+								'status' 	    => $this->input->post('status') ? $this->input->post('status') : 0 
+								);
+							$inserted_id = $this->General_Model->insert_data('blog_tags', $insert_data);
+							//echo $this->db->last_query();
+							$response = array('msg' => 'Blog Tags Created Successfully.', 'redirect_url' => base_url() . 'blog/blog_tags/', 'status' => 1);
+
+							}
+
+							echo json_encode($response);
+							exit;
+							redirect('blog_tags/');
+					}
+					else{
+							$updateData = array();
+							$blog_tag_url = $this->input->post('blog_tag_url');
+							$updateData['status'] = $this->input->post('status') ? 1 : 0;
+							$updateData['blog_tag_name_en'] = $this->input->post('blog_tag_name_en');
+							$updateData['blog_tag_name_ar'] = $this->input->post('blog_tag_name_ar');
+							$updateData['blog_tag_url'] = $this->slugify($blog_tag_url);
+						
+							//print_r($updateData);die;
+							$this->General_Model->update('blog_tags', array('blog_tag_id' => $id), $updateData);
+							//echo $this->db->last_query();
+							$response = array('msg' => 'Blog Tags Updated Successfully.', 'redirect_url' => base_url() . 'blog/blog_tags/', 'status' => 1);
+						}
+
+						echo json_encode($response);
+						exit;
+						redirect('blog_tags/');
+
+			}
+		}
+		else if ($segment == 'delete') {
+			$segment4 = $this->uri->segment(4);
+			$delete_id = json_decode(base64_decode($segment4));
+
+			$delete = $this->General_Model->delete_data('blog_tags', 'blog_tag_id', $delete_id);
+			if ($delete == 1) {
+				$response = array('status' => 1, 'msg' => 'Blog Tags deleted Successfully.');
+				echo json_encode($response);
+				exit;
+			} else {
+				redirect('blog/blog_tags/');die;
+				$response = array('status' => 1, 'msg' => 'Error while deleting game category.');
+				echo json_encode($response);
+				exit;
+			}
+		}
+		else {
+			$this->data['blog_category'] = $this->Blog_Model->getBlogTagsList('', '1000000', '', '', '',array())->result();
+			$this->load->view(THEME.'blog/blog_tags_list', $this->data);
+		}
+
+	}
 	/**
 	 * Fetch data and display based on the pagination request
 	 */
@@ -785,6 +899,92 @@ class Blog extends CI_Controller
 	            "slug"				=> $row->category_slug,
 	            "status"			=> $status,
 	            "date"				=> date('d M Y,  H:i',strtotime($row->created_at)),
+	            "action"			=> $edit_content,
+
+	        ); 
+	     }
+
+	     ## Response
+	     $response = array(
+	        "draw" => intval($draw),
+	        "iTotalRecords" => $allcount,
+	        "iTotalDisplayRecords" => $allcount,
+	        "aaData" => $data
+	     );
+
+	     echo json_encode($response); 
+	     die;
+	}
+	public function blog_tags_ajax(){
+
+		$postData  = $_POST;
+		## Read value
+		$draw = $postData['draw'];
+		$rowno = $postData['start'];
+		$row_per_page = $postData['length']; // Rows display per page
+		$columnIndex = $postData['order'][0]['column'] ; // Column index
+		//$order_column = $postData['columns'][$columnIndex]['data'] ; // Column name
+		$order_column = "";
+		$order_by = $postData['order'][0]['dir']; // asc or desc
+		$search = $postData['search']['value']; // Search value
+		$flag = $postData['flag'];
+		$search_data[] = array();
+		
+		// if($postData['category_ids'] !="") 
+		// 	$search_data['category_ids'] = explode(",", $postData['category_ids']) ;
+
+		if($postData['blog_tag_en'] !="") 
+			$search_data['blog_tag_en'] = $postData['blog_tag_en'] ;
+
+		if($postData['blog_tag_ar'] !="") 
+			$search_data['blog_tag_ar'] = $postData['blog_tag_ar'] ;
+
+		if($postData['statuss']!="") 
+			$search_data['statuss'] = explode(",", $postData['statuss']) ;
+
+		$table = "blog_tags";
+
+
+		$allcount = $this->Blog_Model->getBlogTagList('', '1000000', '', '', '',$search_data)->num_rows();
+		$results = $this->Blog_Model->getBlogTagList($rowno, $row_per_page, $order_column, $order_by, '',$search_data)->result();
+	
+		//  print_r($results);
+		// echo $this->db->last_query();exit;
+
+		//echo $this->db->last_query();die;
+		$data = array();
+		$language_code = $this->session->userdata('language_code');
+	     foreach($results as $row ){
+
+             $edit_content  = '<div class="dropdown">
+                              <a href="javascript:void(0)" class="btn-icon btn-icon-sm btn-icon-soft-primary"
+                                 data-toggle="dropdown">
+                                 <i class="mdi mdi-dots-vertical fs-sm"></i>
+                              </a>
+                              <div class="dropdown-menu dropdown-menu-right">';
+
+
+            $edit_url = "blog/blog_tags/edit/".base64_encode(json_encode($row->blog_tag_id)); 
+
+            // Edit
+            $edit_content  .= '<a href="'.base_url($edit_url).'" class="dropdown-item"><i class=" fas fa-pencil-alt mr-1"></i>&nbsp; Edit </a>';
+
+            //Delete 
+ 	  		$edit_content  .= '<a id="branch_'.$row->blog_tag_id.'" href="javascript:void(0);" data-href="'.base_url().'blog/blog_tags/delete/'.base64_encode(json_encode($row->blog_tag_id)).'" class="dropdown-item delete_action"  onClick="delete_data('.$row->blog_tag_id.')" ><i class=" fas fa-trash mr-1"></i>&nbsp; Delete</a>';
+
+ 	  		$edit_content .= "</div></div>";
+ 	  		
+
+ 	  		if ($row->status == '1') {  
+				$status = '<div class="bttns"> <span class="badge badge-success">Active</span> </div>';
+			}
+			else if ($row->status != '1') { 
+				$status ='<div class="bttns"><span class="badge badge-danger">Inactive</span></div>';
+			} 
+	        $data[] = array( 			   
+	            "blog_tag_name_en"			=> $row->blog_tag_name_en,
+	            "blog_tag_name_ar"		=>$row->blog_tag_name_ar,	            
+	            "status"			=> $status,
 	            "action"			=> $edit_content,
 
 	        ); 

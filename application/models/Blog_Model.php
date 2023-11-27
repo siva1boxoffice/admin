@@ -167,4 +167,99 @@ class Blog_Model extends CI_Model
 
 	}
 
+
+	public function getBlogTagsList($row_no="",$row_per_page="",$orderColumn,$orderby,$where_array = array(),$search= array())
+	{ 
+		$this->db->select('blog_category.*,blog_category_lang.category_name,blog_category_lang.meta_title,blog_category_lang.meta_description,blog_category_lang.seo_keywords');
+		$this->db->join('blog_category_lang','blog_category_lang.	blog_category_id  = blog_category.id');
+		$this->db->where('language', $this->session->userdata('language_code'));
+		if ($search != '') {			
+			if(@$search['statuss']){
+				//if ($match_held !== 'expired') {	
+				$this->db->where_in('blog_category.category_status', $search['statuss']);
+				//}
+			}
+
+			if(@$search['category_name']){
+				$this->db->group_start();
+				$this->db->like('blog_category_lang.category_name', $search['category_name']);
+				$this->db->or_like('blog_category_lang.category_name', $search['category_name']);
+			
+				$this->db->group_end();
+			}
+
+
+		}
+		$query = $this->db->get('blog_category');
+		return $query;
+	}
+
+	public function getBlogTagList($row_no="",$row_per_page="",$orderColumn,$orderby,$where_array = array(),$search= array())
+	{ 
+
+	
+		$this->db->select('blog_tags.*');
+		
+		if (!empty($where_array)) {
+			foreach ($where_array as $columnkey => $value) {
+				$this->db->where($columnkey, $value);
+			}
+		}
+
+		if ($search != '') {			
+
+			if(@$search['statuss']){
+				$this->db->where_in('blog_tags.status', $search['statuss']);
+			}
+			
+			// if(@$search['category_ids']){
+			// 	$this->db->where_in('blog.blog_category', $search['category_ids']);
+			// }
+			if(@$search['blog_tag_en']){
+				$this->db->group_start();
+				$this->db->like('blog_tags.blog_tag_name_en', $search['blog_tag_en']);
+				$this->db->or_like('blog_tags.blog_tag_name_en', $search['blog_tag_en']);
+				$this->db->group_end();
+			}
+
+			if(@$search['blog_tag_ar']){
+				$this->db->group_start();
+				$this->db->like('blog_tags.blog_tag_name_ar', $search['blog_tag_ar']);
+				$this->db->or_like('blog_tags.blog_tag_name_ar', $search['blog_tag_ar']);
+				$this->db->group_end();
+			}
+
+
+		}
+
+		if ($orderColumn != "" && $orderby != "") {
+			$this->db->order_by($orderColumn, $orderby);
+		}
+		else{
+			$this->db->order_by('blog_tag_id', 'desc');
+		}
+		// if ($search != '') {
+		// 	$this->db->like('match_info_lang.match_name', $search);
+		// 	//$this->db->or_like('otherevent_category.category_name', $search);
+		// }
+	//	$this->db->group_by('blog.id');
+		if ($row_per_page != '') {
+			$this->db->limit($row_per_page, $row_no);
+		}
+
+		$query = $this->db->get('blog_tags');
+
+		//  echo $this->db->last_query();
+		//  exit;
+		return $query;
+	}
+
+	public function getTagBlog($id)
+	{ 
+		$this->db->where('blog_tag_id', $id);
+		$this->db->select('blog_tags.*');
+		$query = $this->db->get('blog_tags');
+		return $query->row();
+	}
+
 }
