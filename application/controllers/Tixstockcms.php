@@ -2567,7 +2567,7 @@ private function get_stadium_row($stadium_name,$stadium_type)
     if (!$check_stadium) {
         $insertData['stadium_name'] = $stadium_name;
         $insertData['stadium_type'] = $stadium_type;
-        $insertData['create_date'] = strtotime(date('Y-m-d H:i:s'));
+        $insertData['create_date'] = date('Y-m-d H:i:s');
         $insertData['status'] = 1;     
         $insertData['source_type'] = "tixstock";
         $insertData['store_id'] = $this->session->userdata('storefront')->admin_id;

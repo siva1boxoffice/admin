@@ -158,10 +158,10 @@ public function update_tracking_data(){
 				$ticketid 		= $_POST['ticket_id'];
 				$os 		    = $_POST['os'];
 				if($os == "ANDROID"){
-					$ticket_data 	= array('qr_link' => $_POST['qr_link'],'ticket_status' => 1);
+					$ticket_data 	= array('qr_link' => $_POST['qr_link'],'ticket_status' => 2);
 				}
 				else if($os == "IOS"){
-					$ticket_data 	= array('qr_link_ios' => $_POST['qr_link'],'ticket_status' => 1);
+					$ticket_data 	= array('qr_link_ios' => $_POST['qr_link'],'ticket_status' => 2);
 				}
 				
 				if ($this->General_Model->update_table('booking_etickets', 'id', $ticketid, $ticket_data)) {
@@ -196,10 +196,10 @@ public function update_tracking_data(){
 				$ticketid 		= $_POST['ticket_id'];
 				$os 		    = $_POST['os'];
 				if($os == "ANDROID"){
-					$ticket_data 	= array('qr_link' => $_POST['qr_link'],'ticket_status' => 1);
+					$ticket_data 	= array('qr_link' => $_POST['qr_link'],'ticket_status' => 2);
 				}
 				else if($os == "IOS"){
-					$ticket_data 	= array('qr_link_ios' => $_POST['qr_link'],'ticket_status' => 1);
+					$ticket_data 	= array('qr_link_ios' => $_POST['qr_link'],'ticket_status' => 2);
 				}
 				
 				if ($this->General_Model->update_table('booking_etickets', 'id', $ticketid, $ticket_data)) {
@@ -1278,7 +1278,7 @@ if($record->delivery_status != 0)
 						unlink(UPLOAD_PATH.'uploads/e_tickets/' . $resultTest->ticket_file);
 						$updateData['ticket_file'] = $data["file_name"];
 						$updateData['ticket_upload_date'] = date("Y-m-d h:i:s");
-						$updateData['ticket_status'] = 1;
+						$updateData['ticket_status'] = 2;
 						$done = $this->General_Model->update_table('booking_etickets', 'id', $resultTest->id, $updateData);
 					}
 
@@ -1405,7 +1405,7 @@ if($record->delivery_status != 0)
 						
 						$updateData['ticket_file'] = $file_name;
 						$updateData['ticket_upload_date'] = date("Y-m-d h:i:s");
-						$updateData['ticket_status'] = 1;
+						$updateData['ticket_status'] = 2;
 						$done = $this->General_Model->update_table('booking_etickets', 'id', $resultTest->id, $updateData);
 						$msg = 'E-tickets added successfully.';
 						$response = array('status' => 1, 'msg' => $msg);						
@@ -1654,7 +1654,7 @@ public function multiple_upload_tickets()
 						unlink(UPLOAD_PATH.'uploads/e_tickets/' . $resultTest->ticket_file);
 						$updateData['ticket_file'] = $data["file_name"];
 						$updateData['ticket_upload_date'] = date("Y-m-d h:i:s");
-						$updateData['ticket_status'] = 1;
+						$updateData['ticket_status'] = 2;
 						$done = $this->General_Model->update_table('booking_etickets', 'id', $resultTest->id, $updateData);
 					} else {
 
