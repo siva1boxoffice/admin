@@ -4907,12 +4907,11 @@ public function get_order_status(){
 					foreach ($getStadium as $row) {
 			            unset($row->s_id);
 
-			            $url= "https://listmyticket.com/".$row->stadium_image;
+			            $url= UPLOAD_PATH.$row->stadium_image;
 
 			            $svg = explode(".",$row->stadium_image);
-			            $new_svg = $svg[0].time().".".$svg[1];
+			            $new_svg = $svg[0].time().".svg";
 						$contents=file_get_contents($url);
-
 						$save_path = UPLOAD_PATH_PREFIX.ltrim($new_svg,"/");
 						file_put_contents($save_path,$contents);
 						$row->stadium_image = $new_svg;
