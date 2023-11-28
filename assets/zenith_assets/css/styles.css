@@ -7603,7 +7603,7 @@ a.btn.clone-plus-btn{background: #00A3ED;color: #fff;border-radius: 50%;}
 .all_new_orders label {color: #4C5271;font-size: 14px;font-weight: 700;margin: 0px;}
 .add_new_bttn {margin: 21px 0;}
 .add_new_bttn a{display: block;height: 40px}
-.new_orders_lft {height: 360px;overflow-x: auto;}
+.new_orders_lft {height: 750px;overflow-x: auto;}
 .tick_sec .custom-select{color: #000000;}
 .all_new_orders .orders_team_name h3 {font-size: 18px;color: #0037D5;font-weight: 700;}
 .ticket_trans{padding: 2px 10px;color: #4C5271;background: #F6F8FA;font-size: 16px;font-weight: 400;}
@@ -7623,7 +7623,7 @@ a.btn.clone-plus-btn{background: #00A3ED;color: #fff;border-radius: 50%;}
 .col_height{flex: 1;}
 
 @media only screen and (min-width: 1200px) and (max-width: 1900px) {
- .new_orders_lft {height: 450px;overflow-x: auto;}
+ .new_orders_lft {height: 750px;overflow-x: auto;}
 }
 
 
