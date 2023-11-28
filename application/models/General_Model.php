@@ -4964,7 +4964,7 @@ public function getOrderData_v2()
 
 		$this->db->select('booking_global.*,booking_tickets.*,booking_billing_address.*,booking_payments.*,stadium_details.*,stadium.*,countries.name as country_name,states.name as city_name,register.first_name as customer_first_name,register.last_name as customer_last_name,admin_details.admin_id,admin_details.admin_name as seller_first_name,admin_details.admin_last_name as seller_last_name,sell_tickets.s_no,countries.name as customer_country_name,partner.admin_name as partner_first_name,partner.admin_last_name as partner_last_name,
 			affiliate.admin_name as affiliate_first_name,affiliate.admin_last_name as affiliate_last_name,booking_tickets.match_id as match_id,booking_billing_address.first_name as billing_first_name, booking_billing_address.last_name as billing_last_name, booking_billing_address.postal_code as billing_postal_code,
-			booking_billing_address.address as billing_address,booking_billing_address.country_id as billing_country_name,booking_billing_address.state_id as billing_cit_name,booking_tickets.ticket_type as ticket_type_new , (CASE 
+			booking_billing_address.address as billing_address,booking_billing_address.country_id as billing_country_name,booking_billing_address.state_id as billing_cit_name,booking_tickets.ticket_type as ticket_type_new,booking_tixstock.tixstock_order_id, (CASE 
 			WHEN booking_tickets.match_date >= curdate() THEN 1
 			WHEN booking_tickets.match_date <= curdate() THEN 2
 		 END) as match_date_new');
@@ -4979,7 +4979,8 @@ public function getOrderData_v2()
 		$this->db->join('countries', 'countries.id=booking_billing_address.country_id', 'LEFT');
 		$this->db->join('states', 'states.id=booking_billing_address.state_id', 'LEFT');
 		$this->db->join('sell_tickets', 'sell_tickets.s_no = booking_tickets.ticket_id', 'LEFT');
-
+		$this->db->join('booking_tixstock', 'booking_tixstock.booking_id=booking_global.bg_id', 'LEFT');
+		
 		$this->db->join('admin_details as partner', 'partner.admin_id=booking_global.partner_id', 'LEFT');
 		$this->db->join('admin_details as affiliate', 'affiliate.admin_id=booking_global.affiliate_id', 'LEFT');
 
