@@ -3172,21 +3172,44 @@ public function get_order_status(){
 				}
 
 				if($_POST['mail_enable'] == 1){
-					//echo "<pre>";print_r($_POST);exit;
-					$handle = curl_init();
-					$url = API_MAIL_URL.$order->bg_id;
-					curl_setopt($handle, CURLOPT_HTTPHEADER, array(
-					'domainkey: https://www.1boxoffice.com/en/'
-					));
-					curl_setopt($handle, CURLOPT_URL, $url);
-					curl_setopt($handle, CURLOPT_POST, 1);
-					curl_setopt($handle, CURLOPT_POSTFIELDS,
-					"email_notify=notify");
-					curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
-					$output = curl_exec($handle);
-					curl_close($handle);
-					/*echo "<pre>";print_r($output);exit;
-					echo $url;exit;*/
+
+					if($_POST['status'] == 4  || $_POST['status'] == 5  || $_POST['status'] == 6){
+
+						$updateData_a = array('delivery_status' => "2");
+						$cond_a = array('bg_id' => $order->bg_id);
+						$this->General_Model->update('booking_global', $cond_a, $updateData_a);
+
+						$post_data = array("bg_id" => $order->bg_id);
+						$handle = curl_init();
+						$url = API_CRON_URL.'admin-approve-notfication';
+						curl_setopt($handle, CURLOPT_HTTPHEADER, array(
+						'domainkey: https://www.1boxoffice.com/en/'
+						));
+						curl_setopt($handle, CURLOPT_URL, $url);
+						curl_setopt($handle, CURLOPT_POST, 1);
+						curl_setopt($handle, CURLOPT_POSTFIELDS,$post_data);
+						curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+						$output = curl_exec($handle);
+						curl_close($handle);
+
+					}
+					else{
+						//echo "<pre>";print_r($_POST);exit;
+						$handle = curl_init();
+						$url = API_MAIL_URL.$order->bg_id;
+						curl_setopt($handle, CURLOPT_HTTPHEADER, array(
+						'domainkey: https://www.1boxoffice.com/en/'
+						));
+						curl_setopt($handle, CURLOPT_URL, $url);
+						curl_setopt($handle, CURLOPT_POST, 1);
+						curl_setopt($handle, CURLOPT_POSTFIELDS,
+						"email_notify=notify");
+						curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+						$output = curl_exec($handle);
+						curl_close($handle);
+						/*echo "<pre>";print_r($output);exit;
+						echo $url;exit;*/
+					}
 				}
 				//echo $this->db->last_query();exit;
 				$response = array('status' => 1, 'msg' => "Success.Booking Status Updated Successfully.");
