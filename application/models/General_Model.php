@@ -4209,7 +4209,7 @@ public function getOrderData_v2()
 	function getOrdersSearch($match_id = "",$event='',$ticket_category='',$stadium ='',$event_start_date='',$event_end_date='',$ignore_end_date='',$status='',$seller='',$order_id='',$customer_id='',$page,$seller_name="",$order_status="",$shipping_status="",$row_no='', $row_per_page='')
 	{
 		$this->db->select('booking_global.*,booking_tickets.*,booking_billing_address.*,booking_payments.*,stadium_details.*,stadium.*,countries.name as country_name,states.name as city_name,register.first_name as customer_first_name,register.last_name as customer_last_name,admin_details.admin_id,admin_details.admin_name as seller_first_name,admin_details.admin_last_name as seller_last_name,sell_tickets.s_no,countries.name as customer_country_name,partner.admin_name as partner_first_name,partner.admin_last_name as partner_last_name,
-		affiliate.admin_name as affiliate_first_name,affiliate.admin_last_name as affiliate_last_name,booking_tickets.match_id as match_id, (CASE 
+		affiliate.admin_name as affiliate_first_name,affiliate.admin_last_name as affiliate_last_name,booking_tickets.match_id as match_id,booking_tixstock.tixstock_order_id, (CASE 
 			WHEN booking_tickets.match_date >= curdate() THEN 1
 			WHEN booking_tickets.match_date <= curdate() THEN 2
 		 END) as match_date_new');
