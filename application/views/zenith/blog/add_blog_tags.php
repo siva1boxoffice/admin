@@ -57,7 +57,7 @@
                                   <div class="col-lg-6">
                                   <div class="form-group">
                                    <label for="simpleinput">Blog Tags URL</label>
-                                   <input id="" class="form-control" value="<?php echo $result->blog_tag_url;?>" name="blog_tag_url" placeholder="Enter Blog Tags URL">
+                                   <input class="form-control" value="<?php echo $result->blog_tag_url;?>" id="blog_tag_url" name="blog_tag_url" placeholder="Enter Blog Tags URL">
                                   </div>
                                </div>
 
@@ -65,7 +65,7 @@
                                           <div class="form-group">
                                              <label for="sellers">Status <span class="text-danger">*</span></label>
                                              <div class="custom-control custom-switch">
-                                               <input type="checkbox" class="custom-control-input" id="customSwitch18"  value="1" <?php if($result->status == '1'){?> checked <?php } ?> name="status">
+                                               <input type="checkbox" class="custom-control-input" id="customSwitch18"  value="1" <?php if($result->status == '1' || $result->status == ''){?> checked <?php } ?> name="status">
                                                <label class="custom-control-label" for="customSwitch18">In Active / Active</label>
                                              </div>
                                           </div>
@@ -98,40 +98,27 @@
 
 <?php $this->load->view(THEME.'common/footer'); ?>
 <script>
+  function slugfly(str) {
+        str = str.replace(/^\s+|\s+$/g, ''); // trim
+        str = str.toLowerCase();
 
-         function popitup(url,temp='')
-       {
+        // remove accents, swap ñ for n, etc
+        var from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;";
+        var to   = "aaaaaeeeeeiiiiooooouuuunc------";
+        for (var i = 0, l = from.length; i < l; i++) {
+          str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+        }
 
-          newwindow=window.open(url,'name','directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,,height=500,width=700');
+        str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+                 .replace(/\s+/g, '-') // collapse whitespace and replace by -
+                 .replace(/-+/g, '-'); // collapse dashes
 
-          if (window.focus) {newwindow.focus()}
-          return false;
-       }
+        return str;
+   }
 
-
-        var loadFiles = function(event,team_bg_file) {
-
-            var formData = new FormData();
-            formData.append('file', event.target.files[0]);
-
-            $.ajax({
-                url : "<?php echo base_url();?>event/upload_files",
-               type : 'POST',
-               data : formData,
-               processData: false,  // tell jQuery not to process the data
-               contentType: false,  // tell jQuery not to set contentType
-               dataType: 'json',
-               success : function(data) {
-                  if(data.uploaded_file){
-                    var src = "<?php echo base_url();?>uploads/temp/"+data.uploaded_file;
-                    var output = document.getElementById(team_bg_file);
-                    output.src = src;
-                    $("#"+team_bg_file+"_link").attr("onclick", "return popitup('"+src+"');");
-                  }
-               }
-            });
-      };
-   
-       new Choices(document.getElementById("choices-text-remove-button"), { delimiter: ",", editItems: !0, removeItemButton: !0 });
+   $("body").on("keyup","#blog_tag_name_en",function(){
+       var val = $(this).val();
+       $("#blog_tag_url").val(slugfly(val));
+   });
        
 </script>
