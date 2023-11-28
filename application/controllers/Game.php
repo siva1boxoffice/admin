@@ -795,8 +795,11 @@ public function update_tracking_data(){
 				$words[1] .= "<br/>"; // add the <br/> tag after the second word
 				$seat_category = implode(" ", $words); // join the array of words back into a string
 				//echo $newStr;
-
-				$booking_no='<a href="'.base_url()."game/orders/details/". md5($record->booking_no).'">#'.$record->booking_no.'</a>';
+				$booking_reference = $record->booking_no;
+				if($record->tixstock_order_id){
+					$booking_reference = $booking_reference."<br>".$record->tixstock_order_id;
+				}	
+				$booking_no='<a href="'.base_url()."game/orders/details/". md5($record->booking_no).'">#'.$booking_reference.'</a>';
 
 				$delivery_date="";
 				// $delivery_date=date('D j F Y',strtotime($record->match_date . ' -3 days'))."<br/>".date('H:i',strtotime($record->match_time));
@@ -3178,6 +3181,11 @@ public function get_order_status(){
 						$updateData_a = array('delivery_status' => "2");
 						$cond_a = array('bg_id' => $order->bg_id);
 						$this->General_Model->update('booking_global', $cond_a, $updateData_a);
+
+
+						$updateData_b = array('ticket_status' => "2");
+						$cond_b = array('booking_id' => $order->bg_id);
+						$this->General_Model->update('booking_etickets', $cond_b, $updateData_b);
 
 						$post_data = array("bg_id" => $order->bg_id);
 						$handle = curl_init();
