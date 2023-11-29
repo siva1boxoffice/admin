@@ -97,10 +97,11 @@ color: #00a3ed !important;
 									   <td><span class="order_id" id="copy_order_id"><b>
 										<p id='output'></p>
 										<?php 
+
+										$tixstock_order_id =  $orderData->tixstock_order_id ? " / ".$orderData->tixstock_order_id : "";
+
 										//echo $orderData->booking_no; 
-										$booking_no='<a href="'.base_url()."game/orders/details/". md5($orderData->booking_no).'" '."id='copy_order'".'>#'.$orderData->booking_no.'</a>'; 
-                                                         echo $booking_no.""; 
-                                                         ?>
+										$booking_no='<a href="'.base_url()."game/orders/details/". md5($orderData->booking_no).'" '."id='copy_order'".'>#'.$orderData->booking_no.$tixstock_order_id.'</a>';     echo    $orderData->booking_no.$tixstock_order_id                                               ?>
 									</b> </span><i class="far fa-copy"  id="copyButton"></i>
 									<i class="far fa-copy" onclick="copy_data('copy_order_id',this)" ></i></td>
 									   <td> <?php echo ucfirst($orderData->source_type); ?> </td>
@@ -1034,11 +1035,12 @@ color: #00a3ed !important;
 										
 												<tr>
 												<td>									
-														<!-- <a id="copy_name" target="_blank" href="<?php //echo base_url(); ?>game/orders/list_order/all?customer_id=<?php //echo base64_encode(json_encode($orderData->customer_id)); ?>"> -->
-																				<?php echo $orderData->customer_first_name; ?> 	<?php echo $orderData->customer_last_name; ?>
-																			<!-- </a> -->
-																			<span id="copy_name" ><?php echo $orderData->customer_first_name.' '.$orderData->customer_last_name; ?></span>
-														<i class="far fa-copy" onclick="copy_data('copy_name',this)" ></i>
+							<!-- <a id="copy_name" target="_blank" href="<?php //echo base_url(); ?>game/orders/list_order/all?customer_id=<?php //echo base64_encode(json_encode($orderData->customer_id)); ?>"> -->
+													
+												<!-- </a> -->
+											
+												<span id="copy_name" ><?php echo $orderData->customer_first_name.' '.$orderData->customer_last_name; ?></span>
+													<i class="far fa-copy" onclick="copy_data('copy_name',this)" ></i>
 												</td>
 												<td>
 														<?php echo $orderData->title; ?> 	<?php echo $orderData->first_name; ?> 	<?php echo $orderData->last_name; ?>
@@ -1910,6 +1912,10 @@ $("body").on('click',' #update_modal_booking_status ',function(e){
 	var bg_id = $(this).attr('data-bg-id');
 	var status = $(this).attr('data-status');
 	var data_close_modal = $(this).attr('data-close-modal');
+
+	$("#update_modal_booking_status").prop('disabled', true);
+	$("#update_modal_booking_status").html("Please Wait..");
+
 	var reason = "";
             if (status == 3) {
                 reason = prompt("Please Enter the reason for Cancel ", "");
@@ -1925,16 +1931,15 @@ $("body").on('click',' #update_modal_booking_status ',function(e){
                 },
                 dataType: 'json',
                 success: function(result) {
-
+                	$("#update_modal_booking_status").prop('disabled', false);
+					$("#update_modal_booking_status").html("Yes, Change it!	");
                     if (result) {
-
                         swal('Updated !', result.msg, 'success');
-
                     } else {
                         swal('Updation Failed !', result.msg, 'error');
-
                     }					
 					$('#'+data_close_modal).modal("hide");  
+					setTimeout(window.location.reload(),1000);
                 }
             });
 });
@@ -1945,26 +1950,30 @@ $("body").on('click',' #emailIcon ,#emailIcon_need_to_receive',function(e){
 	var email_status= '<?php echo $orderData->ticket_email_status == 1 ? "Resend" : "Send"; ?>';
 	var ticket_id='<?php echo md5($orderData->bg_id); ?>';
 	var data_close_modal = $(this).attr('data-close-modal');
-	
+	$("#emailIcon").prop('disabled', true);
+	$("#emailIcon").html("Please Wait..");
 	if(Email==""){	
 		swal('Error!', "Emai ID Cannot be empty.", 'error');
 		return false;
 	}				   
-				$.ajax({
+		$.ajax({
 			url: '<?php echo base_url();?>game/send_email',
 			type: 'POST',
 			dataType: "json",
 			data: {  email: Email ,ticket_id:ticket_id  },
-			success: function (response) {   
-					if(response.status==0)
-					{
-						swal('Updation Failed !', response.msg, 'error');
-					}
-					else
-					{
-						swal('Updated !', response.msg, 'success');
-					}
-					$('#'+data_close_modal).modal("hide");  
+			success: function (response) { 
+
+				$("#emailIcon").prop('disabled', false);
+				$("#emailIcon").html("Yes, Send!");
+				if(response.status==0)
+				{
+					swal('Updation Failed !', response.msg, 'error');
+				}
+				else
+				{
+					swal('Updated !', response.msg, 'success');
+				}
+				$('#'+data_close_modal).modal("hide");  
 			},
 			error: function () {
 			console.log('Failed');
@@ -2126,14 +2135,14 @@ var data_id = $(this).attr('data-delete-id');
 
 	function copy_data(id, element){
 		element.classList.add('highlighted');
-	 var copyText = document.getElementById(id);
-	 var textArea = document.createElement("textarea");
-	textArea.value = ((copyText.textContent).trim());
-	document.body.appendChild(textArea);
-	textArea.select();
-	document.execCommand("Copy");
-	textArea.remove();
-	//alert("Copied Successfully.");
+		var copyText = document.getElementById(id);
+		var textArea = document.createElement("textarea");
+		textArea.value = ((copyText.textContent).trim());
+		document.body.appendChild(textArea);
+		textArea.select();
+		document.execCommand("Copy");
+		textArea.remove();
+		//alert("Copied Successfully.");
 
 	}
 	
