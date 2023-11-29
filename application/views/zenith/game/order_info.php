@@ -101,7 +101,8 @@ color: #00a3ed !important;
 										$tixstock_order_id =  $orderData->tixstock_order_id ? " / ".$orderData->tixstock_order_id : "";
 
 										//echo $orderData->booking_no; 
-										$booking_no='<a href="'.base_url()."game/orders/details/". md5($orderData->booking_no).'" '."id='copy_order'".'>#'.$orderData->booking_no.$tixstock_order_id.'</a>';     echo    $orderData->booking_no.$tixstock_order_id                                               ?>
+										$booking_no='<a href="'.base_url()."game/orders/details/". md5($orderData->booking_no).'" '."id='copy_order'".'>#'.$orderData->booking_no.$tixstock_order_id.'</a>';    
+										echo $booking_no   ;                                         ?>
 									</b> </span><i class="far fa-copy"  id="copyButton"></i>
 									<i class="far fa-copy" onclick="copy_data('copy_order_id',this)" ></i></td>
 									   <td> <?php echo ucfirst($orderData->source_type); ?> </td>
