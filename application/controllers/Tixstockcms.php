@@ -193,7 +193,7 @@ class Tixstockcms extends CI_Controller {
                 'price_type'    => $currency,
                 'add_by'        => 1,
                 'source_type'   => 'tixstock',
-                'slug'          => str_to_replace('[','-',$slug)
+                'slug'          => str_replace('[','-',$slug)
             );
             //echo "<pre>";print_r($tournament_data);exit;
             $match_id           =  $this->Tixstock_Model->insert_data('match_info',$match_data);
