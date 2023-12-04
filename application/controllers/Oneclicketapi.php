@@ -979,16 +979,15 @@ public function updateFeedsEvents($category_id="")
                         if($api_events_tickets->tixstock_parent_category == "Rugby World Cup"){
                             $other_event_category = 18;
                         }
-                       
                         $eventtype = ($main_category == 1) ? "match" : "other";
                         $match_data = array();
                         $match_data['category']                 = $main_category;
-                        $match_data['match_name']               = str_to_replace('[','-',$match_name_full);
+                        $match_data['match_name']               = str_replace('[','-',$match_name_full);
                         $match_data['team_1']                   = $boxoffice_team_a;
                         $match_data['team_2']                   = $boxoffice_team_b;
                         $match_data['hometown']                 = $boxoffice_team_a;
                         $match_data['tournament']               = $boxoffice_tournament_id;
-                        $match_data['slug']                     = str_to_replace('[','-',$team_slug);
+                        $match_data['slug']                     = str_replace('[','-',$team_slug);
                         $match_data['status']                   = 1;
                         $match_data['availability']             = 1;
                         $match_data['matchticket']              = 500;
