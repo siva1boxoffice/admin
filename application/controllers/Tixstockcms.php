@@ -36,7 +36,12 @@ class Tixstockcms extends CI_Controller {
             $tmp_stadium_id                = $this->Tixstock_Model->insert_data('api_stadium',$insertsData);
 
         }
-
+        else{
+            $table                     = "api_stadium";
+            $wheres                    = array('stadium_id' => $tmp_stadium_id);
+            $uvalue                    = array('map_url' => $data['map_url']);
+            $match_up                  =  $this->Tixstock_Model->update_table($table, $wheres, $uvalue);
+        }
         $check_statdium_exists =  $this->Tixstock_Model->get_venues($data['venue']['name'])->row();
         $stadium_id            =  $check_statdium_exists->s_id;
         $stadium_name          =  $check_statdium_exists->stadium_name;
