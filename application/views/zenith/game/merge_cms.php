@@ -109,7 +109,8 @@
                                            <div class="col-lg-4">
                                              <div class="form-group">
                                                  <label for="example-select">Select Team Name</label>
-                                                 <select multiple class="custom-select" id="api_team" name="api_team[]"  onchange="get_default_selection(this.value,'team');">
+                                                 <select multiple class="custom-select" id="api_team" 
+                                                 name="api_team[]"  onchange="get_default_selection(this.value,'team');">
                                                   <option value="">Select Team</option>
                                                 </select>
                                              </div> 
@@ -220,7 +221,8 @@ const teamChoices = new Choices('#api_team', { removeItemButton: !0,   searchFie
                     $('#api_tournament').val(data.data.api_content_id);
                 }
                 else if(data.data.content_type == "team"){
-                    $('#api_team').val(data.data.api_content_id);
+                  //teamChoices.removeActiveItems();
+                  //  $('#api_team').val(data.data.api_content_id);
                 }
                 else if(data.data.content_type == "stadium"){
                     $('#api_stadium').val(data.data.api_content_id);
@@ -234,6 +236,7 @@ const teamChoices = new Choices('#api_team', { removeItemButton: !0,   searchFie
                 }
                 else if(data.data.content_type == "team"){
                     $('#team').val(data.data.content_id);
+
                 }
                 else if(data.content_type == "stadium"){ 
                  
@@ -321,7 +324,14 @@ const teamChoices = new Choices('#api_team', { removeItemButton: !0,   searchFie
         $("#overlay").hide();
 
             if(data.status == 1) {
-
+              console.log("DONE");
+              teamChoices.removeActiveItems();
+              choices.removeActiveItems();
+              $('#team').val($('#team').prop('defaultSelected'));
+              $('#api_stadium').val($('#api_stadium').prop('defaultSelected'));
+              $('#stadium').val($('#stadium').prop('defaultSelected'));
+              $('#tournament').val($('#tournament').prop('defaultSelected'));
+              $('#api_tournament').val($('#api_tournament').prop('defaultSelected'));
          swal('Success !', data.msg, 'success');
         }else if(data.status == 0) {
            swal('Failed !', data.msg, 'error');
