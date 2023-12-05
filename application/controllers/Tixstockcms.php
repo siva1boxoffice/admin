@@ -2367,6 +2367,16 @@ function mergecontent(){
 
         if(!empty($_POST['team'])){
 
+             $team_results = $this->General_Model->getAllItemTable_Array('merge_api_content', array('content_id' => $_POST['team'],'content_type' => 'team','source_type' => $_POST['api']))->result();
+             if(!empty($team_results)){
+                foreach($team_results as $team_result){
+                    $table                     = "api_teams";
+                    $wheres                    = array('team_id' => $team_result->api_content_id);
+                    $uvalue                    = array('merge_status' => 0);
+                    $this->Tixstock_Model->update_table($table, $wheres, $uvalue);
+                }
+             }
+             
             $this->db->where('content_id', $_POST['team']);
             $this->db->where_not_in('api_content_id',$_POST['api_team']);
             $this->db->where('source_type',$_POST['api']);
@@ -2386,12 +2396,13 @@ function mergecontent(){
                     );
                     $this->General_Model->insert_data('merge_api_content', $post_data_team);
 
-                    $table                     = "api_teams";
-                    $wheres                    = array('team_id' => $team);
-                    $uvalue                    = array('merge_status' => 1);
-                    $this->Tixstock_Model->update_table($table, $wheres, $uvalue);
+                   
 
                   }
+                $table                     = "api_teams";
+                $wheres                    = array('team_id' => $team);
+                $uvalue                    = array('merge_status' => 1);
+                $this->Tixstock_Model->update_table($table, $wheres, $uvalue);
               // echo "<pre>";print_r($stadium);exit;
             }
         }
@@ -2465,12 +2476,14 @@ function mergecontent(){
                     );
                     $this->General_Model->insert_data('merge_api_content', $post_data_stadium);
 
-                    $table                     = "api_stadium";
+                   
+
+                  }
+
+                   $table                     = "api_stadium";
                     $wheres                    = array('stadium_id' => $_POST['api_stadium']);
                     $uvalue                    = array('merge_status' => 1);
                     $this->Tixstock_Model->update_table($table, $wheres, $uvalue);
-
-                  }
               // echo "<pre>";print_r($stadium);exit;
             }
         }
