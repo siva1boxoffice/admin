@@ -98,14 +98,22 @@
                                                 </select>
                                              </div> 
                                           </div> 
-                                          <div class="col-lg-4">
+                                          <!-- <div class="col-lg-4">
                                              <div class="form-group">
                                                  <label for="example-select">Select Team Name</label>
                                                   <select class="custom-select" id="api_team" name="api_team" onchange="get_default_selection(this.value,'team');">
                                                    <option value="">Select Team</option>
                                                 </select>
                                              </div> 
-                                          </div>
+                                          </div> -->
+                                           <div class="col-lg-4">
+                                             <div class="form-group">
+                                                 <label for="example-select">Select Team Name</label>
+                                                 <select multiple class="custom-select" id="api_team" name="api_team[]"  onchange="get_default_selection(this.value,'team');">
+                                                  <option value="">Select Team</option>
+                                                </select>
+                                             </div> 
+                                          </div> 
                                           <div class="col-lg-4">
                                              <div class="form-group">
                                                  <label for="example-select">Select Stadium Name</label>
@@ -186,7 +194,8 @@
 <?php $this->load->view(THEME . 'common/footer'); ?>
 <script type="text/javascript">
 
-const choices = new Choices('#stadium', { removeItemButton: !0,   searchFields: ['label', 'value'] ,allowSearch: true});
+const choices     = new Choices('#stadium', { removeItemButton: !0,   searchFields: ['label', 'value'] ,allowSearch: true});
+const teamChoices = new Choices('#api_team', { removeItemButton: !0,   searchFields: ['label', 'value'] ,allowSearch: true});
     function get_default_selection(val,content_type,flag=0){
         var api = $("#api").val();
         var action = "<?php echo base_url();?>tixstockcms/get_default_selection";
@@ -359,16 +368,24 @@ const choices = new Choices('#stadium', { removeItemButton: !0,   searchFields: 
                     }
                     $("#api_tournament").append('<option value=' + value.tournament_id + '>' + value.tournament_name +' - '+merged +'</option>');
                 });
-
+                         var api_stadium_json = [];
                         $.each(response.teams,function(key, value)
                 {
+                  
+                    
                     var merged = "Not Sync";
                     var merge_status = value.merge_status;
                     if(merge_status == 1){
                         merged = "Sync";
                     }
-                    $("#api_team").append('<option value=' + value.team_id + '>' + value.team_name+' - '+merged + '</option>');
+                    var obj = { value: value.team_id, label: value.team_name+' - '+merged};
+                    api_stadium_json.push(obj);
+                    console.log(obj);
+                  //  $("#api_team").append('<option value=' + value.team_id + '>' + value.team_name+' - '+merged + '</option>');
+                  teamChoices.clearChoices();
+                  teamChoices.setChoices(api_stadium_json)
                 });
+
                         $.each(response.stadiums,function(key, value)
                 {
                     var merged = "Not Sync";
