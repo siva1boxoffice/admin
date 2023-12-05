@@ -2352,8 +2352,8 @@ function mergecontent(){
         $this->form_validation->set_rules('api_tournament', 'Api Tournament', 'required');
         $this->form_validation->set_rules('tournament', '1Boxoffice Tournament', 'required');
     }
-    if($_POST['api_team'] != "" || $_POST['team'] != ""){
-        $this->form_validation->set_rules('api_team', 'Api Team', 'required');
+    if($_POST['api_team'][0] != "" || $_POST['team'] != ""){
+        $this->form_validation->set_rules('api_team[]', 'Api Team', 'required');
         $this->form_validation->set_rules('team', '1Boxoffice team', 'required');
     }
     if($_POST['api_stadium'] != "" || $_POST['stadium'] != ""){
@@ -2362,18 +2362,41 @@ function mergecontent(){
     }
     
     if ($this->form_validation->run() !== false) {
-       
-        if($_POST['api_team'] != "" && $_POST['team'] != ""){
 
-        $team_count = $this->General_Model->getAllItemTable_Array('merge_api_content', array('api_content_id' => $_POST['api_team'],'content_type' => 'team','source_type' => $_POST['api']))->num_rows();
-        if($team_count >= 1){
+          if(!empty($_POST['api_team']) && $_POST['team'] != ""){
 
-        $this->db->where('api_content_id',$_POST['api_team']);
-        $this->db->where('source_type',$_POST['api']);
-        $this->db->where('content_type','team');
-        $this->db->delete('merge_api_content');
+        if(!empty($_POST['team'])){
 
+            $this->db->where('content_id', $_POST['team']);
+            $this->db->where_not_in('api_content_id',$_POST['api_team']);
+            $this->db->where('source_type',$_POST['api']);
+            $this->db->where('content_type','team');
+            $this->db->delete('merge_api_content'); 
+
+            foreach ($_POST['api_team'] as $team) {
+
+                 $team_count = $this->General_Model->getAllItemTable_Array('merge_api_content', array('api_content_id' => $team,'content_type' => 'team','source_type' => $_POST['api']))->num_rows();
+                  if($team_count == 0){
+                     $post_data_team = array(
+                        'api_content_id'        => $team,
+                        'content_id'            => $_POST['team'],
+                        'source_type'           => $_POST['api'],
+                        'content_type'          => 'team',
+                        'merged_on'             => date("Y-m-d h:i:s")
+                    );
+                    $this->General_Model->insert_data('merge_api_content', $post_data_team);
+
+                    $table                     = "api_teams";
+                    $wheres                    = array('team_id' => $team);
+                    $uvalue                    = array('merge_status' => 1);
+                    $this->Tixstock_Model->update_table($table, $wheres, $uvalue);
+
+                  }
+              // echo "<pre>";print_r($stadium);exit;
+            }
         }
+
+/*
         $post_data_team = array(
                         'api_content_id'        => $_POST['api_team'],
                         'content_id'            => $_POST['team'],
@@ -2386,8 +2409,7 @@ function mergecontent(){
             $table                     = "api_teams";
             $wheres                    = array('team_id' => $_POST['api_team']);
             $uvalue                    = array('merge_status' => 1);
-            $this->Tixstock_Model->update_table($table, $wheres, $uvalue);
-
+            $this->Tixstock_Model->update_table($table, $wheres, $uvalue);*/
         }
 
         if($_POST['api_tournament'] != "" && $_POST['tournament'] != ""){
