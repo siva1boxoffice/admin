@@ -8546,6 +8546,7 @@ public function get_country_name(){
 						$updateData_lang['meta_description'] = $this->input->post('metadescription');
 						$updateData_lang['seo_keywords'] = $this->input->post('seo_keywords');
 						$updateData_lang['search_keywords'] = $this->input->post('seo_keywords');
+						$updateData_lang['city_name'] = $this->input->post('city_name');
 						$updateData['seo_keywords'] = $this->input->post('seo_keywords');
 						$updateData['search_keywords'] = $this->input->post('seo_keywords');
 						$updateData['search_keywords'] = $this->input->post('seo_keywords');
