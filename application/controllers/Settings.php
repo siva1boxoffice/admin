@@ -2818,7 +2818,7 @@ public function get_country_name(){
 							$this->upload->initialize($config);
 							if ($this->upload->do_upload('team_image')) {
 								$outputData['team_image'] = $this->upload->data();
-							//	$insertData_lang_team_image = $outputData['team_image']['file_name'];
+								//	$insertData_lang_team_image = $outputData['team_image']['file_name'];
 								$insertData['team_image'] = $outputData['team_image']['file_name'];
 							} else {
 								$msg .= 'Failed to add team image';
@@ -2857,8 +2857,9 @@ public function get_country_name(){
 						$insertData['page_title'] = strip_tags($this->input->post('pagetitle'));
 						$insertData['meta_description'] = $this->input->post('metadescription');
 						$insertData['page_content'] = trim($this->input->post('page_content'));
-						$insertData['url_key'] = str_replace(" ", "-", trim($this->input->post('teamname')));
-						$insertData['team_url'] = str_replace(" ", "-", trim($this->input->post('teamname')));
+						$insertData['url_key'] = trim($this->input->post('url_key'));
+						$insertData['team_url'] = trim($this->input->post('url_key'));
+
 						$insertData['store_id'] = $this->session->userdata('storefront')->admin_id;
 						$team_id = $this->General_Model->insert_data('teams', $insertData);
 
@@ -2898,17 +2899,11 @@ public function get_country_name(){
 					$updateData = array();
 					$updateData_lang = array();
 
-
-
-
-
-
 					$this->form_validation->set_rules('teamname', 'Team Name', 'required');
 					$this->form_validation->set_rules('gamecategory', 'Game Category', 'required');
 					/*$this->form_validation->set_rules('country', 'Country', 'required');
 					$this->form_validation->set_rules('city', 'City', 'required');
 					$this->form_validation->set_rules('stadium', 'stadium', 'required');*/
-
 
 					$msg = '';
 					if ($this->form_validation->run() !== false) {
@@ -2971,6 +2966,7 @@ public function get_country_name(){
 						$updateData['city'] = trim($this->input->post('city'));
 						$updateData['stadium'] = trim($this->input->post('stadium'));
 						$updateData['team_color'] = trim($this->input->post('teamcolor'));
+						$updateData['url_key'] = trim($this->input->post('url_key'));
 						$updateData['popular_team'] = trim($this->input->post('topteam'));
 						$updateData['header_top_teams'] = trim($this->input->post('header_footer'));
 						$updateData['create_date'] = strtotime(date('Y-m-d H:i:s'));
