@@ -38,11 +38,12 @@ class Stadium_Model extends CI_Model
 			$this->db->order_by('stadium.stadium_name', 'asc');
 		}
 		if (@$_GET['only'] == 'tixstock') {
-			$this->db->where('stadium.source_type', 'tixstock');
+			//$this->db->where('stadium.source_type', 'tixstock');
 		}
 		else{
-			$this->db->where('stadium.source_type', '1boxoffice');
+			//$this->db->where('stadium.source_type', '1boxoffice');
 		}
+		$this->db->where_in('stadium.source_type', ['1boxoffice','tixstock']);
 		if($search['stadium_ids']){
 				$this->db->where_in('stadium.s_id', $search['stadium_ids']);
 			}
