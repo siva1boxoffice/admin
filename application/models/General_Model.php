@@ -1829,7 +1829,7 @@ class General_Model extends CI_Model
 		$this->db->select('stadium.*')->from('stadium');
 		$this->db->where('stadium.status', '1');
 		$this->db->where('stadium.category is NOT NULL', NULL, FALSE);
-		$this->db->where('stadium.source_type', '1boxoffice');
+		$this->db->where_in('stadium.source_type', ['1boxoffice','tixstock']);
 		$this->db->order_by('stadium.stadium_name', 'ASC');
 		$query = $this->db->get();
 		return $query;
@@ -2958,11 +2958,12 @@ public function getOrderData_v2()
 			$this->db->order_by('stadium.stadium_name', 'asc');
 		}
 		if (@$_GET['only'] == 'tixstock') {
-			$this->db->where('stadium.source_type', 'tixstock');
+			//$this->db->where('stadium.source_type', 'tixstock');
 		}
 		else{
-			$this->db->where('stadium.source_type', '1boxoffice');
+			//$this->db->where('stadium.source_type', '1boxoffice');
 		}
+		$this->db->where_in('stadium.source_type', ['tixstock','1boxoffice']);
 		if($search['stadium_ids']){
 				$this->db->where_in('stadium.s_id', $search['stadium_ids']);
 			}
@@ -2980,7 +2981,7 @@ public function getOrderData_v2()
 		if ($row_per_page != '') {
 			$this->db->limit($row_per_page, $row_no);
 		}
-		$query = $this->db->get();
+		$query = $this->db->get();//echo  $this->db->last_query();exit;
 		return $query;
 	}
 	public function get_seat_category_by_limit($row_no, $row_per_page, $orderColumn = '', $orderby = '', $where_array = array(),$search = array())
