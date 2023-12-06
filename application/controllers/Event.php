@@ -859,6 +859,7 @@ class Event extends CI_Controller
 						$updateData_lang['meta_description'] = $this->input->post('metadescription');
 						$updateData_lang['description'] = trim($this->input->post('description'));
 						$updateData_lang['long_description'] = trim($this->input->post('long_description'));
+						$updateData_lang['seo_keywords'] = trim($this->input->post('seo_keywords'));
 						//$updateData_lang['short_description'] = trim($this->input->post('short_description'));
 						//echo "<pre>";print_r($updateData_lang);exit;	
 
@@ -870,8 +871,9 @@ class Event extends CI_Controller
 							$this->db->where('match_id', $matchId);
 							$this->db->where('store_id', $this->session->userdata('storefront')->admin_id);
 							$this->db->where('language', $this->session->userdata('language_code'));
+							
 							$query = $this->db->get();
-							// echo $this->db->last_query();exit;
+						// echo $this->db->last_query();exit;
 							if ($query->num_rows() == 0) {							
 								$updateData_lang['match_id'] = $matchId;
 								$updateData_lang['language'] = $this->session->userdata('language_code');						
@@ -880,7 +882,7 @@ class Event extends CI_Controller
 								$this->db->insert('match_info_lang', $updateData_lang);
 							
 							} else {
-								$this->General_Model->update('match_info_lang', array('match_id' => $matchId, 'language' => $this->session->userdata('language_code')), $updateData_lang);
+								$this->General_Model->update('match_info_lang', array('match_id' => $matchId, 'language' => $this->session->userdata('language_code'),'store_id'=>$this->session->userdata('storefront')->admin_id), $updateData_lang);
 
 							}
 
@@ -1011,7 +1013,6 @@ class Event extends CI_Controller
 							}
 
 						}
-
 					$match_id = $this->General_Model->insert_data('match_info', $insertData);
 
 					// 
@@ -2083,6 +2084,7 @@ class Event extends CI_Controller
 						$insertData['affiliate_status'] = $this->input->post('affiliate_status') ? 1 : 0;
 						$insertData['confirm_status'] = $this->input->post('confirm_status') ? 1 : 0;
 						$insertData['epl_status'] = $this->input->post('epl_status') ? 1 : 0;
+						$insertData['store_id'] = $this->session->userdata('storefront')->admin_id;
 
 						if ($this->input->post('event_url')) {
 							$title = strip_tags($this->input->post('event_url'));
@@ -2103,7 +2105,6 @@ class Event extends CI_Controller
 						foreach ($_POST['partner_api'] as $api) {
 							$insertData[$api == 1 ? 'tixstock_status' : 'oneclicket_status'] = 1;
 							}
-
 						$match_id = $this->General_Model->insert_data('match_info', $insertData);
 
 
@@ -2128,6 +2129,7 @@ class Event extends CI_Controller
 							$insertData_lang['meta_title'] = $this->input->post('metatitle');
 							$insertData_lang['meta_description'] = $this->input->post('metadescription');
 							$insertData_lang['event_image'] = $insertData['event_image'];
+							$insertData_lang['store_id'] = $this->session->userdata('storefront')->admin_id;
 							$this->General_Model->insert_data('match_info_lang', $insertData_lang);
 						}
 						$encode_id = base64_encode(json_encode("$match_id"));
