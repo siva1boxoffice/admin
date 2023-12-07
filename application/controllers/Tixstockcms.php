@@ -167,8 +167,7 @@ class Tixstockcms extends CI_Controller {
             if($match_id == ''){
 
                $match_full_date = str_replace('T', " ", $data['datetime']);
-               $url_key         = explode(' ',$match_name);
-               $slug            = strtolower(implode('-',$url_key).'-tickets');
+               $slug            = $this->url_slugify($match_name).'-tickets';
                $create_date     = time();
                $availability     = 0;
                $status           = 0;
@@ -198,7 +197,7 @@ class Tixstockcms extends CI_Controller {
                 'price_type'    => $currency,
                 'add_by'        => 1,
                 'source_type'   => 'tixstock',
-                'slug'          => str_replace('[','-',$slug)
+                'slug'          => $slug
             );
             //echo "<pre>";print_r($tournament_data);exit;
             $match_id           =  $this->Tixstock_Model->insert_data('match_info',$match_data);
@@ -2601,8 +2600,8 @@ function mergecontent(){
         $insertData['category'] = $main_category;
         $insertData['create_date'] = strtotime(date('Y-m-d H:i:s'));
         $insertData['status'] = 1;     
-        $insertData['url_key'] = str_replace(" ", "-", trim($team_name));
-        $insertData['team_url'] = str_replace(" ", "-", trim($team_name));
+        $insertData['url_key'] = $this->url_slugify($team_name)."-tickets";
+        $insertData['team_url'] = $this->url_slugify($team_name)."-tickets";
         $insertData['source_type'] = "tixstock";
         $insertData['store_id'] = $this->session->userdata('storefront')->admin_id;
         $team_id = $this->General_Model->insert_data('teams', $insertData);
@@ -2636,6 +2635,27 @@ private function get_stadium_row($stadium_name,$stadium_type)
     }
 
 }
+
+    public static function url_slugify($text, string $divider = '-')
+    {
+        // replace non letter or digits by divider
+        $text = preg_replace('~[^\pL\d]+~u', $divider, $text);
+        // transliterate
+        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+        // remove unwanted characters
+        $text = preg_replace('~[^-\w]+~', '', $text);
+        // trim
+        $text = trim($text, $divider);
+        // remove duplicate divider
+        $text = preg_replace('~-+~', $divider, $text);
+        // lowercase
+        $text = strtolower($text);
+
+        if (empty($text)) {
+        return 'n-a';
+        }
+        return $text;
+    }
    
 }
 ?>
