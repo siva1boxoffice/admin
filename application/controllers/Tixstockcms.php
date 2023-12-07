@@ -601,8 +601,8 @@ public function updateFeedsEvents($proceed = false)
             if(!empty($feed_response['data'])){
                         foreach ($feed_response['data'] as $datakey => $data) {
                            //echo "<pre>";print_r($data['listings']);exit;
-                           //if($data['id'] == "01grkjexnr998pt19vr7mpr8rb"){
-                             //   echo "<pre>";print_r($data);exit;
+                          // if($data['id'] == "01h466pwbj5q7de8c5f2v4c73p"){
+                              
                            $tournament_category  = $this->General_Model->tournaments_1bx($data['category']['name']);
                             if($tournament_category[0]->category == "" && $tournament_data->category == "Rugby World Cup"){
                                 $response['status'] = 0;
@@ -674,21 +674,7 @@ public function updateFeedsEvents($proceed = false)
                             $teams_exists = $this->General_Model->getAllItemTable_Array('api_teams', array('team_id' => $team_2_id,'source_type' => 'tixstock','category' => $main_category))->row();
                             $team_2_name = $teams_exists->team_name;
 
-
-
-                            $boxoffice_team_exists = $this->General_Model->get_team_exist($team_1_name,$main_category)->row();
-                            $boxoffice_team_a = $boxoffice_team_exists->team_id;
-                           
-                            $boxoffice_team_exists = $this->General_Model->get_team_exist($team_2_name,$main_category)->row();
-
-                            $boxoffice_team_b = $boxoffice_team_exists->team_id;
-                             $boxoffice_stadium_exists = $this->General_Model->getAllItemTable_Array('stadium', array('stadium_name' => $stadium_name,'category' => $main_category))->row();
-                             $boxoffice_stadium_id = $boxoffice_stadium_exists->s_id;
-
-                             $boxoffice_tournament_exists = $this->General_Model->get_tournaments_exist($tournament_name,$main_category)->row();
-                             $boxoffice_tournament_id = $boxoffice_tournament_exists->tournament_id;
-                              
-                             $merge_found = 0;
+                            $merge_found = 0;
 
                              if($boxoffice_tournament_id == ""){
 
@@ -731,6 +717,39 @@ public function updateFeedsEvents($proceed = false)
 
                              }
 
+                            if($boxoffice_team_a == ""){
+
+                            $boxoffice_team_exists = $this->General_Model->get_team_exist($team_1_name,$main_category)->row();
+                            $boxoffice_team_a = $boxoffice_team_exists->team_id;
+                                if($boxoffice_team_a != ""){
+                                    $merge_found = 1;
+                                }
+                            }
+                           if($boxoffice_team_b == ""){
+                            $boxoffice_team_exists = $this->General_Model->get_team_exist($team_2_name,$main_category)->row();
+                            $boxoffice_team_b = $boxoffice_team_exists->team_id;
+                                if($boxoffice_team_b != ""){
+                                    $merge_found = 1;
+                                }
+                            }
+
+                            if($boxoffice_stadium_id == ""){
+                             $boxoffice_stadium_exists = $this->General_Model->getAllItemTable_Array('stadium', array('stadium_name' => $stadium_name,'category' => $main_category))->row();
+                             $boxoffice_stadium_id = $boxoffice_stadium_exists->s_id;
+                             if($boxoffice_stadium_id != ""){
+                                $merge_found = 1;
+                                }
+                            }
+
+                            if($boxoffice_tournament_id == ""){
+                             $boxoffice_tournament_exists = $this->General_Model->get_tournaments_exist($tournament_name,$main_category)->row();
+                             $boxoffice_tournament_id = $boxoffice_tournament_exists->tournament_id;
+                              if($boxoffice_tournament_id != ""){
+                                $merge_found = 1;
+                                }
+                            }
+                             
+
                         } 
                 /*        if($data['id'] == '01hf3wgc2zwarae4drg7j7z0sf'){
                         echo $boxoffice_tournament_id.'-'.$boxoffice_team_a.'-'.$boxoffice_team_b.'-'.$boxoffice_stadium_id;exit;
@@ -746,8 +765,9 @@ public function updateFeedsEvents($proceed = false)
                         if($main_category == 1){
                             $event_type = "match";
                         }
-                       
+                      // echo $boxoffice_tournament_id.'='.$boxoffice_team_a.'='.$boxoffice_team_b.'='.$boxoffice_stadium_id.'='.$event_type;
                         $boxoffice_match_id        = $this->updateApiEvents($data,$boxoffice_tournament_id,$boxoffice_team_a,$boxoffice_team_b,$boxoffice_stadium_id,$event_type);
+                       //echo 'boxoffice_match_id = '.$boxoffice_match_id;exit;
                         if($boxoffice_match_id == ""){
                             $boxoffice_match_id        = $this->updateApiEvents($data,$boxoffice_tournament_id,$boxoffice_team_b,$boxoffice_team_a,$boxoffice_stadium_id,$event_type,1);
                             if($boxoffice_match_id != ""){
@@ -867,7 +887,7 @@ public function updateFeedsEvents($proceed = false)
                        }
 
                             }
-                            //}
+                           // }
                            
                         }  
                         //echo "<pre>";print_r($match_data);exit;
