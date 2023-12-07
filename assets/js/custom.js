@@ -28,6 +28,10 @@ var loadFile = function(event) {
   }
   
 
+  team_1 = team_1.replace(/\( 1boxoffice \)/g, "");
+  team_2 = team_2.replace(/\( 1boxoffice \)/g, "");
+
+
   $('#matchname').val(team_1 +' Vs '+ team_2);
    $('#matchname').trigger("keyup");
 

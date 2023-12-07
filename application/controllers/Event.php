@@ -2926,7 +2926,7 @@ class Event extends CI_Controller
 			if($stadium->s_id == $selected_stadium){ 
 				$selected='selected ';
 			} 
-			$stadiums .= '<option value="'.$stadium->s_id.'" '.$selected.'>'.$stadium->stadium_name.' - '.$stadium->s_id." ( ".$record->source_type." )".'</option>';
+			$stadiums .= '<option value="'.$stadium->s_id.'" '.$selected.'>'.$stadium->stadium_name.' - '.$stadium->s_id." ( ".$stadium->source_type." )".'</option>';
 		}
 
 		$tournaments .= '<option value="">Select Tournament</option>';

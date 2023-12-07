@@ -1281,6 +1281,12 @@ $('#venue').on('change', function(event) {
 
    function create_slug(){
       var val = $("#matchname").val();
+      // Remove "( 1boxoffice )" substring
+      val = val.replace(/\( 1boxoffice \)/g, "");
+
+console.log(val);
+
+
       var tournament;
       if($("#tournament").val()){
           tournament = $("#tournament option:selected").attr('data-slug');
