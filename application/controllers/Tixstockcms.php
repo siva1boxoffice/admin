@@ -600,7 +600,7 @@ public function updateFeedsEvents($proceed = false)
             if(!empty($feed_response['data'])){
                         foreach ($feed_response['data'] as $datakey => $data) {
                            //echo "<pre>";print_r($data['listings']);exit;
-                          // if($data['id'] == "01h466pwbj5q7de8c5f2v4c73p"){
+                           //if($data['id'] == "01h4634ap50fym2rcebfa3rejx"){
                               
                            $tournament_category  = $this->General_Model->tournaments_1bx($data['category']['name']);
                             if($tournament_category[0]->category == "" && $tournament_data->category == "Rugby World Cup"){
@@ -764,9 +764,11 @@ public function updateFeedsEvents($proceed = false)
                         if($main_category == 1){
                             $event_type = "match";
                         }
-                      // echo $boxoffice_tournament_id.'='.$boxoffice_team_a.'='.$boxoffice_team_b.'='.$boxoffice_stadium_id.'='.$event_type;
+                      
                         $boxoffice_match_id        = $this->updateApiEvents($data,$boxoffice_tournament_id,$boxoffice_team_a,$boxoffice_team_b,$boxoffice_stadium_id,$event_type);
-                       //echo 'boxoffice_match_id = '.$boxoffice_match_id;exit;
+                         if($boxoffice_match_id == ""){
+                        $boxoffice_match_id        = $this->updateApiEvents($data,$boxoffice_tournament_id,$boxoffice_team_b,$boxoffice_team_a,$boxoffice_stadium_id,$event_type);
+                         }
                         if($boxoffice_match_id == ""){
                             $boxoffice_match_id        = $this->updateApiEvents($data,$boxoffice_tournament_id,$boxoffice_team_b,$boxoffice_team_a,$boxoffice_stadium_id,$event_type,1);
                             if($boxoffice_match_id != ""){
@@ -886,7 +888,7 @@ public function updateFeedsEvents($proceed = false)
                        }
 
                             }
-                           // }
+                            //}
                            
                         }  
                         //echo "<pre>";print_r($match_data);exit;
