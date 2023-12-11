@@ -273,6 +273,20 @@
                                                       </div>
                                                    </td>
                                                 </tr>
+                                                <tr>
+                                                   <td> <label for="header_footer" class="mb-0">Show Team</label></td>
+                                                   <td>
+                                                      <div class="form-group mb-1 cust-switch">
+                                                         No / Yes
+                                                         <div class="custom-control custom-switch">
+                                                            <input type="checkbox" id="show_status" class="is-switch custom-control-input" name="show_status" value="1" <?php
+                                                            if ($teams->show_status == '1' || $teams->show_status == '' ) { ?> checked <?php }
+                                                            ?> >
+                                                            <label class="custom-control-label" for="show_status"></label>
+                                                         </div>
+                                                      </div>
+                                                   </td>
+                                                </tr>
                                              </table>
                                           </div>
                                        </div>

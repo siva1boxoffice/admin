@@ -2852,6 +2852,7 @@ public function get_country_name(){
 						$insertData['stadium'] = trim($this->input->post('stadium'));
 						$insertData['team_color'] = trim($this->input->post('teamcolor'));
 						$insertData['popular_team'] = trim($this->input->post('topteam'));
+						$insertData['show_status'] = trim($this->input->post('show_status')) ? trim($this->input->post('show_status')) : 2 ; 
 						$insertData['create_date'] = strtotime(date('Y-m-d H:i:s'));
 						$insertData['status'] = $this->input->post('is_active') ? 1 : 0;
 						$insertData['page_title'] = strip_tags($this->input->post('pagetitle'));
@@ -2969,6 +2970,7 @@ public function get_country_name(){
 						$updateData['url_key'] = trim($this->input->post('url_key'));
 						$updateData['popular_team'] = trim($this->input->post('topteam'));
 						$updateData['header_top_teams'] = trim($this->input->post('header_footer'));
+						$updateData['show_status'] = trim($this->input->post('show_status')) ? trim($this->input->post('show_status'))  : 2 ;
 						$updateData['create_date'] = strtotime(date('Y-m-d H:i:s'));
 						$updateData['status'] = $this->input->post('is_active') ? 1 : 0;
 						
