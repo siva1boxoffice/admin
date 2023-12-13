@@ -1359,6 +1359,18 @@ class General_Model extends CI_Model
     }
 
 
+    public function check_match_exists_tixstock($tixstock_id) {
+			$this->db->select("match_info.*");
+			$this->db->from('match_info');
+			$this->db->where('match_info.match_date >=', date("Y-m-d H:i:s"));
+			//$this->db->where('match_info.status', '1');
+			$this->db->where('match_info.tixstock_id', $tixstock_id );
+			$this->db->order_by('match_info.m_id', 'DESC');
+			$result = $this->db->get();
+			return $result;
+    }
+
+
 	public function get_match_tournments() {
         
 
@@ -7084,6 +7096,7 @@ public function get_seat_category_main()
 		$this->db->where('category='.$catgory);
 		$this->db->where('teams_lang.language', $this->session->userdata('language_code'));	
 		$this->db->order_by('teams_lang.team_name', 'ASC');
+		$this->db->group_by('teams.id');
 		$query = $this->db->get();
 		return $query;
 	}
@@ -7105,7 +7118,8 @@ public function get_seat_category_main()
 		$this->db->select('tournament.t_id,tournament_lang.tournament_name,url_key')->from('tournament')->join('tournament_lang', 'tournament_lang.tournament_id = tournament.t_id', 'left');
 		$this->db->where('tournament.status',1);
 		$this->db->where('category='.$catgory);
-		$this->db->where('tournament_lang.language', $this->session->userdata('language_code'));	
+		$this->db->where('tournament_lang.language', $this->session->userdata('language_code'));
+		$this->db->group_by('tournament.t_id');	
 		$this->db->order_by('tournament_lang.tournament_name', 'ASC');
 		$query = $this->db->get();
 		return $query;
@@ -7384,9 +7398,6 @@ public function get_seat_category_main()
 
 	function bank_accounts($admin_id,$currency)
 	{ 
-
-		
-
 		$this->db->select('admin_bank_details.*,countries.name as country_name');
 		$this->db->from('admin_bank_details');
 		$this->db->join('countries', 'countries.id = admin_bank_details.country','LEFT');
