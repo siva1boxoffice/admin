@@ -1066,6 +1066,7 @@ class Event extends CI_Controller
 						$insertData_lang['description'] = $description;
 						$insertData_lang['meta_description'] = $description;
 						$insertData_lang['store_id'] =$this->session->userdata('storefront')->admin_id;
+						$insertData_lang['seo_keywords'] = trim($this->input->post('seo_keywords'));
 
 						$this->General_Model->insert_data('match_info_lang', $insertData_lang);
 					}
@@ -1247,7 +1248,8 @@ class Event extends CI_Controller
 					$updateData_lang['match_name'] = trim($this->input->post('matchname'));
 					$updateData_lang['match_label'] = trim($this->input->post('match_label'));
 					$updateData_lang['store_id'] =$this->session->userdata('storefront')->admin_id;
-					$this->General_Model->update('match_info_lang', array('match_id' => $matchId, 'language' => $this->session->userdata('language_code')), $updateData_lang);
+					$updateData_lang['seo_keywords'] = trim($this->input->post('seo_keywords'));
+					$this->General_Model->update('match_info_lang', array('match_id' => $matchId, 'language' => $this->session->userdata('language_code'),'store_id'=>$this->session->userdata('storefront')->admin_id), $updateData_lang);
 
 					$this->db->delete('banned_countries_match', array('match_id' => $matchId));
 
