@@ -1,5 +1,9 @@
 <?php 
+ini_set('max_execution_time', '0');
 ini_set('memory_limit','2048M');
+ ini_set('mysql.connect_timeout', 14400);
+        ini_set('default_socket_timeout', 14400);
+        ini_set('mysql.allow_persistent', 1);
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 error_reporting(0);
 class Tixstockcms extends CI_Controller {
@@ -12,7 +16,7 @@ class Tixstockcms extends CI_Controller {
         $this->load->model('General_Model');
         
         $this->language_array = array('en','ar');
-        $this->ticket_type = array('eTicket' => 2,'Paper' => 3,'mobile' => 4,'Members / Season Card' => 1);
+        $this->ticket_type = array('eTicket' => 2,'Paper' => 3,'mobile' => 4,'mobile-link' => 4,'Members / Season Card' => 1);
         $this->split_type = array('Avoid Leaving One Ticket' => 4,'No Preferences' => 5,'All Together' => 2,'Sell In Multiples' => 3);
 
         }
@@ -70,7 +74,7 @@ class Tixstockcms extends CI_Controller {
     }
     return "";
     }
-      public function updatePerformers($data,$category='')
+      public function updatePerformers_old($data,$category='')
     { 
         $language_array = $this->language_array;
         $performers = $data['performers'];
@@ -91,6 +95,69 @@ class Tixstockcms extends CI_Controller {
                     $performer_team   = trim($performer['name']);
                 }
                     
+                $teams_exists = $this->General_Model->getAllItemTable_Array('api_teams', array('team_name' => $performer_team,'source_type' => 'tixstock','category' => $category))->row();
+                $team_id = $teams_exists->team_id;
+                if($teams_exists == 0){
+
+                $insertsData['team_name'] = $performer_team;
+                $insertsData['api_unique_id']  = '';
+                $insertsData['merge_status'] = 0;
+                $insertsData['source_type'] = 'tixstock';
+                if($category != ""){
+                $insertsData['category'] = $category;
+                }
+                $team_id = $this->Tixstock_Model->insert_data('api_teams',$insertsData);
+                }
+
+                if($pkey == 0 && $team_id != ""){
+                    $team_1_id      = $team_id;
+                }
+                if($pkey == 1 && $team_id != ""){
+                    $team_2_id      = $team_id;
+                }
+                
+               
+            }
+            
+                }
+                return array('team_1_id' => $team_1_id,'team_2_id' => $team_2_id);
+                        return true;
+    }
+
+    public function updatePerformers($data,$category='')
+    { 
+        $language_array = $this->language_array;
+
+         if(count($data['performers']) > 1){
+
+                        $unform_match_name      = explode('-',$data['name']);
+                        $unformted_match_name   = trim($unform_match_name[0]);
+                        if($unformted_match_name != "" && $unform_match_name[0] != ""){ 
+                             $form_match_name      = explode('vs',$unformted_match_name);
+                             if($form_match_name[1] != ""){
+                                $performer_data['performers'][0]['name']     = trim($form_match_name[0]);
+                                $performer_data['performers'][1]['name']     = trim($form_match_name[1]);
+                                 $performers = $performer_data;
+                             }
+                             
+                        }
+                     
+                        $performer_data['team_1_id'] = "";
+                        $performer_data['team_2_id'] = "";
+                        if(!empty($data['performers']) && empty($performer_data['team_1_id']) && empty($performer_data['performers'][0]['name'])){ 
+                            $performer_data['performers'][0]['name']     = trim($data['performers'][0]['name']);
+                            $performer_data['performers'][1]['name']     = trim($data['performers'][1]['name']);
+                            //$data['performers'] = $performer_data['performers'];
+                            $performers = $performer_data;
+                        }  
+             }
+
+       // $performers = $data['performers'];
+    
+        if(!empty($performers)){
+            foreach($performers['performers'] as $pkey => $performer){ 
+                    $performer_team   = trim($performer['name']);
+                
                 $teams_exists = $this->General_Model->getAllItemTable_Array('api_teams', array('team_name' => $performer_team,'source_type' => 'tixstock','category' => $category))->row();
                 $team_id = $teams_exists->team_id;
                 if($teams_exists == 0){
@@ -465,7 +532,11 @@ public function updateFeedsTickets($proceed = false)
                         foreach ($feed_response['data'] as $datakey => $listing) {
                                 
 
-                                $match_info = $this->General_Model->getAllItemTable_Array('match_info', array('tixstock_id' => $listing['event']['id']))->row();
+                                // $match_info = $this->General_Model->getAllItemTable_Array('match_info', array('tixstock_id' => $listing['event']['id']))->row();
+
+                            $match_info = $this->General_Model->check_match_exists_tixstock($listing['event']['id'])->row();
+
+
                                     $restrictions_benefits_options  = $listing['restrictions_benefits']['options'];
                                     $restrictions_benefits_others   = $listing['restrictions_benefits']['other'];
                                     $listing_notes = array();
@@ -600,9 +671,12 @@ public function updateFeedsEvents($proceed = false)
             if(!empty($feed_response['data'])){
                         foreach ($feed_response['data'] as $datakey => $data) {
                            //echo "<pre>";print_r($data['listings']);exit;
-                           //if($data['id'] == "01h4634ap50fym2rcebfa3rejx"){
-                              
-                           $tournament_category  = $this->General_Model->tournaments_1bx($data['category']['name']);
+                           //if($data['id'] == "01h2z7k7grzh2amne9n3g4ag3j"){
+                            if($_SERVER['HTTP_TRUE_CLIENT_IP'] == "182.76.247.76"){
+                          //    echo "<pre>";print_r($data);exit;
+                            }
+                           $tournament_category  = $this->General_Model->tournaments_1bx(trim($data['category']['name']));
+                            
                             if($tournament_category[0]->category == "" && $tournament_data->category == "Rugby World Cup"){
                                 $response['status'] = 0;
                                 $response['flag'] = 'team';
@@ -633,7 +707,7 @@ public function updateFeedsEvents($proceed = false)
 
                         $unform_match_name      = explode('-',$data['name']);
                         $unformted_match_name   = trim($unform_match_name[0]);
-                        if($unformted_match_name != "" && $unform_match_name[1] != ""){ 
+                        if($unformted_match_name != "" && $unform_match_name[0] != ""){ 
                              $form_match_name      = explode('vs',$unformted_match_name);
                              if($form_match_name[1] != ""){
                                 $performer_data['performers'][0]['name']     = trim($form_match_name[0]);
@@ -641,7 +715,7 @@ public function updateFeedsEvents($proceed = false)
                              }
                              
                         }
-
+                      
                         $performer_data['team_1_id'] = "";
                         $performer_data['team_2_id'] = "";
                         if(!empty($data['performers']) && empty($performer_data['team_1_id'])){ 
@@ -649,7 +723,7 @@ public function updateFeedsEvents($proceed = false)
                             $performer_data['performers'][1]['name']     = trim($data['performers'][1]['name']);
                             $data['performers'] = $performer_data['performers'];
                         }
-                        
+                      
                         //$performer_data = $this->updatePerformers($performer_data,$main_category);
                         $performer_data = $this->updatePerformers($data,$main_category);
                         $team_1_id      = $performer_data['team_1_id'];
@@ -764,8 +838,15 @@ public function updateFeedsEvents($proceed = false)
                         if($main_category == 1){
                             $event_type = "match";
                         }
-                      
+                        
+                        /*$match_info = $this->General_Model->check_match_exists_tixstock($data['id'])->row();
+                        if(!empty($match_info)){
+                            $boxoffice_match_id = $match_info->m_id;
+                        } */
+                          if($boxoffice_match_id == ""){
                         $boxoffice_match_id        = $this->updateApiEvents($data,$boxoffice_tournament_id,$boxoffice_team_a,$boxoffice_team_b,$boxoffice_stadium_id,$event_type);
+                        }
+                        
                          if($boxoffice_match_id == ""){
                         $boxoffice_match_id        = $this->updateApiEvents($data,$boxoffice_tournament_id,$boxoffice_team_b,$boxoffice_team_a,$boxoffice_stadium_id,$event_type);
                          }
@@ -888,7 +969,7 @@ public function updateFeedsEvents($proceed = false)
                        }
 
                             }
-                            //}
+                           // }
                            
                         }  
                         //echo "<pre>";print_r($match_data);exit;
@@ -1004,7 +1085,12 @@ error_reporting(E_ALL);*/
                         foreach ($feed_response['data'] as $datakey => $listing) {
                               
 
-                                $match_info = $this->General_Model->getAllItemTable_Array('match_info', array('tixstock_id' => $listing['event']['id']))->row();
+                                //$match_info = $this->General_Model->getAllItemTable_Array('match_info', array('tixstock_id' => $listing['event']['id']))->row();
+
+
+                                $match_info = $this->General_Model->check_match_exists_tixstock($listing['event']['id'])->row();
+
+
                                 if(!empty($match_info)){
                                 //echo "<pre>";print_r($match_info);exit;
                                     $restrictions_benefits_options  = $listing['restrictions_benefits']['options'];
@@ -1074,7 +1160,7 @@ error_reporting(E_ALL);*/
                                     $seller_tickets['general_admission']  = $general_admission;
                                     $seller_tickets['seat']               = $seat;
                                      //echo "<pre>";print_r($seller_tickets);exit;
-                                     
+                                    
                                      $sell_ticket                                 = $this->sellerTickets_update($listing['id'],$seller_tickets);
 
                                      $ticket_count = $ticket_count + $quantity;
