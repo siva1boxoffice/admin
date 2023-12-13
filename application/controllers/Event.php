@@ -1031,6 +1031,7 @@ class Event extends CI_Controller
 						$this->db->insert('banned_countries_match', $this->data);
 					}
 					// 
+					$insertData['store_id'] =$this->session->userdata('storefront')->admin_id;
 
 					$lang = $this->General_Model->getAllItemTable('language', 'store_id', $this->session->userdata('storefront')->admin_id)->result();
 
@@ -1064,6 +1065,7 @@ class Event extends CI_Controller
 
 						$insertData_lang['description'] = $description;
 						$insertData_lang['meta_description'] = $description;
+						$insertData_lang['store_id'] =$this->session->userdata('storefront')->admin_id;
 
 						$this->General_Model->insert_data('match_info_lang', $insertData_lang);
 					}
@@ -1188,6 +1190,7 @@ class Event extends CI_Controller
 					$updateData['feature_games'] = $this->input->post('feature_games') ? 1 : 0;
 					$updateData['tbc_status'] = $this->input->post('tbc_status') ? 1 : 0;
 					$updateData['tixstock_status'] = $this->input->post('tixstock_status') ? "1" : "0";
+					$updateData['store_id'] =$this->session->userdata('storefront')->admin_id;
 					//echo "<pre>";print_r($updateData);exit;
 
 
@@ -1243,6 +1246,7 @@ class Event extends CI_Controller
 					$updateData_lang = array();
 					$updateData_lang['match_name'] = trim($this->input->post('matchname'));
 					$updateData_lang['match_label'] = trim($this->input->post('match_label'));
+					$updateData_lang['store_id'] =$this->session->userdata('storefront')->admin_id;
 					$this->General_Model->update('match_info_lang', array('match_id' => $matchId, 'language' => $this->session->userdata('language_code')), $updateData_lang);
 
 					$this->db->delete('banned_countries_match', array('match_id' => $matchId));
