@@ -745,7 +745,7 @@
                                           <div class="col-lg-12">
                                              <div class="form-group">
                                                  <label for="simpleinput">Seo Keywords</label>
-                                                 <input type="text" id="choices-text-remove-button" class="form-control" placeholder="Enter Seo Keywords" value="<?php echo isset($matches->match_seo_keywords) ? $matches->match_seo_keywords : ''; ?>" name="seo_keywords">
+                                                 <input type="text" id="choices-text-remove-button" class="form-control" placeholder="Enter Seo Keywords" value="<?php echo isset($matches_lang->seo_keywords) ? $matches_lang->seo_keywords : ''; ?>" name="seo_keywords">
                                                </div>
                                           </div> 
                                           <div class="col-lg-12">
