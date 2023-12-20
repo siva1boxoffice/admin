@@ -761,8 +761,8 @@ class Event extends CI_Controller
 			$states = $this->General_Model->get_state_cities($country_id);
 			$statesCount = COUNT($states);
 			$keys = array_column($states, 'name');
-			array_multisort($keys, SORT_ASC, $states);
-			//echo "<pre>";print_r($states);exit;
+			array_multisort($keys, SORT_ASC|SORT_NATURAL|SORT_FLAG_CASE, $states);
+			// echo "<pre>";print_r($states);exit;
 			$city = '';
 			if ($statesCount > 0) {
 				$city .= '<option value="">-Select City-</option>';

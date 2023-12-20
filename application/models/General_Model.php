@@ -2099,12 +2099,19 @@ class General_Model extends CI_Model
 					$city_array[] = $city_data;
 				}
 			}
+
+			usort($city_array, function($a, $b) {
+				//return strcmp($a['name'], $b['name']);
+				 	return strcmp($a->name, $b->name);
+			});
 			return $city_array;
 		} else {
 			return false;
 		}
 		return $query;
 	}
+
+
 	/**
 	 * @desc Return record count from a table
 	 */
