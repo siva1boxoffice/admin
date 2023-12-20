@@ -602,7 +602,7 @@ public function update_tracking_data(){
 		// print_r($_POST);
 		// exit;
 
-			if (!empty($_POST['event']) || !empty($_POST['ticket_category']) || !empty($_POST['stadium']) || !empty($_POST['event_start_date']) || !empty($_POST['event_end_date']) || !empty($_POST['ignore_end_date']) || !empty($_POST['seller']) || !empty($_POST['seller_name']) || !empty($_POST['booking_no']) || !empty($_POST['customer_id']) || !empty($_POST['customer_id']) || !empty($_POST['protect']) || !empty($_POST['order_status']) || !empty($_POST['shipping_status']) || !empty($_POST['order_status']) ) {
+			if (!empty($_POST['event']) || !empty($_POST['ticket_category']) || !empty($_POST['stadium']) || !empty($_POST['event_start_date']) || !empty($_POST['event_end_date']) || !empty($_POST['ignore_end_date']) || !empty($_POST['seller']) || !empty($_POST['seller_name']) || !empty($_POST['booking_no']) || !empty($_POST['customer_id']) || !empty($_POST['customer_id']) || !empty($_POST['protect']) || !empty($_POST['order_status']) || !empty($_POST['shipping_status']) || !empty($_POST['order_status']) || !empty($_POST['partner_affiliateid'])  ) {
 
 			//	array_map()
 				$event 							= $_POST['event'];
@@ -620,16 +620,17 @@ public function update_tracking_data(){
 				$shipping_status 				= $_POST['shipping_status'];
 			//	$order_status 					= $_POST['order_status'];				
 				$customer_id 					= $_POST['customer_id'];
-				$page 							= $_POST['page'];
+				$page 							= $_POST['partner_affiliateid'];
+				$partner_affiliateid 			= $_POST['partner_affiliateid'];
 
 				// if(@$customer_id){
 				// 		$row_per_page = 500;
 				// }
 				
-				$records = $this->General_Model->getOrdersSearch("",$event,$ticket_category,$stadium,$event_start_date,$event_end_date,$ignore_end_date,'',$seller,$order_id,$customer_id,$page,$seller_name,$order_status,$shipping_status,$rowno, $row_per_page)->result();
+				$records = $this->General_Model->getOrdersSearch("",$event,$ticket_category,$stadium,$event_start_date,$event_end_date,$ignore_end_date,'',$seller,$order_id,$customer_id,$page,$seller_name,$order_status,$shipping_status,$rowno, $row_per_page,$partner_affiliateid)->result();
 
-				$allcount = $this->General_Model->getOrdersSearch("",$event,$ticket_category,$stadium,$event_start_date,$event_end_date,$ignore_end_date,'',$seller,$order_id,$customer_id,$page,$seller_name,$order_status,$shipping_status)->num_rows();
-//exit;
+				$allcount = $this->General_Model->getOrdersSearch("",$event,$ticket_category,$stadium,$event_start_date,$event_end_date,$ignore_end_date,'',$seller,$order_id,$customer_id,$page,$seller_name,$order_status,$shipping_status,"","",$partner_affiliateid)->num_rows();
+			//exit;
 			} else {  
 				if($_POST['page'] == "protect"){
 					$flag = "protect";
@@ -639,6 +640,9 @@ public function update_tracking_data(){
 				}
 				else if($_POST['page'] == "affiliate"){
 					$flag = "affiliate";
+				}
+				else if($_POST['page'] == "partner_affiliate"){
+					$flag = "partner_affiliate";
 				}
 				else{
 					$flag = "all";
@@ -771,6 +775,9 @@ public function update_tracking_data(){
 					
 				$price= number_format($record->price,2)." ".strtoupper($record->currency_type); 
 				$total= number_format($record->total_amount,2)." ".strtoupper($record->currency_type); 
+				$commission= number_format($record->partner_commission,2)." ".strtoupper($record->currency_type); 
+
+
 
 				$match_time=" <br> <span class='tr_date'>".date('D j F Y',strtotime($record->match_date))."</span><br>  <span class='tr_date'>".date('H:i A',strtotime($record->match_time))."</span>";
 
@@ -836,7 +843,7 @@ if($record->delivery_status != 0)
 
 				$premium_price= number_format($record->premium_price,2)." ".strtoupper($record->currency_type);
 				
-				if($_POST['page'] == "protect" || $_POST['page'] == "api" || $_POST['page'] == "affiliate"){
+				if($_POST['page'] == "protect" || $_POST['page'] == "api" || $_POST['page'] == "affiliate" || $_POST['page'] == "partner_affiliate"){
 
 
 					$data[] = array( 
@@ -847,13 +854,19 @@ if($record->delivery_status != 0)
 					"category"				=> $seat_category,
 					"block"                 => $block,
 					"buyer"					=> $record->customer_first_name." ".$record->customer_last_name,
-					"partner"					=> $record->partner_first_name." ".$record->partner_last_name,
-					"affiliate"					=> $record->affiliate_first_name." ".$record->affiliate_last_name,
+					"partner"				=> $record->partner_first_name." ".$record->partner_last_name,
+					"affiliate"				=> $record->affiliate_first_name." ".$record->affiliate_last_name,
+					"partner_affiliate"		=> $record->affiliate_first_name ?  $record->affiliate_first_name." ".$record->affiliate_last_name : $record->partner_first_name." ".$record->partner_last_name,
+					"ticket_type"			=> $ticket_type,
+					"seller"				=> $record->seller_first_name." ".$record->seller_last_name,
 					"payment_status"		=> $payment_status,
 					"shipping_status"		=> $delivery_status,
 					"premium_price"			=> $premium_price,
+					"delivery_date"			=> $delivery_date,
+					"admin_status"			=> $admin_status,
 					"price"					=> $price,
 					"total"					=> $total,
+					"commission"			=> $commission,
 					"view"					=> '<div class="dropdown">
 					<a href="javascript:void(0)" class="btn-icon btn-icon-sm btn-icon-soft-primary" data-toggle="dropdown">
 					<i class="mdi mdi-dots-vertical fs-sm"></i>
@@ -2573,61 +2586,87 @@ public function get_order_status(){
 
 
 		 $searchText = "";
-	// Perform a database query or some other operation to retrieve the checkbox data based on the search text
-	$checkboxData = array('0'=>'Tickets	Not Uploaded','1'=>'Tickets	In-Review','2'=>'Tickets Approved','3'=>'Tickets Rejected','4'=>'Tickets Downloaded','5'=>'Tickets Shipped','6'=>'Tickets Delivered');
-	
-	$pattern = '/' . preg_quote($searchText, '/') . '/'; // Dynamically create the pattern
-	$matches = preg_grep($pattern, $checkboxData);
-	
-	$shipping_status = "";
-	
-	foreach($matches as $key=>$value ){
+			// Perform a database query or some other operation to retrieve the checkbox data based on the search text
+			$checkboxData = array('0'=>'Tickets	Not Uploaded','1'=>'Tickets	In-Review','2'=>'Tickets Approved','3'=>'Tickets Rejected','4'=>'Tickets Downloaded','5'=>'Tickets Shipped','6'=>'Tickets Delivered');
+			
+			$pattern = '/' . preg_quote($searchText, '/') . '/'; // Dynamically create the pattern
+			$matches = preg_grep($pattern, $checkboxData);
+			
+			$shipping_status = "";
+			
+			foreach($matches as $key=>$value ){
 
-		$shipping_status .=   '<div class="custom-control custom-checkbox">
-		<input type="checkbox" class="custom-control-input shipping_select_status" id="shipping_status'.$key.'">
-		<label class="custom-control-label" for="shipping_status'.$key.'">'.ucwords($value).'</label>
-	  </div>'.'';
+				$shipping_status .=   '<div class="custom-control custom-checkbox">
+				<input type="checkbox" class="custom-control-input shipping_select_status" id="shipping_status'.$key.'">
+				<label class="custom-control-label" for="shipping_status'.$key.'">'.ucwords($value).'</label>
+			  </div>'.'';
 
-	}
+			}
 
-	$this->data['shipping_status'] = $shipping_status; 
-
-
-
-	$order_status_searchText = "";
-	// Perform a database query or some other operation to retrieve the checkbox data based on the search text
-	$order_status_checkboxData = array('2'=>'Pending','1'=>'Confirmed','0'=>'Failed','3'=>'Cancelled','4'=>'Shipped','5'=>'Delivered','6'=>'Downloaded');
-	
-	$pattern = '/' . preg_quote($order_status_searchText, '/') . '/'; // Dynamically create the pattern
-	$order = preg_grep($pattern, $order_status_checkboxData);
-	
-	$order_status = "";
-	
-	foreach($order as $key=>$value ){
-
-		$order_status .=   '<div class="custom-control custom-checkbox">
-		<input type="checkbox" class="custom-control-input order_select_status" id="order_status'.$key.'">
-		<label class="custom-control-label" for="order_status'.$key.'">'.ucwords($value).'</label>
-	  </div>'.'';
-
-	}
-
-	$this->data['order_status'] = $order_status; 
+			$this->data['shipping_status'] = $shipping_status; 
 
 
+
+			$order_status_searchText = "";
+			// Perform a database query or some other operation to retrieve the checkbox data based on the search text
+			$order_status_checkboxData = array('2'=>'Pending','1'=>'Confirmed','0'=>'Failed','3'=>'Cancelled','4'=>'Shipped','5'=>'Delivered','6'=>'Downloaded');
+			
+			$pattern = '/' . preg_quote($order_status_searchText, '/') . '/'; // Dynamically create the pattern
+			$order = preg_grep($pattern, $order_status_checkboxData);
+			
+			$order_status = "";
+			
+			foreach($order as $key=>$value ){
+
+				$order_status .=   '<div class="custom-control custom-checkbox">
+				<input type="checkbox" class="custom-control-input order_select_status" id="order_status'.$key.'">
+				<label class="custom-control-label" for="order_status'.$key.'">'.ucwords($value).'</label>
+			  </div>'.'';
+
+			}
+
+			$this->data['order_status'] = $order_status; 
 
 
 			if($_GET['page'] == "protect"){
-					$this->load->view(THEME.'/game/booking_protect_order', $_POST,$this->data);
+				$this->load->view(THEME.'/game/booking_protect_order', $_POST,$this->data);
 			}
 			else if($_GET['page'] == "api"){
-					$this->load->view(THEME.'/game/booking_api_order', $_POST,$this->data);
+				$this->load->view(THEME.'/game/booking_api_order', $_POST,$this->data);
 			}
 			else if($_GET['page'] == "affiliate"){
-					$this->load->view(THEME.'/game/booking_affiliate_order', $_POST,$this->data);
+				$this->load->view(THEME.'/game/booking_affiliate_order', $_POST,$this->data);
+			}
+			else if($_GET['page'] == "partner_affiliate"){
+
+				$data_aff = $this->General_Model->get_admin_details_by_role_v1(2, 'status');
+				$data_aff2 = $this->General_Model->get_admin_details_by_role_v1(3, 'status');
+				$data_aff_check = "";
+				foreach($data_aff as $key =>$value ){
+
+					$data_aff_check .=   '<div class="custom-control custom-checkbox" data-category="'.strtolower($value->admin_name." ".$value->admin_last_name).'">
+					<input type="checkbox" class="custom-control-input partner_affiliate_status" id="partner_affiliate'.$value->admin_id.'" value="'.$value->admin_id.'">
+					<label class="custom-control-label" for="partner_affiliate'.$value->admin_id.'">'.ucwords($value->admin_name." ".$value->admin_last_name).'</label>
+				  </div>'.'';
+
+				}
+				foreach($data_aff2 as $key =>$value ){
+
+					$data_aff_check .=   '<div class="custom-control custom-checkbox" data-category="'.strtolower($value->admin_name." ".$value->admin_last_name).'" >
+					<input type="checkbox" class="custom-control-input partner_affiliate_status" id="partner_affiliate'.$value->admin_id.'" value="'.$value->admin_id.'">
+					<label class="custom-control-label" for="partner_affiliate'.$value->admin_id.'">'.ucwords($value->admin_name." ".$value->admin_last_name).'</label>
+				  </div>'.'';
+
+				}
+			
+
+				$this->data['data_aff_check'] = $data_aff_check; 
+
+
+				$this->load->view(THEME.'/game/partner_affiliate', $_POST,$this->data);
 			}
 			else{
-					$this->load->view(THEME.'/game/list_order', $_POST,$this->data);
+				$this->load->view(THEME.'/game/list_order', $_POST,$this->data);
 			}
 
 		}
