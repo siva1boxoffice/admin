@@ -4219,7 +4219,7 @@ public function getOrderData_v2()
         return $result->num_rows();
     }
 
-	function getOrdersSearch($match_id = "",$event='',$ticket_category='',$stadium ='',$event_start_date='',$event_end_date='',$ignore_end_date='',$status='',$seller='',$order_id='',$customer_id='',$page,$seller_name="",$order_status="",$shipping_status="",$row_no='', $row_per_page='')
+	function getOrdersSearch($match_id = "",$event='',$ticket_category='',$stadium ='',$event_start_date='',$event_end_date='',$ignore_end_date='',$status='',$seller='',$order_id='',$customer_id='',$page,$seller_name="",$order_status="",$shipping_status="",$row_no='', $row_per_page='',$partner_affiliateid= array())
 	{
 		$this->db->select('booking_global.*,booking_tickets.*,booking_billing_address.*,booking_payments.*,stadium_details.*,stadium.*,countries.name as country_name,states.name as city_name,register.first_name as customer_first_name,register.last_name as customer_last_name,admin_details.admin_id,admin_details.admin_name as seller_first_name,admin_details.admin_last_name as seller_last_name,sell_tickets.s_no,countries.name as customer_country_name,partner.admin_name as partner_first_name,partner.admin_last_name as partner_last_name,
 		affiliate.admin_name as affiliate_first_name,affiliate.admin_last_name as affiliate_last_name,booking_tickets.match_id as match_id,booking_tixstock.tixstock_order_id, (CASE 
@@ -4273,6 +4273,8 @@ public function getOrderData_v2()
 			$this->db->where('booking_global.affiliate_id !=', 0);
 			$this->db->group_end();
 		}
+		
+
 		// if ($seller_name != "") {
 		// 	$this->db->or_like('admin_details.admin_last_name', $seller_name);
 		// }
@@ -4345,6 +4347,12 @@ public function getOrderData_v2()
 		else
 			$this->db->where_in('booking_global.delivery_status ', [0,1,2,3,4,5,6]);
 
+		if($partner_affiliateid){
+			$this->db->group_start();
+			$this->db->where_in('booking_global.partner_id ', $partner_affiliateid);
+			$this->db->or_where_in('booking_global.affiliate_id ', $partner_affiliateid);
+			$this->db->group_end();
+		}
 		// if($this->store_id){
 		// 	$this->db->where('booking_global.store_id', $this->store_id);
 		// }
@@ -5019,6 +5027,11 @@ public function getOrderData_v2()
 			$this->db->where('booking_global.affiliate_id is NOT NULL', NULL, FALSE);
 			$this->db->where('booking_global.affiliate_id !=', 0);
 			$this->db->group_end();
+		}
+
+		if($flag == 'partner_affiliate'){ 
+			$this->db->where(' ( booking_global.affiliate_id is NOT NULL AND `booking_global`.`affiliate_id` != 0 )OR ( booking_global.partner_id is NOT NULL AND `booking_global`.`partner_id` != 0 )', NULL, FALSE);
+
 		}
 
 		//$this->db->where('md5(booking_global.booking_no)', $booking_no);
