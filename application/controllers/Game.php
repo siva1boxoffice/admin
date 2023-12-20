@@ -2404,6 +2404,30 @@ public function get_order_status(){
 				exit;
 			}
 	}
+
+	public function save_bill_email()
+	{
+				$ticket_type = $_POST['ticket_id'];
+				@$email = $_POST['bill_email'];
+				if(!empty($ticket_type)){
+
+					$tickets = $this->General_Model->getAllItemTable_Array('booking_global', array('md5(bg_id)' => $_POST['ticket_id']))->row();
+
+					$updateData = array('email' => $email);
+					$cond = array('id' =>  $tickets->user_id);
+					$done = $this->General_Model->update('register', $cond, $updateData);
+					$response = array('status' => 1, 'msg' => "Email Updated Successfully.");
+					echo json_encode($response);
+					exit;
+			}
+			else {
+				$response = array('status' => 0, 'msg' => "Email Failed to Add.");
+				echo json_encode($response);
+				exit;
+			}
+	}
+
+	
 	public function send_email()
 	{
 				$ticket_type = $_POST['ticket_id'];

@@ -2099,12 +2099,19 @@ class General_Model extends CI_Model
 					$city_array[] = $city_data;
 				}
 			}
+
+			usort($city_array, function($a, $b) {
+				//return strcmp($a['name'], $b['name']);
+				 	return strcmp($a->name, $b->name);
+			});
 			return $city_array;
 		} else {
 			return false;
 		}
 		return $query;
 	}
+
+
 	/**
 	 * @desc Return record count from a table
 	 */
@@ -5761,7 +5768,7 @@ public function getOrderData_v2()
 
 	public function getOrderData($booking_no)
 	{
-		$this->db->select('booking_global.*,ticket_types_lang.name as ticket_type_name,booking_tickets.*,booking_tickets.country_name as stadium_country_name,booking_tickets.city_name as stadium_city_name,booking_billing_address.*,booking_payments.*,stadium.*,countries.name as country_name,states.name as city_name,register.first_name as customer_first_name,register.last_name as customer_last_name,admin_details.admin_id,admin_details.admin_name as seller_first_name,admin_details.admin_last_name as seller_last_name,sell_tickets.*,booking_tickets.quantity as quantity,booking_tickets.price,booking_tickets.listing_note as listing_note,partner.admin_name as partner_first_name,partner.admin_last_name as partner_last_name,partner.company_name  as partner_company_name,partner.admin_email  as partner_email,partner.admin_cell_phone  as partner_mobile,booking_global.user_id as customer_id,booking_tickets.ticket_block as ticket_block,site_settings.site_value as store_name,booking_etickets.ticket_status,booking_etickets.ticket_email_status,booking_etickets.ticket_upload_date,booking_etickets.ticket_approve_date,booking_tickets.ticket_type as ticket_type,booking_tixstock.tixstock_order_id');
+		$this->db->select('booking_global.*,ticket_types_lang.name as ticket_type_name,booking_tickets.*,booking_tickets.country_name as stadium_country_name,booking_tickets.city_name as stadium_city_name,booking_billing_address.*,booking_payments.*,stadium.*,countries.name as country_name,states.name as city_name,register.first_name as customer_first_name,register.last_name as customer_last_name,admin_details.admin_id,admin_details.admin_name as seller_first_name,admin_details.admin_last_name as seller_last_name,sell_tickets.*,booking_tickets.quantity as quantity,booking_tickets.price,booking_tickets.listing_note as listing_note,partner.admin_name as partner_first_name,partner.admin_last_name as partner_last_name,partner.company_name  as partner_company_name,partner.admin_email  as partner_email,partner.admin_cell_phone  as partner_mobile,booking_global.user_id as customer_id,booking_tickets.ticket_block as ticket_block,site_settings.site_value as store_name,booking_etickets.ticket_status,booking_etickets.ticket_email_status,booking_etickets.ticket_upload_date,booking_etickets.ticket_approve_date,booking_tickets.ticket_type as ticket_type,booking_tixstock.tixstock_order_id,register.email as customer_email');
 		$this->db->from('booking_global');
 		$this->db->join('booking_tickets', 'booking_tickets.booking_id = booking_global.bg_id');
 		$this->db->join('booking_billing_address', 'booking_billing_address.booking_id = booking_global.bg_id');
