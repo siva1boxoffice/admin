@@ -1049,10 +1049,10 @@ color: #00a3ed !important;
 														<i class="far fa-copy" onclick="copy_data('copy_billing_name',this)"></i>									
 													</td>
 												<td>
-														<span id="copy_billing_email" style="display:none;"><?php echo $orderData->email; ?></span>	
+														<span id="copy_billing_email" style="display:none;"><?php echo $orderData->customer_email; ?></span>	
 														<div class="input-group widh">
 											
-											<input type="email" name="bill_email_address" class="form-control" id="bill_email_address" value="<?php echo $orderData->email; ?>">
+											<input type="email" name="bill_email_address" class="form-control" id="bill_email_address" value="<?php echo $orderData->customer_email; ?>">
 												<div class="input-group-append">
 											<span class="input-group-text save_bill_email" >
 											<i class="fa fa-edit" aria-hidden="true"></i>
@@ -1339,7 +1339,7 @@ color: #00a3ed !important;
 									
 											<div class="input-group">
 											
-											<input type="email" name="email_address" class="form-control" id="email_address" value="<?php echo $orderData->email; ?>">
+											<input type="email" name="email_address" class="form-control" id="email_address" value="<?php echo $orderData->customer_email; ?>">
 												<div class="input-group-append">
 												<!-- id="emailIcon" 
 											data-toggle="modal"                      data-target="#centermodal"

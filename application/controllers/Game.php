@@ -2414,8 +2414,8 @@ public function get_order_status(){
 					$tickets = $this->General_Model->getAllItemTable_Array('booking_global', array('md5(bg_id)' => $_POST['ticket_id']))->row();
 
 					$updateData = array('email' => $email);
-					$cond = array('booking_id' =>  $tickets->bg_id);
-					$done = $this->General_Model->update('booking_billing_address', $cond, $updateData);
+					$cond = array('id' =>  $tickets->user_id);
+					$done = $this->General_Model->update('register', $cond, $updateData);
 					$response = array('status' => 1, 'msg' => "Email Updated Successfully.");
 					echo json_encode($response);
 					exit;
