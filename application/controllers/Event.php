@@ -2981,56 +2981,58 @@ class Event extends CI_Controller
 		if(count($result_set)>0)
 		{
 			$lang = $this->General_Model->getAllItemTable('language', 'store_id', $this->session->userdata('storefront')->admin_id)->result();
-			foreach ($result_set as $key => $value) {	
-							
-				$array = array(
-					'store_id'		=> '13',
-				);
-				$this->General_Model->update('match_info', array('m_id' => $value->m_id), $array);
-				
-					foreach ($lang as $key => $l_code) {
+			foreach ($result_set as $key => $value) {
+				foreach ($lang as $key => $l_code) {
+					$match_info_lang = $this->General_Model->getAllItemTable_array('match_info_lang', array('match_id' => $value->m_id, 'language' => $l_code->language_code, 'store_id' => 13))->result_array();
+					if (empty($match_info_lang)) {
 
-						$match_info_lang = $this->General_Model->getAllItemTable_array('match_info_lang', array('match_id' => $value->m_id, 'language' => $l_code->language_code))->result_array();
+						$team1 = $this->General_Model->getid('teams', array('teams.id' => $value->team_1, 'teams_lang.language' => $l_code->language_code))->row();
 
-						foreach ($match_info_lang as $row) {
-
-							$team1 = $this->General_Model->getid('teams', array('teams.id' => $value->team_1, 'teams_lang.language' => $l_code->language_code))->row();
-
-							$team2 = $this->General_Model->getid('teams', array('teams.id' => $value->team_2, 'teams_lang.language' => $l_code->language_code))->row();
+						$team2 = $this->General_Model->getid('teams', array('teams.id' => $value->team_2, 'teams_lang.language' => $l_code->language_code))->row();
 
 
-							$tournament = $this->General_Model->getid('tournament', array('tournament.t_id' => $value->tournament, 'tournament_lang.language' => $l_code->language_code))->row();
+						$tournament = $this->General_Model->getid('tournament', array('tournament.t_id' => $value->tournament, 'tournament_lang.language' => $l_code->language_code))->row();
 
-							$stadium = $this->General_Model->getid('stadium', array('stadium.s_id' => $value->venue))->row();
+						$stadium = $this->General_Model->getid('stadium', array('stadium.s_id' => $value->venue))->row();
 
-							$updateData_lang = array();
+						$updateData_lang = array();
 
-							if ($l_code->language_code == "en") {
-								$meta_title = $team1->team_name . " vs " . $team2->team_name . " Tickets | " . date('d-m-Y', strtotime($value->match_date)) . " | 1BoxOffice.com";
+						if ($l_code->language_code == "en") {
+							$meta_title = $team1->team_name . " vs " . $team2->team_name . " Tickets | " . date('d-m-Y', strtotime($value->match_date)) . " | 1BoxOffice.com";
 
-								$description = 'Buy ' . $team1->team_name . ' vs ' . $team2->team_name . ' tickets for the ' . $tournament->tournament_name . ' game being played on ' . date('d M Y', strtotime($value->match_date)) . ' at ' . $stadium->stadium_name . '. 1BoxOffice offers a wide range of ' . $team1->team_name . ' vs ' . $team2->team_name . ' tickets that suits most football fans budget. Contact 1BoxOffice today for more information on how to buy ' . $team1->team_name . ' tickets!';
-							} else {
+							$description = 'Buy ' . $team1->team_name . ' vs ' . $team2->team_name . ' tickets for the ' . $tournament->tournament_name . ' game being played on ' . date('d M Y', strtotime($value->match_date)) . ' at ' . $stadium->stadium_name . '. 1BoxOffice offers a wide range of ' . $team1->team_name . ' vs ' . $team2->team_name . ' tickets that suits most football fans budget. Contact 1BoxOffice today for more information on how to buy ' . $team1->team_name . ' tickets!';
+						} else {
 
-								$meta_title = "تذاكر   " . $team1->team_name . " - " . $team2->team_name . " | " . date('d-m-Y', strtotime($value->match_date)) . " | ";
+							$meta_title = "تذاكر   " . $team1->team_name . " - " . $team2->team_name . " | " . date('d-m-Y', strtotime($value->match_date)) . " | ";
 
 
-								$description = ' اشتر تذاكر مباراة   ' . $team1->team_name . ' - ' . $team2->team_name . '  لمباراة   ' . $tournament->tournament_name . '  التي ستُلعب في   ' . date('d-m-Y', strtotime($value->match_date)) . ' على    ' . $stadium->stadium_name_ar . '. نقدم مجموعة واسعة من تذاكر   ' . $team1->team_name . ' - ' . $team2->team_name . ' بأسعار مدروسة مناسبة  لعشاق كرة القدم. قم بزيارة موقعنا  www.1boxoffice.com لمزيد من المعلومات حول كيفية شراء تذاكر   ' . $team1->team_name . '!';
-							}
-
-							$updateData_lang['meta_title'] = trim($meta_title);
-							$updateData_lang['meta_description'] = trim($description);
-							$updateData_lang['description'] = trim($description);
-
-							$this->General_Model->update('match_info_lang', array('match_id' => $value->m_id, 'language' => $l_code->language_code), $updateData_lang);
-							$data.=$row['match_id']." \t\t".$meta_title."\t\t ".$description;
-							$data.="\n";
+							$description = ' اشتر تذاكر مباراة   ' . $team1->team_name . ' - ' . $team2->team_name . '  لمباراة   ' . $tournament->tournament_name . '  التي ستُلعب في   ' . date('d-m-Y', strtotime($value->match_date)) . ' على    ' . $stadium->stadium_name_ar . '. نقدم مجموعة واسعة من تذاكر   ' . $team1->team_name . ' - ' . $team2->team_name . ' بأسعار مدروسة مناسبة  لعشاق كرة القدم. قم بزيارة موقعنا  www.1boxoffice.com لمزيد من المعلومات حول كيفية شراء تذاكر   ' . $team1->team_name . '!';
 						}
+
+
+						$insertData_lang['match_name'] = $team1->team_name . " vs " . $team2->team_name;
+						$insertData_lang['match_id'] = $value->m_id;
+						$insertData_lang['language'] = $l_code->language_code;
+						$insertData_lang['store_id'] = $this->session->userdata('storefront')->admin_id;
+						$insertData_lang['meta_title'] = trim($meta_title);
+						$insertData_lang['meta_description'] = trim($description);
+						$insertData_lang['description'] = trim($description);
+						$this->db->insert('match_info_lang', $insertData_lang);
+
+						$data .= $value->m_id . " \t\t" . $meta_title . "\t\t " . $description;
+						$data .= "\n";
 					}
 				}
-				header('Content-Type: application/csv');
-				$filename = 'match_info_' . date('Y_m_d') . '.csv';
-				header('Content-Disposition: attachment; filename="' . $filename . '"');
-				echo $data; exit();
+			}
+			if($data!=""){
+			header('Content-Type: application/csv');
+			$filename = 'match_info_' . date('Y_m_d') . '.csv';
+			header('Content-Disposition: attachment; filename="' . $filename . '"');
+			echo $data; exit();
+			}
+			else{
+				echo "No Records Found.";
+			}
 		}
 		else
 		{

@@ -7431,18 +7431,12 @@ public function get_seat_category_main()
 
 	function update_match_info()
 	{
-		
-		// $this->db->select('*');
-		// $this->db->from('match_info');
-		// $this->db->where_in('store_id', array(1, "", 0));
-		// $query = $this->db->get();
-
 		$this->db->select('*');
 		$this->db->from('match_info');
-		$this->db->where('store_id', '');
-		$this->db->or_where('store_id IS NULL', NULL, FALSE); 
-		$this->db->or_where('store_id', 1);
-		$this->db->or_where('store_id', 0);
+		// $this->db->where('store_id', '');
+		// $this->db->or_where('store_id IS NULL', NULL, FALSE); 
+		// $this->db->or_where('store_id', 1);
+		// $this->db->or_where('store_id', 0);
 		$query = $this->db->get();
 		
 		return $query;
