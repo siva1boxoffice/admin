@@ -264,7 +264,10 @@ color: #00a3ed !important;
 												</div>
 											</td>
 
-										<?php } ?>
+										<?php } else { ?>
+											<td></td>
+											<?php }  ?>
+
 									</tr>
 								 </tbody>
 							  </table>

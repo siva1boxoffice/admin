@@ -902,7 +902,7 @@ if($record->delivery_status != 0)
 				 </a>
 				 <div class="dropdown-menu dropdown-menu-right">
 					<a href="'.base_url().'game/orders/details/'.md5($record->booking_no).'" class="dropdown-item">View</a>
-					<a href="#" class="dropdown-item download_e_ticket" data-booking-id="'.$download_id.'">Download </a>
+					<a href="#" class="dropdown-item download_e_ticket down_opt" data-booking-id="'.$download_id.'">Download </a>
 					<a href="'.base_url().'game/orders/upload_e_ticket/'.md5($record->booking_no).'" class="dropdown-item">Upload </a>
 					<a href="#" class="dropdown-item">Replace </a>
 				 </div>

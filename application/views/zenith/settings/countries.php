@@ -22,6 +22,9 @@
          <div class="container-fluid">
             <div class="page-title dflex-between-center">
                <h3 class="mb-1">Country Lists</h3>
+                <div class="float-sm-right mt-3 mt-sm-0 add_team_s">
+                   <a href="<?php echo base_url();?>settings/countries/add"  class="btn btn-success mb-2">Add Country</a>
+                 </div>
             </div>
          </div>
       </div>
@@ -29,26 +32,7 @@
       <div class="page-content-wrapper mt--45 all_orders_page">
          <div class="container-fluid">
 
-         <div class="card">
-                      <div class="card-body">
-                          <!-- cta -->
-                          <div class="row">
-                            <div class="col-sm-9 col-md-4">
-                                
-                            </div>
-                            <div class="col-sm-3 col-md-8">
-                                <div class="float-sm-right mt-3 mt-sm-0">                               
-                                
-                                <div class="float-sm-right mt-3 mt-sm-0">
-                                  <a href="<?php echo base_url();?>settings/countries/add"  class="btn btn-success mb-2">Add Country</a>
-                                </div>
-                                </div>
-                            </div>
-                          </div>
-                      </div>
-                    </div>
-
-            <div class="card">
+           <div class="card">
                <div class="card-body">
 
                   <div class="section_all all_orders filter_new">
