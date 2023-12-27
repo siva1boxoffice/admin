@@ -407,7 +407,7 @@ if(!empty($seller_sales_data_count))
                                                          <td><?php echo $data->total_payable; ?></td>
                                                          <td><?php echo $data->currency; ?></td>
                                                          <td><?php  echo date("d F Y", strtotime(time_zone_calc(@$_COOKIE["client_time_zone"], $data->paid_date_time))) . ' ' . @$_COOKIE["time_zone"]; ?></td>                                 
-                                                         <td>CASH</td>
+                                                         <td>Bank Transfer</td>
                                                          <td><a class="payment_vw" href=" <?php echo base_url()."/accounts/payout_details/".$data->payout_id;?>">View payment</td>
                                                         
                                                       </tr>
@@ -669,7 +669,7 @@ if(!empty($seller_sales_data_count))
                                        </tr>
                                        <tr>
                                           <th>Last Visit :</th>
-                                          <td>10 January 2023 1:25 PM</td>
+                                          <td><?php  echo date("d F Y h:i A", strtotime($seller_profile_info[0]->admin_updation_date_time));?></td>
                                        </tr>
                                        <tr>
                                           <th>Language :</th>

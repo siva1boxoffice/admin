@@ -1474,6 +1474,9 @@ return true;
             else if($payable_orders[0]->currency_type == 'EUR'){
                 $currency = '€';
             }
+             else if($payable_orders[0]->currency_type == 'AED'){
+                $currency = 'AED';
+            }
              $this->mydatas['payable_orders'] = $payable_orders;
             $list_orders = $this->load->view(THEME.'accounts/make_payouts_ajax_v1', $this->mydatas, TRUE);
             $this->mydata['base_currency'] = $currency;
