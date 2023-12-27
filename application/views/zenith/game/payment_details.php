@@ -49,7 +49,7 @@
 									<td><span class="order_id">#<?php echo $orderData->booking_confirmation_no; ?></a></span></td>
 									
 									<td data-label="Order:">
-									<select name="seller_status" id="seller_status" class="custom-select">
+									<select name="seller_status" id="seller_status" class="custom-select" required="false">
 										<option value="">-Selec Status-</option>
 										<option <?php if ($orderData->booking_status == 1) { ?> selected <?php } ?> value="1">Confirmed</option>
 										<option <?php if ($orderData->booking_status == 2) { ?> selected <?php } ?> value="2">Pending</option>

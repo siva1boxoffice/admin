@@ -40,7 +40,7 @@
                               </div>
                            </div>
                            <div class="col-md-11">
-                              <div class="sort_filters">
+                              <div class="sort_filters last-field">
                                  <ul>
                                     <li class="sort_list">
                                                 <div class="btn-group">
@@ -179,7 +179,7 @@
                                        <a class="clear_all reset_txt" href="javascript:void(0)">Clear All</a>
                                        
                                     </li>
-                                    <li class="sort_list">
+                                    <li class="sort_list ">
                                        <a href=""class="button h-button is-primary download_orders report_sts">Reports</a>
                                     </li>
                                  </ul>

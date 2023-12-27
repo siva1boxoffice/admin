@@ -229,7 +229,7 @@
                                  <div class="seat_detail_list">
                                     <div class="select_details">
                                        <label>Ticket Type</label>
-                                       <select required class="form-control" id="home_town" name="home_town" data-error="#errNm6">
+                                       <select required class="custom-select" id="home_town" name="home_town" data-error="#errNm6">
                                        <option value="0">Any</option>
                                        <option value="1">Home</option>
                                        <option value="2">Away</option>
