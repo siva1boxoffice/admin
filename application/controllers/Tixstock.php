@@ -944,7 +944,8 @@ public function orderConfirm(){
 
                  $order_response = $this->process_curl_request("update","POST",$end_point_url,$post_data_json);
 
-                $table                     = "booking_tixstock";
+               // $table                     = "booking_tixstock";
+                  $table                     = "booking_api_response";
                 $wheres                    = array('booking_id' => $bg_id);
 
                 $uvalue                    = array(
@@ -953,7 +954,8 @@ public function orderConfirm(){
                     'update_order_response' => json_encode($order_response));
 
                 if($order_response['data']['status'] != ""){
-                    $uvalue['tixstock_status'] = $order_response['data']['status'];
+                   // $uvalue['tixstock_status'] = $order_response['data']['status'];
+                     $uvalue['status'] = $order_response['data']['status'];
                 }
 
                 $stadium_up                =  $this->Tixstock_Model->update_table($table, $wheres, $uvalue);
