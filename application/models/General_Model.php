@@ -7433,7 +7433,7 @@ public function get_seat_category_main()
 	{
 		$this->db->select('*');
 		$this->db->from('match_info');
-		// $this->db->where('store_id', '');
+		$this->db->where('event_type ', 'match');
 		// $this->db->or_where('store_id IS NULL', NULL, FALSE); 
 		// $this->db->or_where('store_id', 1);
 		// $this->db->or_where('store_id', 0);

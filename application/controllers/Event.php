@@ -3040,4 +3040,51 @@ class Event extends CI_Controller
 		}
 	}
 
+
+	public function meta_match_info_update()
+	{
+		$result_set=$this->General_Model->update_match_info()->result();
+		$data = "";
+		if(count($result_set)>0)
+		{
+			$store_id = 13;
+			$lang = $this->General_Model->getAllItemTable('language', 'store_id', $store_id)->result();
+			foreach ($result_set as $key => $value) {
+				foreach ($lang as $key => $l_code) {
+					$match_info_lang = $this->db->select('COUNT(match_info_lang.id) as total_count,match_id')
+										->where('match_id' , $value->m_id)
+										->where('store_id' , $store_id)
+										//->where('store_id IS NOT NULL')
+										->from('match_info_lang')
+										->get();
+					$res =  $match_info_lang->row();
+					if ($res->total_count == 0 ) {
+					 	$updated_data = array('store_id' => $store_id);
+					 	// pr($updated_data);
+					 	// pr($value->m_id);
+					 	$this->General_Model->update('match_info_lang', array('match_id' => $value->m_id), $updated_data);
+						 $data .= $value->m_id;
+						$data .= "\n";
+					 }
+				}
+
+			
+			}
+		ob_clean();
+			if($data!=""){
+			header('Content-Type: application/csv');
+			$filename = 'match_info_' . date('Y_m_d') . '.csv';
+			header('Content-Disposition: attachment; filename="' . $filename . '"');
+			echo $data; exit();
+			}
+			else{
+				echo "No Records Found.";
+			}
+		}
+		else
+		{
+			echo "No Records Found.";
+		}
+	}
+
 }
