@@ -27,17 +27,12 @@ label.error{
                <div class="container-fluid">
                   <div class="page-title dflex-between-center mb-2">
                      <h3 class="mb-1">Credit Note List</h3>
-
-                     <!-- <div class="float-sm-right mt-3 mt-sm-0 add_team_s">
-                         <a href="<?php echo base_url();?>settings/states/add"  class="btn btn-success mb-2">Add State</a>
-                     </div> -->
-
-
-                     <div class="float-sm-right mt-3 mt-sm-0 add_team_s">
-                        <a href="#" class="btn btn-success mb-2">
+                     <div class="add_new_btn">
+                        <a href="#" class="btn btn-primary add_coupon" >
+                            <!-- <i class="bx bx-plus bx-flashing"></i> -->
                             Add New
-                        </a>
-                     </div>
+                         </a>
+                      </div>
                   </div>
                </div>
             </div>
@@ -163,7 +158,7 @@ label.error{
                            </div>
                         </div>
 
-                        <div class="coupon_list_tab">
+                        <div class="table-responsive coupon_list_tab">
                            <table style='width:100% !important' id="coupon-datatable" class="table  table-hover table-nowrap mb-0">
                               <thead class="thead-light">
                                  <tr>
@@ -290,10 +285,10 @@ label.error{
                            <div class="col-md-6" style="display:none;">
                         <div class="form-check">
                                       
-                              <input class="form-check-input check_credit_note" type="checkbox" id="credit_note" name="credit_note" value="1" >
-                             <label class="form-check-label" for="credit_note">
-                              Mark as to use in Credit Note
-                             </label></div>
+                                                  <input class="form-check-input check_credit_note" type="checkbox" id="credit_note" name="credit_note" value="1" >
+                                         <label class="form-check-label" for="credit_note">
+                                          Mark as to use in Credit Note
+                                         </label></div>
                           </div>
                         </div>
 
