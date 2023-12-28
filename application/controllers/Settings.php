@@ -959,7 +959,7 @@ public function get_country_name(){
 				$applied_prices[] = $coupon_price_v1;
 			} 
 			$applied_total_prices = number_format(array_sum($applied_prices),2);
-			$remaining_coupon_value = $total_coupon_prices - $applied_total_prices;
+			$remaining_coupon_value = (int)$total_coupon_prices - (int)$applied_total_prices;
 			$inpt_remaining_coupon_value = number_format($remaining_coupon_value,2);
 
 			$data[] = array( 
