@@ -72,7 +72,7 @@
                                     <?php } ?> 
                                     <?php echo $payout_history->total_payable;?></td>
                                     <td data-label="Tournament:"><a target="_blank" href="<?php echo base_url();?>accounts/payout_details/<?php echo $payout_history->payout_id;?>"><?php echo $payout_history->payout_no;?></a></td>
-                                    <td data-label="Acc:">
+                                    <td data-label="Acc:" style="text-align:center;">
 
 
 <?php 
