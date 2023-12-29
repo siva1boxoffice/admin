@@ -38,7 +38,7 @@
                                 <h5 class="card-title">Payout Info</h5>
                                 <p>Fill the following Seller and Order information</p>
                               </div>
-                              <div class="row">
+                              <div class="">
                                   <form id="search-form" method="post" enctype='multipart/form-data' class="" action="<?php echo base_url();?>accounts/get_payout_data">
                                 <div class="col-12">
                                   <div class="card">
@@ -61,7 +61,7 @@
                                             <div class="form-group">
                                                 <label for="example-select">Currency <span class="text-danger">*</span></label>
                                               
-                                                <select class="custom-select" id="currency" name="currency">
+                                                <select class="custom-select" id="currency" name="currency" required>
                                         <option value="">-Choose Currency-</option>
                                         <option value="GBP">GBP</option>
                                         <option value="USD">USD</option>
@@ -149,7 +149,7 @@
                                        <div class="col-lg-3">
                                           <div class="form-group mt-3 mb-0 seller_info">
                                               <label for="simpleinput">Seller Account</label>
-                                       <select class="custom-select" id="seller_account" name="seller_account">
+                                       <select class="custom-select" id="seller_account" name="seller_account" required="false">
                                         <option value="">-Choose Account-</option>
                                         </select>
                                         </div>

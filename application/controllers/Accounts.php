@@ -1,8 +1,8 @@
 <?php
 if (!defined('BASEPATH')) exit('No direct script access allowed');
-require 'vendor/autoload.php';
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+// require 'vendor/autoload.php';
+// use PhpOffice\PhpSpreadsheet\Spreadsheet;
+// use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 error_reporting(0);
 class Accounts extends CI_Controller {
     public function __construct() {

@@ -3,6 +3,7 @@
     max-height: 250px;
     overflow-y: auto;
 }
+
 label.error {
     font-size: 12px !important;
     color: RED;
@@ -284,8 +285,8 @@ if(!empty($seller_sales_data_count))
 
                                           <div id="collapseTwo" class="collapse show mt-3" aria-labelledby="headingOne"
                                             data-parent="#general">
-                                             <div class="">
-                                                <table style='width:100% !important' id="basic-datatable" class="table sales_table table-hover table-nowrap mb-0 table-responsive">
+                                             <div class="table-responsive">
+                                                <table style='width:100% !important' id="basic-datatable" class="table sales_table table-hover table-nowrap mb-0 ">
                                                
                                                    <thead class="thead-light">
                                                       <tr>
@@ -1795,12 +1796,14 @@ else
    'processing': true,
    'serverSide': true,
    'serverMethod': 'post',
-   "scrollX": true,
-   "scrollCollapse": true,
+   // "scrollX": true,
+   // "scrollCollapse": true,
   "fixedColumns": {
     "leftColumns": 3,  // Adjust the number of fixed columns if needed
-    "rightColumns": 2
+    "rightColumns": 2,
+    autoWidth: false,
   },
+  autoWidth: false,
    "ajax": {
       url: base_url + 'home/search_payouts',
       data: function (d) {

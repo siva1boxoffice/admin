@@ -157,7 +157,7 @@
          'info': false,
          'serverSide': true,
          'serverMethod': 'post',
-         'scrollX': !0,
+         // 'scrollX': !0,
          "pageLength" : 50,
          "targets": 'no-sort',
          "bSort": false,

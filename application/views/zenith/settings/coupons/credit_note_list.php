@@ -366,7 +366,7 @@ var Dtable = $('#coupon-datatable').DataTable(
         'info': false,
         'processing': true,
         'serverSide': true,
-        'scrollX': !0,
+        // 'scrollX': !0,
         'serverMethod': 'post',
         "ajax": {
             url: base_url + 'settings/get_credit_note_item',
