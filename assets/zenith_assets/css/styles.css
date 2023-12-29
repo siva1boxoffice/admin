@@ -9229,3 +9229,9 @@ span.sell_name {font-weight: 600 !important;}
 
 .down_opt {margin-left: 0px;margin-top: 0px;}
 .all_orders .last-field ul li:nth-last-child(1) {background: #00A3ED;}
+
+
+/*
+.dataTables_scrollHeadInner {
+    width: 100% !important;
+}*/

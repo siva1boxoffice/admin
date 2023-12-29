@@ -150,10 +150,10 @@
 
                               <thead class="thead-light">
                                  <tr>
-                                    <th class="before_none">CATEGORY NAME</th>
-                                    <th class="before_none">SLUG</th>
-                                    <th class="before_none">STATUS</th>
-                                    <th class="before_none">CREATED DATE</th>
+                                    <th class="before_none">Category Name</th>
+                                    <th class="before_none">Slug</th>
+                                    <th class="before_none">Status</th>
+                                    <th class="before_none">Created Date</th>
                                     <th class="before_none">Actions</th>
                                  </tr>
                               </thead>
@@ -289,11 +289,11 @@
             $(".dataTables_paginate > .pagination").addClass("flat-rounded-pagination "), $(".dataTables_filter").find("label").addClass("search-box d-inline-flex position-relative"), $(".dataTables_filter").find(".form-control").attr("placeholder", "Search...")
         },
          'info': false,
-         scrollX: !0,
+         // scrollX: !0,
         "ordering": false,
          'processing': true,
           'serverSide': true,
-          'scrollX': !0,
+          // 'scrollX': !0,
           'serverMethod': 'post',
           "targets": 'no-sort',
           "bSort": false,

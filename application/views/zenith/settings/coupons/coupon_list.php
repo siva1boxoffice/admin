@@ -29,7 +29,6 @@ label.error{
                      <h3 class="mb-1">Coupon List</h3>
                      <div class="add_new_btn">
                         <a href="#" class="btn btn-primary waves-effect waves-light add_coupon" data-effect="wave"   >
-                            <i class="bx bx-plus bx-flashing"></i>
                             Add New
                          </a>
                       </div>
@@ -426,7 +425,7 @@ var Dtable = $('#coupon-datatable').DataTable(
         'info': false,
         'processing': true,
         'serverSide': true,
-        'scrollX': !0,
+        // 'scrollX': !0,
         'serverMethod': 'post',
         "ajax": {
             url: base_url + 'settings/get_item',
