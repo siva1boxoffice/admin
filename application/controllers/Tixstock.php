@@ -944,7 +944,8 @@ public function orderConfirm(){
 
                  $order_response = $this->process_curl_request("update","POST",$end_point_url,$post_data_json);
 
-                $table                     = "booking_tixstock";
+               // $table                     = "booking_tixstock";
+                  $table                     = "booking_api_response";
                 $wheres                    = array('booking_id' => $bg_id);
 
                 $uvalue                    = array(
@@ -953,7 +954,8 @@ public function orderConfirm(){
                     'update_order_response' => json_encode($order_response));
 
                 if($order_response['data']['status'] != ""){
-                    $uvalue['tixstock_status'] = $order_response['data']['status'];
+                   // $uvalue['tixstock_status'] = $order_response['data']['status'];
+                     $uvalue['status'] = $order_response['data']['status'];
                 }
 
                 $stadium_up                =  $this->Tixstock_Model->update_table($table, $wheres, $uvalue);
@@ -1284,6 +1286,70 @@ function webhooks()
              $updated_tickets = $this->General_Model->getAllItemTable_Array('booking_etickets', array('booking_id' => $booking->bg_id,'ticket_status' => 1))->num_rows();
 
             $pending_tickets = $this->General_Model->getAllItemTable_Array('booking_etickets', array('booking_id' => $booking->bg_id,'ticket_file' => ''))->num_rows();
+
+             if($updated_tickets == $total_tickets){
+
+                 
+                $response = array('external_id' => $booking_no,"order_status" => "Commissionable","message" => "Listing has been fulfilled for the order.","success" => true);
+
+            }
+            else{
+                $response = array('external_id' => $booking_no,"order_status" => "Approved","message" => $pending_tickets." more tickets need to be fullfilled.","success" => false );
+            }
+
+             echo json_encode($response);exit;
+
+            }
+            else if($ticket_type == "order.mobile_link_ticket_fulfilment"){
+
+        $mobile_links                      = $tixstock_response['data']['mobile_links'];
+
+
+        $serial = $this->General_Model->getAllItemTable_Array('booking_etickets', array('booking_id' => $booking->bg_id,'qr_link' => ''))->num_rows();
+
+        $file_name = $booking->booking_no;
+        $fp = fopen("tix_logs/webhooks/".$webhooks_type."/".$file_name.'_request.json', 'a+');
+        ftruncate($fp, 0);
+        fwrite($fp, $payload);
+        fclose($fp);
+
+        $fp = fopen("tix_logs/webhooks/".$webhooks_type."/".$file_name.'.txt', 'a+');
+        ftruncate($fp, 0);
+        fwrite($fp, $tixstock_response);
+        fclose($fp);
+
+         $total_tickets = $this->General_Model->getAllItemTable_Array('booking_etickets', array('booking_id' => $booking->bg_id))->num_rows();
+
+   
+            $additional_file           = @$tixstock_response['data']['additional_file'];
+
+            if($additional_file != ""){
+
+            $table_bg                  = "booking_global";
+            $wheres_bg                 = array('bg_id' => $booking->bg_id);
+            $uvalue_bg                 = array('instruction_file' => $additional_file);
+            $ticket_update             =  $this->Tixstock_Model->update_table($table_bg, $wheres_bg, $uvalue_bg);
+
+            }
+
+            foreach($mobile_links as $mobile_link){
+
+                if(!empty($mobile_link)){
+
+                $table                     = "booking_etickets";
+                $wheresv1                  = array('booking_id' => $booking->bg_id,'qr_link' => '','serial' => trim($mobile_link['seat']));
+                $uvalue                    = array('qr_link' => trim($mobile_link['link']),'ticket_status' => 1,'seat' => $seat);
+                $ticket_update             =  $this->Tixstock_Model->update_table($table, $wheresv1, $uvalue);
+
+                }
+
+            }
+
+    
+
+             $updated_tickets = $this->General_Model->getAllItemTable_Array('booking_etickets', array('booking_id' => $booking->bg_id,'ticket_status' => 1))->num_rows();
+
+            $pending_tickets = $this->General_Model->getAllItemTable_Array('booking_etickets', array('booking_id' => $booking->bg_id,'qr_link' => ''))->num_rows();
 
              if($updated_tickets == $total_tickets){
 
