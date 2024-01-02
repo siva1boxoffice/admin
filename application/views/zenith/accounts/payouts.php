@@ -1,7 +1,9 @@
 <style>
+   .highlighted {
+color: #00a3ed !important;
+}
  .tooltip_texts .fa-copy {
-    font-size: 18px;
-    color: black !important;
+    font-size: 16px;
 }
 </style>
 
@@ -72,7 +74,7 @@
                                     <?php } ?> 
                                     <?php echo $payout_history->total_payable;?></td>
                                     <td data-label="Tournament:"><a target="_blank" href="<?php echo base_url();?>accounts/payout_details/<?php echo $payout_history->payout_id;?>"><?php echo $payout_history->payout_no;?></a></td>
-                                    <td data-label="Acc:" style="text-align:center;">
+                                    <td data-label="Acc:" style="text-align:center;" >
 
 
 <?php 
@@ -87,7 +89,7 @@
                                         echo "<br>";
                                         echo 'Currency :'.@$payout_history->currency;
                                       }
-                                      ?>" data-html="true"><i class="far fa-copy"></i></a>
+                                      ?>" data-html="true" id="copy_order_id"  ><i class="far fa-copy" onclick="copy_data('copy_order_id',this)" ></i></a>
 <?php } ?>
 
                                        </td>
@@ -128,6 +130,21 @@
             }
          });
 
+       
+
     });
+
+    function copy_data(id, element){
+      
+  element.classList.add('highlighted');
+  var copyText = document.getElementById(id);
+  var originalTitle = copyText.getAttribute('data-original-title');
+  var textArea = document.createElement("textarea");
+  textArea.value = originalTitle.replace(/<br>/g, '\n');
+  document.body.appendChild(textArea);
+  textArea.select();
+  document.execCommand("Copy");
+  textArea.remove();
+	}
 
 </script>
