@@ -101,7 +101,7 @@ public function update_tracking_data(){
 				if($_FILES["pod_file"]["name"] != ""){
 					
 				$config["upload_path"] = UPLOAD_PATH_PREFIX.'uploads/pod/';
-				$config["allowed_types"] = 'pdf|jpg|jpeg|png';
+				$config["allowed_types"] = 'pdf|gif|jpg|png|jpeg|pkpass';
 				$this->load->library('upload', $config);
 				$this->upload->initialize($config);
 				$ticketId = time();
@@ -602,7 +602,7 @@ public function update_tracking_data(){
 		// print_r($_POST);
 		// exit;
 
-			if (!empty($_POST['event']) || !empty($_POST['ticket_category']) || !empty($_POST['stadium']) || !empty($_POST['event_start_date']) || !empty($_POST['event_end_date']) || !empty($_POST['ignore_end_date']) || !empty($_POST['seller']) || !empty($_POST['seller_name']) || !empty($_POST['booking_no']) || !empty($_POST['customer_id']) || !empty($_POST['customer_id']) || !empty($_POST['protect']) || !empty($_POST['order_status']) || !empty($_POST['shipping_status']) || !empty($_POST['order_status']) ) {
+			if (!empty($_POST['event']) || !empty($_POST['ticket_category']) || !empty($_POST['stadium']) || !empty($_POST['event_start_date']) || !empty($_POST['event_end_date']) || !empty($_POST['ignore_end_date']) || !empty($_POST['seller']) || !empty($_POST['seller_name']) || !empty($_POST['booking_no']) || !empty($_POST['customer_id']) || !empty($_POST['customer_id']) || !empty($_POST['protect']) || !empty($_POST['order_status']) || !empty($_POST['shipping_status']) || !empty($_POST['order_status']) || !empty($_POST['partner_affiliateid'])  ) {
 
 			//	array_map()
 				$event 							= $_POST['event'];
@@ -620,16 +620,17 @@ public function update_tracking_data(){
 				$shipping_status 				= $_POST['shipping_status'];
 			//	$order_status 					= $_POST['order_status'];				
 				$customer_id 					= $_POST['customer_id'];
-				$page 							= $_POST['page'];
+				$page 							= $_POST['partner_affiliateid'];
+				$partner_affiliateid 			= $_POST['partner_affiliateid'];
 
 				// if(@$customer_id){
 				// 		$row_per_page = 500;
 				// }
 				
-				$records = $this->General_Model->getOrdersSearch("",$event,$ticket_category,$stadium,$event_start_date,$event_end_date,$ignore_end_date,'',$seller,$order_id,$customer_id,$page,$seller_name,$order_status,$shipping_status,$rowno, $row_per_page)->result();
+				$records = $this->General_Model->getOrdersSearch("",$event,$ticket_category,$stadium,$event_start_date,$event_end_date,$ignore_end_date,'',$seller,$order_id,$customer_id,$page,$seller_name,$order_status,$shipping_status,$rowno, $row_per_page,$partner_affiliateid)->result();
 
-				$allcount = $this->General_Model->getOrdersSearch("",$event,$ticket_category,$stadium,$event_start_date,$event_end_date,$ignore_end_date,'',$seller,$order_id,$customer_id,$page,$seller_name,$order_status,$shipping_status)->num_rows();
-//exit;
+				$allcount = $this->General_Model->getOrdersSearch("",$event,$ticket_category,$stadium,$event_start_date,$event_end_date,$ignore_end_date,'',$seller,$order_id,$customer_id,$page,$seller_name,$order_status,$shipping_status,"","",$partner_affiliateid)->num_rows();
+			//exit;
 			} else {  
 				if($_POST['page'] == "protect"){
 					$flag = "protect";
@@ -639,6 +640,9 @@ public function update_tracking_data(){
 				}
 				else if($_POST['page'] == "affiliate"){
 					$flag = "affiliate";
+				}
+				else if($_POST['page'] == "partner_affiliate"){
+					$flag = "partner_affiliate";
 				}
 				else{
 					$flag = "all";
@@ -771,6 +775,9 @@ public function update_tracking_data(){
 					
 				$price= number_format($record->price,2)." ".strtoupper($record->currency_type); 
 				$total= number_format($record->total_amount,2)." ".strtoupper($record->currency_type); 
+				$commission= number_format($record->partner_commission,2)." ".strtoupper($record->currency_type); 
+
+
 
 				$match_time=" <br> <span class='tr_date'>".date('D j F Y',strtotime($record->match_date))."</span><br>  <span class='tr_date'>".date('H:i A',strtotime($record->match_time))."</span>";
 
@@ -836,7 +843,7 @@ if($record->delivery_status != 0)
 
 				$premium_price= number_format($record->premium_price,2)." ".strtoupper($record->currency_type);
 				
-				if($_POST['page'] == "protect" || $_POST['page'] == "api" || $_POST['page'] == "affiliate"){
+				if($_POST['page'] == "protect" || $_POST['page'] == "api" || $_POST['page'] == "affiliate" || $_POST['page'] == "partner_affiliate"){
 
 
 					$data[] = array( 
@@ -847,13 +854,19 @@ if($record->delivery_status != 0)
 					"category"				=> $seat_category,
 					"block"                 => $block,
 					"buyer"					=> $record->customer_first_name." ".$record->customer_last_name,
-					"partner"					=> $record->partner_first_name." ".$record->partner_last_name,
-					"affiliate"					=> $record->affiliate_first_name." ".$record->affiliate_last_name,
+					"partner"				=> $record->partner_first_name." ".$record->partner_last_name,
+					"affiliate"				=> $record->affiliate_first_name." ".$record->affiliate_last_name,
+					"partner_affiliate"		=> $record->affiliate_first_name ?  $record->affiliate_first_name." ".$record->affiliate_last_name : $record->partner_first_name." ".$record->partner_last_name,
+					"ticket_type"			=> $ticket_type,
+					"seller"				=> $record->seller_first_name." ".$record->seller_last_name,
 					"payment_status"		=> $payment_status,
 					"shipping_status"		=> $delivery_status,
 					"premium_price"			=> $premium_price,
+					"delivery_date"			=> $delivery_date,
+					"admin_status"			=> $admin_status,
 					"price"					=> $price,
 					"total"					=> $total,
+					"commission"			=> $commission,
 					"view"					=> '<div class="dropdown">
 					<a href="javascript:void(0)" class="btn-icon btn-icon-sm btn-icon-soft-primary" data-toggle="dropdown">
 					<i class="mdi mdi-dots-vertical fs-sm"></i>
@@ -889,7 +902,7 @@ if($record->delivery_status != 0)
 				 </a>
 				 <div class="dropdown-menu dropdown-menu-right">
 					<a href="'.base_url().'game/orders/details/'.md5($record->booking_no).'" class="dropdown-item">View</a>
-					<a href="#" class="dropdown-item download_e_ticket" data-booking-id="'.$download_id.'">Download </a>
+					<a href="#" class="dropdown-item download_e_ticket down_opt" data-booking-id="'.$download_id.'">Download </a>
 					<a href="'.base_url().'game/orders/upload_e_ticket/'.md5($record->booking_no).'" class="dropdown-item">Upload </a>
 					<a href="#" class="dropdown-item">Replace </a>
 				 </div>
@@ -1257,7 +1270,7 @@ if($record->delivery_status != 0)
 		$msg = '';
 		$ticketId = $_POST['ticketid'];
 		$config["upload_path"] = UPLOAD_PATH_PREFIX.'uploads/e_tickets/';
-		$config["allowed_types"] = 'pdf';
+		$config["allowed_types"] = 'pdf|pkpass';
 		$this->load->library('upload', $config);
 		$this->upload->initialize($config);
 		if ($_FILES["eticket"]["name"] != '') { 
@@ -1376,7 +1389,7 @@ if($record->delivery_status != 0)
 		//echo "<pre>";print_r($_POST);exit;
 		$config["upload_path"] = UPLOAD_PATH_PREFIX.'uploads/e_tickets';
 		$config["destination_dir"] = UPLOAD_PATH_PREFIX.'uploads/e_tickets/temp';
-		$config["allowed_types"] = 'pdf|jpg|jpeg|png';
+		$config["allowed_types"] = 'pdf|gif|jpg|png|jpeg|pkpass';
 		$ticketId="";
 		$msg = 'Nothing Updated';
 		$response = array('status' => 1, 'msg' => $msg);
@@ -1485,7 +1498,7 @@ if($record->delivery_status != 0)
 		$delete_ticket_id="";
 		$ticketId = $_POST['data_ticket_id'];
 		$config["upload_path"] = UPLOAD_PATH_PREFIX.'uploads/e_tickets/temp';
-		$config["allowed_types"] = 'pdf|jpg|jpeg|png';
+		$config["allowed_types"] = 'pdf|gif|jpg|png|jpeg|pkpass';
 		$config["data_ticket_id"] = $_POST['data_ticket_id'];
 		$this->load->library('upload',$config);
 		$this->upload->initialize($config);
@@ -1526,14 +1539,14 @@ if($record->delivery_status != 0)
 					// exit;
 					$temp_file_name= TICKET_UPLOAD_PATH."uploads/e_tickets/temp/".$data['file_name'];
 					$show_file_name=$data['file_name'];
-					//$insertData['ticket_file'] = $data['file_name'];
-					// $this->db->where(array('ticketid' => $ticketId));
-					// $query = $this->db->get('booking_etickets');
-					// $resultTest = $query->row();
-					// $bookingId  = $resultTest->booking_id;
-					// $delete_ticket_id=$resultTest->ticketid;
+					$insertData['ticket_file'] = $data['file_name'];
+					$this->db->where(array('ticketid' => $ticketId));
+					$query = $this->db->get('booking_etickets');
+					$resultTest = $query->row();
+					$bookingId  = $resultTest->booking_id;
+					$delete_ticket_id=$resultTest->ticketid;
 					//echo "<pre>";print_r($resultTest);exit;
-					/*if (!empty($resultTest)) {
+					if (!empty($resultTest)) {
 					//	unlink(UPLOAD_PATH.'uploads/e_tickets/' . $resultTest->ticket_file);
 						$updateData['ticket_file'] = $data['file_name'];
 						$updateData['ticket_upload_date'] = date("Y-m-d h:i:s");
@@ -1541,14 +1554,14 @@ if($record->delivery_status != 0)
 						$done = $this->General_Model->update_table('booking_etickets', 'id', $resultTest->id, $updateData);
 					}
 
-					if($done == true){
+					//if($done == true){
 
 					// $status = '1';
 					// $updateData = array('delivery_status' => $status);
 					// $cond = array('bg_id' => $bookingId);
 				//	$this->General_Model->update('booking_global', $cond, $updateData);
-					$msg = 'E-tickets added successfully.';
-					}*/
+					// $msg = 'E-tickets added successfully.';
+					// }
 				} else {
 					$error = ['error' => $this->upload->display_errors()];
 					echo '<pre/>';
@@ -1582,7 +1595,7 @@ public function multiple_upload_tickets()
 
    // $config['upload_path']   = $uploadDir;
     $config["upload_path"] = UPLOAD_PATH_PREFIX.'uploads/e_tickets/temp';
-    $config["allowed_types"] = 'pdf|jpg|jpeg|png'; 
+    $config["allowed_types"] = 'pdf|gif|jpg|png|jpeg|pkpass'; 
     $config['max_size']      = 10240; 
     $config['overwrite']     = FALSE; // Set to TRUE if you want to overwrite existing files
 
@@ -1632,7 +1645,7 @@ public function multiple_upload_tickets()
 		$bookingId = $this->input->post('booking_id');
 		$bookingNo = $this->input->post('booking_no');
 		$config["upload_path"] = UPLOAD_PATH_PREFIX.'uploads/e_tickets/';
-		$config["allowed_types"] = 'pdf';
+		$config["allowed_types"] = 'pdf|pkpass';
 		$this->load->library('upload', $config);
 		$this->upload->initialize($config);
 		if ($_FILES["eticket"]["name"] != '') {
@@ -2391,6 +2404,30 @@ public function get_order_status(){
 				exit;
 			}
 	}
+
+	public function save_bill_email()
+	{
+				$ticket_type = $_POST['ticket_id'];
+				@$email = $_POST['bill_email'];
+				if(!empty($ticket_type)){
+
+					$tickets = $this->General_Model->getAllItemTable_Array('booking_global', array('md5(bg_id)' => $_POST['ticket_id']))->row();
+
+					$updateData = array('email' => $email);
+					$cond = array('id' =>  $tickets->user_id);
+					$done = $this->General_Model->update('register', $cond, $updateData);
+					$response = array('status' => 1, 'msg' => "Email Updated Successfully.");
+					echo json_encode($response);
+					exit;
+			}
+			else {
+				$response = array('status' => 0, 'msg' => "Email Failed to Add.");
+				echo json_encode($response);
+				exit;
+			}
+	}
+
+	
 	public function send_email()
 	{
 				$ticket_type = $_POST['ticket_id'];
@@ -2573,61 +2610,87 @@ public function get_order_status(){
 
 
 		 $searchText = "";
-	// Perform a database query or some other operation to retrieve the checkbox data based on the search text
-	$checkboxData = array('0'=>'Tickets	Not Uploaded','1'=>'Tickets	In-Review','2'=>'Tickets Approved','3'=>'Tickets Rejected','4'=>'Tickets Downloaded','5'=>'Tickets Shipped','6'=>'Tickets Delivered');
-	
-	$pattern = '/' . preg_quote($searchText, '/') . '/'; // Dynamically create the pattern
-	$matches = preg_grep($pattern, $checkboxData);
-	
-	$shipping_status = "";
-	
-	foreach($matches as $key=>$value ){
+			// Perform a database query or some other operation to retrieve the checkbox data based on the search text
+			$checkboxData = array('0'=>'Tickets	Not Uploaded','1'=>'Tickets	In-Review','2'=>'Tickets Approved','3'=>'Tickets Rejected','4'=>'Tickets Downloaded','5'=>'Tickets Shipped','6'=>'Tickets Delivered');
+			
+			$pattern = '/' . preg_quote($searchText, '/') . '/'; // Dynamically create the pattern
+			$matches = preg_grep($pattern, $checkboxData);
+			
+			$shipping_status = "";
+			
+			foreach($matches as $key=>$value ){
 
-		$shipping_status .=   '<div class="custom-control custom-checkbox">
-		<input type="checkbox" class="custom-control-input shipping_select_status" id="shipping_status'.$key.'">
-		<label class="custom-control-label" for="shipping_status'.$key.'">'.ucwords($value).'</label>
-	  </div>'.'';
+				$shipping_status .=   '<div class="custom-control custom-checkbox">
+				<input type="checkbox" class="custom-control-input shipping_select_status" id="shipping_status'.$key.'">
+				<label class="custom-control-label" for="shipping_status'.$key.'">'.ucwords($value).'</label>
+			  </div>'.'';
 
-	}
+			}
 
-	$this->data['shipping_status'] = $shipping_status; 
-
-
-
-	$order_status_searchText = "";
-	// Perform a database query or some other operation to retrieve the checkbox data based on the search text
-	$order_status_checkboxData = array('2'=>'Pending','1'=>'Confirmed','0'=>'Failed','3'=>'Cancelled','4'=>'Shipped','5'=>'Delivered','6'=>'Downloaded');
-	
-	$pattern = '/' . preg_quote($order_status_searchText, '/') . '/'; // Dynamically create the pattern
-	$order = preg_grep($pattern, $order_status_checkboxData);
-	
-	$order_status = "";
-	
-	foreach($order as $key=>$value ){
-
-		$order_status .=   '<div class="custom-control custom-checkbox">
-		<input type="checkbox" class="custom-control-input order_select_status" id="order_status'.$key.'">
-		<label class="custom-control-label" for="order_status'.$key.'">'.ucwords($value).'</label>
-	  </div>'.'';
-
-	}
-
-	$this->data['order_status'] = $order_status; 
+			$this->data['shipping_status'] = $shipping_status; 
 
 
+
+			$order_status_searchText = "";
+			// Perform a database query or some other operation to retrieve the checkbox data based on the search text
+			$order_status_checkboxData = array('2'=>'Pending','1'=>'Confirmed','0'=>'Failed','3'=>'Cancelled','4'=>'Shipped','5'=>'Delivered','6'=>'Downloaded');
+			
+			$pattern = '/' . preg_quote($order_status_searchText, '/') . '/'; // Dynamically create the pattern
+			$order = preg_grep($pattern, $order_status_checkboxData);
+			
+			$order_status = "";
+			
+			foreach($order as $key=>$value ){
+
+				$order_status .=   '<div class="custom-control custom-checkbox">
+				<input type="checkbox" class="custom-control-input order_select_status" id="order_status'.$key.'">
+				<label class="custom-control-label" for="order_status'.$key.'">'.ucwords($value).'</label>
+			  </div>'.'';
+
+			}
+
+			$this->data['order_status'] = $order_status; 
 
 
 			if($_GET['page'] == "protect"){
-					$this->load->view(THEME.'/game/booking_protect_order', $_POST,$this->data);
+				$this->load->view(THEME.'/game/booking_protect_order', $_POST,$this->data);
 			}
 			else if($_GET['page'] == "api"){
-					$this->load->view(THEME.'/game/booking_api_order', $_POST,$this->data);
+				$this->load->view(THEME.'/game/booking_api_order', $_POST,$this->data);
 			}
 			else if($_GET['page'] == "affiliate"){
-					$this->load->view(THEME.'/game/booking_affiliate_order', $_POST,$this->data);
+				$this->load->view(THEME.'/game/booking_affiliate_order', $_POST,$this->data);
+			}
+			else if($_GET['page'] == "partner_affiliate"){
+
+				$data_aff = $this->General_Model->get_admin_details_by_role_v1(2, 'status');
+				$data_aff2 = $this->General_Model->get_admin_details_by_role_v1(3, 'status');
+				$data_aff_check = "";
+				foreach($data_aff as $key =>$value ){
+
+					$data_aff_check .=   '<div class="custom-control custom-checkbox" data-category="'.strtolower($value->admin_name." ".$value->admin_last_name).'">
+					<input type="checkbox" class="custom-control-input partner_affiliate_status" id="partner_affiliate'.$value->admin_id.'" value="'.$value->admin_id.'">
+					<label class="custom-control-label" for="partner_affiliate'.$value->admin_id.'">'.ucwords($value->admin_name." ".$value->admin_last_name).'</label>
+				  </div>'.'';
+
+				}
+				foreach($data_aff2 as $key =>$value ){
+
+					$data_aff_check .=   '<div class="custom-control custom-checkbox" data-category="'.strtolower($value->admin_name." ".$value->admin_last_name).'" >
+					<input type="checkbox" class="custom-control-input partner_affiliate_status" id="partner_affiliate'.$value->admin_id.'" value="'.$value->admin_id.'">
+					<label class="custom-control-label" for="partner_affiliate'.$value->admin_id.'">'.ucwords($value->admin_name." ".$value->admin_last_name).'</label>
+				  </div>'.'';
+
+				}
+			
+
+				$this->data['data_aff_check'] = $data_aff_check; 
+
+
+				$this->load->view(THEME.'/game/partner_affiliate', $_POST,$this->data);
 			}
 			else{
-					$this->load->view(THEME.'/game/list_order', $_POST,$this->data);
+				$this->load->view(THEME.'/game/list_order', $_POST,$this->data);
 			}
 
 		}
@@ -7715,7 +7778,7 @@ if ($dateObj !== false) {
 				if($_FILES["file"]["name"] != ""){
 					
 				$config["upload_path"] = UPLOAD_PATH_PREFIX.'uploads/pod/';
-				$config["allowed_types"] = 'pdf|jpg|jpeg|png';
+				$config["allowed_types"] = 'pdf|gif|jpg|png|jpeg|pkpass';
 				$this->load->library('upload', $config);
 				$this->upload->initialize($config);
 				$ticketId = time();
