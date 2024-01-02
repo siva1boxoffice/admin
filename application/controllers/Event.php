@@ -950,6 +950,7 @@ class Event extends CI_Controller
 					$insertData['country'] = $this->input->post('country');
 					$insertData['create_date'] = strtotime(date('Y-m-d h:i:s'));
 					$insertData['ignoreautoswitch'] = $this->input->post('ignoreautoswitch') ? 1 : 0;
+					$insertData['final_match'] = $this->input->post('final_match') ? 1 : 0;
 					$insertData['top_games'] = $this->input->post('top_games') ? 1 : 0;
 					$insertData['high_demand'] = $this->input->post('high_demand') ? '1' : '0';
 					$insertData['almost_sold'] = $this->input->post('almost_sold') ? '1' : '0';
@@ -1181,6 +1182,7 @@ class Event extends CI_Controller
 					$updateData['matchticket'] = $this->input->post('matchticket');
 					$updateData['daysremaining'] = 1; //$this->input->post('daysremaining');
 					$updateData['ignoreautoswitch'] = $this->input->post('ignoreautoswitch') ? 1 : 0;
+					$updateData['final_match'] = $this->input->post('final_match') ? 1 : 0;
 					$updateData['top_games'] = $this->input->post('top_games') ? 1 : 0;
 					$updateData['high_demand'] = $this->input->post('high_demand') ? '1' : '0';
 					$updateData['almost_sold'] = $this->input->post('almost_sold') ? '1' : '0';
@@ -2085,6 +2087,7 @@ class Event extends CI_Controller
 						$insertData['tbc_status'] = $this->input->post('tbc_status') ? 1 : 0;
 						//$insertData['oneboxoffice_status'] = $this->input->post('oneboxoffice_status') ? 1 : 0;
 						$insertData['ignoreautoswitch'] = $this->input->post('ignoreautoswitch') ? 1 : 0;
+						$insertData['final_match'] = $this->input->post('final_match') ? 1 : 0;
 						$insertData['high_demand'] = $this->input->post('high_demand') ? '1' : '0';
 						$insertData['almost_sold'] = $this->input->post('almost_sold') ? '1' : '0';
 						$insertData['affiliate_status'] = $this->input->post('affiliate_status') ? 1 : 0;
@@ -2286,6 +2289,7 @@ class Event extends CI_Controller
 							$updateData['upcoming_events'] = $this->input->post('upcomingevents') ? 1 : 0;
 							$updateData['tbc_status'] = $this->input->post('tbc_status') ? 1 : 0;
 							$updateData['ignoreautoswitch'] = $this->input->post('ignoreautoswitch') ? 1 : 0;
+							$updateData['final_match'] = $this->input->post('final_match') ? 1 : 0;
 							$updateData['high_demand'] = $this->input->post('high_demand') ? '1' : '0';
 							$updateData['almost_sold'] = $this->input->post('almost_sold') ? '1' : '0';
 							$updateData['affiliate_status'] = $this->input->post('affiliate_status') ? 1 : 0;
