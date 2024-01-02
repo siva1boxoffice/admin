@@ -47,20 +47,20 @@
 																						echo $state_details->id;
 																					} ?>">
                                     <div class="">
-                                      <div class="row ">   
+                                      <div class="row column_modified">   
                                       <div class="col-lg-3">
                                           <div class="form-group">
-                                           <label for="simpleinput">Country </label>
-										   <select class="form-control select2" id="cname" name="cname" required>
-												<option value="">-Select Country-</option>
-												<?php foreach ($countries as $country) { ?>
-													<option value="<?php echo $country->id; ?>" <?php if (isset($state_details->country_id)) {
-														if ($country->id == $state_details->country_id) {
-															echo ' selected  ';
-														}
-													} ?>><?php echo $country->name; ?></option>
-												<?php } ?>
-											</select>
+                                             <label for="simpleinput">Country </label>
+            										   <select class="custom-select select2" id="cname" name="cname" required>
+            												<option value="">-Select Country-</option>
+            												<?php foreach ($countries as $country) { ?>
+            													<option value="<?php echo $country->id; ?>" <?php if (isset($state_details->country_id)) {
+            														if ($country->id == $state_details->country_id) {
+            															echo ' selected  ';
+            														}
+            													} ?>><?php echo $country->name; ?></option>
+            												<?php } ?>
+            											</select>
                                           </div> 
                                        </div>
 
@@ -72,11 +72,10 @@
                                        </div>
 
 									   <div class="col-lg-12">
-                                          <div class="float-sm-right mt-2 mt-sm-0 ml-sm-1 mx-sm-2">
-                                                <a href="<?php echo base_url();?>settings/states" class="btn btn-primary mb-2">
-                                                <i class="bx bx-list-ol bx-flashing mr-1"></i> Go Back</a> 
+                                          <div class="float-sm-right mt-2 mt-sm-0 ml-sm-1 mx-sm-2 tick_details">
+                                                <a href="<?php echo base_url();?>settings/states" class="btn btn-primary mb-2">Back</a> 
 
-                                                <button type="submit" id="branch-form-btn" class="btn btn-success mb-2 submit_match button h-button is-primary is-raised"><i class=" bx bx-list-ol bx-flashing mr-1 save_match"></i>Save
+                                                <button type="submit" id="branch-form-btn" class="btn btn-success mb-2 submit_match button h-button is-primary is-raised">Save
                                                 </button>
                                           </div>
                                        </div>

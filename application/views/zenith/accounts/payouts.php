@@ -1,5 +1,8 @@
 <style>
- 
+ .tooltip_texts .fa-copy {
+    font-size: 18px;
+    color: black !important;
+}
 </style>
 
 <?php $this->load->view(THEME . 'common/header'); ?>
@@ -27,7 +30,7 @@
 
                 
 
-                  <div class="" id="content_1">
+                  <div class="table-responsive">
                       <?php if(isset($payout_histories)){?>
                      <table style='width:100% !important' id="sales-datatable"
                         class="table table-hover table-nowrap mb-0 sales-summary-class">
@@ -49,7 +52,7 @@
                         <tbody>
                               <?php foreach($payout_histories as $payout_history){?>
                          <tr>
-                                    <td><span class="tr_date"> <?php echo date('D j F Y',strtotime($payout_history->paid_date_time));?></span>  <span class="tr_date"><?php echo date('H:i A',strtotime($payout_history->paid_date_time));?></span></td>
+                                    <td><span class=""> <?php echo date('D j F Y',strtotime($payout_history->paid_date_time));?></span>  <span class=""><?php echo date('H:i A',strtotime($payout_history->paid_date_time));?></span></td>
                                     <?php if ($this->session->userdata('role') == 6) { ?>
                                     <td data-label="Seller:"><?php echo $payout_history->admin_name;?> <?php echo $payout_history->admin_last_name;?></td>
                                     <?php } ?>                                 
@@ -69,8 +72,13 @@
                                     <?php } ?> 
                                     <?php echo $payout_history->total_payable;?></td>
                                     <td data-label="Tournament:"><a target="_blank" href="<?php echo base_url();?>accounts/payout_details/<?php echo $payout_history->payout_id;?>"><?php echo $payout_history->payout_no;?></a></td>
-                                    <td data-label="Acc:">
-                                      <?php 
+                                    <td data-label="Acc:" style="text-align:center;">
+
+
+<?php 
+                                      if($payout_history->beneficiary_name != ""){ ?>
+
+                                     <a class="tooltip_texts" data-toggle="tooltip" data-placement="right" title="" data-original-title="<?php 
                                       if($payout_history->beneficiary_name != ""){
                                         echo 'Beneficiary name :'.@$payout_history->beneficiary_name;echo "<br>";
                                         echo 'Account No :'.@$payout_history->account_number;
@@ -79,8 +87,11 @@
                                         echo "<br>";
                                         echo 'Currency :'.@$payout_history->currency;
                                       }
-                                      ?> </td>
-                                    <td data-label="Stadium:"><a href="javascript:void(0);" onclick="popitup('<?php echo UPLOAD_PATH;?>uploads/payout_receipt/<?php echo $payout_history->receipt;?>');"><?php echo $payout_history->receipt;?></a></td>
+                                      ?>" data-html="true"><i class="far fa-copy"></i></a>
+<?php } ?>
+
+                                       </td>
+                                    <td data-label="Stadium:"><a href="javascript:void(0);" onclick="popitup('<?php echo UPLOAD_PATH;?>uploads/payout_receipt/<?php echo $payout_history->receipt;?>');"><?php if($payout_history->receipt!="") echo "View";?> </a></td>
                                     <td data-label="City:">Payout #<?php echo $payout_history->payout_id;?> </td>
                                  </tr>
                                  <?php } ?>

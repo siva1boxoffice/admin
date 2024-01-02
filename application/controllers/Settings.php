@@ -959,7 +959,7 @@ public function get_country_name(){
 				$applied_prices[] = $coupon_price_v1;
 			} 
 			$applied_total_prices = number_format(array_sum($applied_prices),2);
-			$remaining_coupon_value = $total_coupon_prices - $applied_total_prices;
+			$remaining_coupon_value = (int)$total_coupon_prices - (int)$applied_total_prices;
 			$inpt_remaining_coupon_value = number_format($remaining_coupon_value,2);
 
 			$data[] = array( 
@@ -2818,7 +2818,7 @@ public function get_country_name(){
 							$this->upload->initialize($config);
 							if ($this->upload->do_upload('team_image')) {
 								$outputData['team_image'] = $this->upload->data();
-							//	$insertData_lang_team_image = $outputData['team_image']['file_name'];
+								//	$insertData_lang_team_image = $outputData['team_image']['file_name'];
 								$insertData['team_image'] = $outputData['team_image']['file_name'];
 							} else {
 								$msg .= 'Failed to add team image';
@@ -2852,13 +2852,15 @@ public function get_country_name(){
 						$insertData['stadium'] = trim($this->input->post('stadium'));
 						$insertData['team_color'] = trim($this->input->post('teamcolor'));
 						$insertData['popular_team'] = trim($this->input->post('topteam'));
+						$insertData['show_status'] = trim($this->input->post('show_status')) ? trim($this->input->post('show_status')) : 2 ; 
 						$insertData['create_date'] = strtotime(date('Y-m-d H:i:s'));
 						$insertData['status'] = $this->input->post('is_active') ? 1 : 0;
 						$insertData['page_title'] = strip_tags($this->input->post('pagetitle'));
 						$insertData['meta_description'] = $this->input->post('metadescription');
 						$insertData['page_content'] = trim($this->input->post('page_content'));
-						$insertData['url_key'] = str_replace(" ", "-", trim($this->input->post('teamname')));
-						$insertData['team_url'] = str_replace(" ", "-", trim($this->input->post('teamname')));
+						$insertData['url_key'] = trim($this->input->post('url_key'));
+						$insertData['team_url'] = trim($this->input->post('url_key'));
+
 						$insertData['store_id'] = $this->session->userdata('storefront')->admin_id;
 						$team_id = $this->General_Model->insert_data('teams', $insertData);
 
@@ -2898,17 +2900,11 @@ public function get_country_name(){
 					$updateData = array();
 					$updateData_lang = array();
 
-
-
-
-
-
 					$this->form_validation->set_rules('teamname', 'Team Name', 'required');
 					$this->form_validation->set_rules('gamecategory', 'Game Category', 'required');
 					/*$this->form_validation->set_rules('country', 'Country', 'required');
 					$this->form_validation->set_rules('city', 'City', 'required');
 					$this->form_validation->set_rules('stadium', 'stadium', 'required');*/
-
 
 					$msg = '';
 					if ($this->form_validation->run() !== false) {
@@ -2971,8 +2967,10 @@ public function get_country_name(){
 						$updateData['city'] = trim($this->input->post('city'));
 						$updateData['stadium'] = trim($this->input->post('stadium'));
 						$updateData['team_color'] = trim($this->input->post('teamcolor'));
+						$updateData['url_key'] = trim($this->input->post('url_key'));
 						$updateData['popular_team'] = trim($this->input->post('topteam'));
 						$updateData['header_top_teams'] = trim($this->input->post('header_footer'));
+						$updateData['show_status'] = trim($this->input->post('show_status')) ? trim($this->input->post('show_status'))  : 2 ;
 						$updateData['create_date'] = strtotime(date('Y-m-d H:i:s'));
 						$updateData['status'] = $this->input->post('is_active') ? 1 : 0;
 						
@@ -8546,6 +8544,7 @@ public function get_country_name(){
 						$updateData_lang['meta_description'] = $this->input->post('metadescription');
 						$updateData_lang['seo_keywords'] = $this->input->post('seo_keywords');
 						$updateData_lang['search_keywords'] = $this->input->post('seo_keywords');
+						$updateData_lang['city_name'] = $this->input->post('city_name');
 						$updateData['seo_keywords'] = $this->input->post('seo_keywords');
 						$updateData['search_keywords'] = $this->input->post('seo_keywords');
 						$updateData['search_keywords'] = $this->input->post('seo_keywords');

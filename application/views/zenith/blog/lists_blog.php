@@ -331,11 +331,11 @@
             $(".dataTables_paginate > .pagination").addClass("flat-rounded-pagination "), $(".dataTables_filter").find("label").addClass("search-box d-inline-flex position-relative"), $(".dataTables_filter").find(".form-control").attr("placeholder", "Search...")
         },
          'info': false,
-         scrollX: !0,
+         // scrollX: !0,
         "ordering": false,
          'processing': true,
           'serverSide': true,
-          'scrollX': !0,
+          // 'scrollX': !0,
           'serverMethod': 'post',
           "targets": 'no-sort',
           "bSort": false,

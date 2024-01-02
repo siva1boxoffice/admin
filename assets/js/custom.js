@@ -28,7 +28,11 @@ var loadFile = function(event) {
   }
   
 
-  $('#matchname').val(team_1 +' Vs '+ team_2);
+  team_1 = team_1.replace(/\( 1boxoffice \)/g, "");
+  team_2 = team_2.replace(/\( 1boxoffice \)/g, "");
+
+
+  $('#matchname').val(team_1 +'vs '+ team_2);
    $('#matchname').trigger("keyup");
 
    selected_team_value= $("#team1 option:selected").val();

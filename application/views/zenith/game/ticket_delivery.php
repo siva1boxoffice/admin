@@ -250,10 +250,11 @@
          'info': false,
          'serverSide': true,
          'serverMethod': 'post',
-         'scrollX': !0,
+         // 'scrollX': !0,
          "pageLength" : 50,
          "targets": 'no-sort',
          "bSort": false,
+         autoWidth: false,
          "ajax": {
             url: base_url + 'game/get_ticket_delivery_list',
             data: function (d) {

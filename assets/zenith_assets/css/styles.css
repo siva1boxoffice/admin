@@ -7622,6 +7622,7 @@ a.btn.clone-plus-btn{background: #00A3ED;color: #fff;border-radius: 50%;}
 .columns{display: flex;}
 .col_height{flex: 1;}
 
+
 @media only screen and (min-width: 1200px) and (max-width: 1900px) {
  .new_orders_lft {height: 750px;overflow-x: auto;}
 }
@@ -7637,7 +7638,6 @@ a.btn.clone-plus-btn{background: #00A3ED;color: #fff;border-radius: 50%;}
 .filter_new div.dataTables_wrapper div.dataTables_filter {text-align: left;}
 .filter_new div.dataTables_wrapper div.dataTables_filter .search-box{width: 100%;}
 .filter_new .sort_filters ul li:nth-child(1){display: block;}
-
 
 
 .bo-table td {
@@ -9219,3 +9219,19 @@ span.sell_name {font-weight: 600 !important;}
 .confirm_delivery .btn-light {background: #ED1C24;border: #ED1C24;width: 163px;height: 35px;border-radius: 0px;color: #fff;font-size: 16px;font-weight: 700;display: flex;align-items: center;justify-content: center;}
 .confirm_delivery .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active {background-color: #039871;border: #039871;color: #fff;}
 .confirm_delivery .btn-light:not(:disabled):not(.disabled):active, .btn-light:not(:disabled):not(.disabled).active {background-color: #ED1C24;border: #ED1C24;color: #fff;}
+
+
+.custom-select{color: #96B0B7;}
+.custom-select option { color: #96B0B7;}
+.custom-select:valid { color:black;}
+.form-control::placeholder {color: #96B0B7;}
+.form-control{color: #000 !important;}
+
+.down_opt {margin-left: 0px;margin-top: 0px;}
+.all_orders .last-field ul li:nth-last-child(1) {background: #00A3ED;}
+
+
+/*
+.dataTables_scrollHeadInner {
+    width: 100% !important;
+}*/

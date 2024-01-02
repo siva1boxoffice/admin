@@ -207,7 +207,17 @@
                                             </div> 
                                          </div>
 
-                                      
+                                    
+                                      <div class="col-lg-12">
+                                          <div class="form-group">
+                                           <label for="simpleinput">Url <span class="text-danger">*</span></label>
+                                           <input type="text" name="url_key" id="team_url_key" class="form-control" placeholder="Url Key" value="<?php if (isset($teams->url_key)) {
+                                                      echo $teams->url_key;
+                                                      } ?>" required>
+                                          </div>
+                                       </div>
+
+
                                        
                                        
                                         
@@ -226,9 +236,9 @@
                                                       <div class="form-group mb-1 cust-switch">
                                                          Inactive / Active
                                                          <div class="custom-control custom-switch">
-                                                            <input type="checkbox" id="status" class="custom-control-input is-switch" name="is_active" value="1" <?php if (isset($teams->status)) {
-                                                            if ($teams->status == '1') { ?> checked <?php }
-                                                            } ?>>
+                                                            <input type="checkbox" id="status" class="custom-control-input is-switch" name="is_active" value="1" <?php 
+                                                            if ($teams->status == '1' || $teams->status == "" ) { ?> checked <?php }
+                                                            ?>>
                                                             <label class="custom-control-label" for="status"></label>
                                                          
                                                          </div>
@@ -259,6 +269,20 @@
                                                             if ($teams->header_top_teams == '1') { ?> checked <?php }
                                                             } ?> >
                                                             <label class="custom-control-label" for="header_footer"></label>
+                                                         </div>
+                                                      </div>
+                                                   </td>
+                                                </tr>
+                                                <tr>
+                                                   <td> <label for="header_footer" class="mb-0">Show Team</label></td>
+                                                   <td>
+                                                      <div class="form-group mb-1 cust-switch">
+                                                         No / Yes
+                                                         <div class="custom-control custom-switch">
+                                                            <input type="checkbox" id="show_status" class="is-switch custom-control-input" name="show_status" value="1" <?php
+                                                            if ($teams->show_status == '1' || $teams->show_status == '' ) { ?> checked <?php }
+                                                            ?> >
+                                                            <label class="custom-control-label" for="show_status"></label>
                                                          </div>
                                                       </div>
                                                    </td>
@@ -887,4 +911,35 @@ $.ajax({
          window.history.replaceState({}, '', `${path}?${params.toString()}${hash}`);
       <?php } ?>
    });
+
+
+    function slugfly(str) {
+        str = str.replace(/^\s+|\s+$/g, ''); // trim
+        str = str.toLowerCase();
+
+        // remove accents, swap ñ for n, etc
+        var from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;";
+        var to   = "aaaaaeeeeeiiiiooooouuuunc------";
+        for (var i = 0, l = from.length; i < l; i++) {
+          str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+        }
+
+        str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+                 .replace(/\s+/g, '-') // collapse whitespace and replace by -
+                 .replace(/-+/g, '-'); // collapse dashes
+
+        return str;
+   }
+
+
+ <?php if(empty($teams->id)) { ?>
+    $("#teamname").on('keyup', function(){
+        var val = $("#teamname").val();
+        slug = slugfly(val + "-tickets");
+        $("#team_url_key").val(slug);
+    });
+   <?php  } ?>
+
+   
+
 </script>
