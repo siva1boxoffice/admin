@@ -45,7 +45,7 @@ function admin_payout_pending()
   function admin_payout_histories($payment_id = '',$seller_id='')
 	{ 
 		
-		$this->db->select('*,payouts.currency as currency,admin_bank_details.*');
+		$this->db->select('*,admin_bank_details.*,payouts.currency as currency');
 		$this->db->join('admin_details', 'admin_details.admin_id = payouts.seller_id');
 		$this->db->join('admin_bank_details', 'admin_bank_details.bank_id = payouts.paid_account','LEFT');
 		if ($this->session->userdata('role') == 1) {
