@@ -3352,7 +3352,11 @@ public function getOrderData_v2()
 	}
 
 
-
+	public function get_other_events_concerts()
+	{
+		$query = $this->db->get_where('teams', array('category' => 4,'status' => 1));
+		return $query;
+	}
 
 	public function get_other_events_categories($row_no = '', $row_per_page = '', $orderColumn = '', $orderby = '', $where_array = array(), $search = '')
 	{

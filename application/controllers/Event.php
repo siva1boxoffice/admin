@@ -1727,7 +1727,7 @@ class Event extends CI_Controller
 		$category_id = $this->uri->segment(4);
 
 		if ($event_segment == "add_category") {
-			$this->data['categories'] = $this->General_Model->get_other_events_categories()->result();
+			$this->data['categories'] = $this->General_Model->get_other_events_categories()->result();			
 			if ($category_id != '') {
 				$this->data['category'] = $this->General_Model->get_other_events_categories($row_no = '', $row_per_page = '', $orderColumn = '', $orderby = '', array('A.id' => $category_id))->row();
 			}
@@ -1922,6 +1922,10 @@ class Event extends CI_Controller
 		} else if ($event_segment == "add_event") {
 			//$this->data['categories'] = $this->General_Model->get_other_events_main_categories()->result();
 			$this->data['categories'] = $this->General_Model->get_other_events_categories('', '', '', '')->result();
+
+			$this->data['other_events'] = $this->General_Model->get_other_events_concerts()->result();
+			
+
 			$this->data['stadiums'] = $this->General_Model->get_stadium()->result();
 
 			$this->data['tournments'] = $this->General_Model->get_tournments()->result();
@@ -2057,6 +2061,7 @@ class Event extends CI_Controller
 						$insertData['oneboxoffice_status'] = 1;
 						$insertData['category'] = 1;
 						$insertData['other_event_category'] = $this->input->post('category');
+						$insertData['team_1'] = $this->input->post('artist_name');
 						$insertData['match_name'] = trim($this->input->post('eventname'));
 						$insertData['extra_title'] = trim($this->input->post('extra_title'));
 						$insertData['status'] = $this->input->post('is_active') ? 1 : 0;
@@ -2263,6 +2268,7 @@ class Event extends CI_Controller
 							}
 
 							$updateData['other_event_category'] = $this->input->post('category');
+							$updateData['team_1'] = $this->input->post('artist_name');
 							$updateData['match_name'] = trim($this->input->post('eventname'));
 							$updateData['extra_title'] = trim($this->input->post('extra_title'));
 							$updateData['status'] = $this->input->post('is_active') ? 1 : 0;
@@ -2318,6 +2324,7 @@ class Event extends CI_Controller
 								else if($api == 2)							
 									$updateData['oneclicket_status'] = 1;								
 								}
+
 							$this->General_Model->update('match_info', array('m_id' => $matchId), $updateData);
 
 

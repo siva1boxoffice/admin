@@ -110,14 +110,23 @@ z-index: 9999;
                                        </select>
                                     </div>
                                  </div>
-                                <!--  <div class="col-lg-4" style="display:none">
+                                 <?php 
+                                 if($event->team_1 >0 )
+                                    $display="block";
+                                 else
+                                    $display="none";
+                                    ?>
+                                 <div class="col-lg-4 other_events"  style="display:<?php echo $display; ?>">
                                     <div class="form-group">
-                                       <label for="example-select">Sub Category <span class="text-danger">*</span> </label>
-                                       <select class="custom-select" id="category" name="category" required>
-                                          <option value="">-Select  Sub Category -</option>
+                                       <label for="example-select">Artist Name <span class="text-danger">*</span> </label>
+                                       <select class="custom-select" id="artist_name" name="artist_name" required>
+                                          <option value="">-Select  Artist Name -</option>
+                                          <?php foreach($other_events as $other_event){ ?>
+                                          <option value="<?php echo $other_event->id;?>" <?php if($event->team_1 == $other_event->id){?> selected <?php } ?>><?php echo $other_event->team_name;?></option>
+                                          <?php } ?>
                                        </select>
                                     </div>
-                                 </div> -->
+                                 </div>
                                  <div class="col-lg-4" style="display:none">
                                     <div class="form-group">
                                        <label for="example-select">Tournament</label>
@@ -1149,6 +1158,17 @@ $.ajax({
 
 
 })
+
+$('#category').on('change', function(event) {
+   if ($(this).val() == 2 || $(this).val() == 3) {
+      $('.other_events').css('display', 'block');
+   } else {
+      $('.other_events').css('display', 'none');
+      $('#artist_name').val(''); 
+
+   }
+});
+
 
 $('#team1').on('change', function(event) {
 
