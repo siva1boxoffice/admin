@@ -257,7 +257,7 @@ class Xs2event extends CI_Controller {
 
                         $insertsvData['stadium_id'] = $stadium_id;
                         $insertsvData['category']   = $category_name;
-                        $insertsvData['category_id']   = $category_id;
+                        //$insertsvData['category_id']   = $category_id;
                         $this->Tixstock_Model->insert_data('xs2event_stadium_category',$insertsvData);
 
                     }
@@ -328,7 +328,7 @@ class Xs2event extends CI_Controller {
 
                         $insertsvData['stadium_id'] = $tmp_stadium_id;
                         $insertsvData['category']   = $category_name;
-                        $insertsvData['category_id']   = $category_id;
+                       // $insertsvData['category_id']   = $category_id;
                         $this->Tixstock_Model->insert_data('xs2event_stadium_category',$insertsvData);
 
                     }
@@ -906,7 +906,8 @@ class Xs2event extends CI_Controller {
     $api_stadiums_category = $this->General_Model->getAllItemTable_Array('xs2event_stadium_category', array('stadium_id' => $stadium_id,'category' => $category))->row();
     
     if($api_stadiums_category->id == ""){
-        $category_data = array('stadium_id' => $stadium_id,'category' => $category,'category_id' => $category_id,'merge_status' => 0);
+      //  $category_data = array('stadium_id' => $stadium_id,'category' => $category,'category_id' => $category_id,'merge_status' => 0);
+    	  $category_data = array('stadium_id' => $stadium_id,'category' => $category,'merge_status' => 0);
         $api_stadiums_category_id = $this->Tixstock_Model->insert_data('xs2event_stadium_category',$category_data);
     }
     else{
