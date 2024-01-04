@@ -2684,6 +2684,7 @@ public function getOrderData_v2()
 	{
 		$this->db->select('game_category.*,game_category_lang.language,game_category_lang.game_cat_id,game_category_lang.category_name')->from('game_category')->join('game_category_lang', 'game_category_lang.game_cat_id = game_category.id', 'left');
 		$this->db->where('game_category_lang.language', $this->session->userdata('language_code'));
+		$this->db->where_not_in('game_category.id', [4]);
 		$this->db->order_by('game_category_lang.category_name', 'ASC');
 		$query = $this->db->get();
 		return $query;
@@ -2714,7 +2715,7 @@ public function getOrderData_v2()
 		return $query;
 	}
 
-	public function get_teams_by_limit($row_no, $row_per_page, $orderColumn = '', $orderby = '', $where_array = array(), $search = '',$seg='')
+	public function get_teams_by_limit($row_no, $row_per_page, $orderColumn = '', $orderby = '', $where_array = array(), $search = '',$seg='',$category='')
 	{
 
 		$this->db->select('match_info.m_id,teams.*,teams_lang.team_name as team,game_category_lang.category_name')->from('teams')->join('teams_lang', 'teams_lang.team_id = teams.id', 'left')->join('game_category_lang', 'game_category_lang.game_cat_id = teams.category', 'left')
@@ -2725,6 +2726,13 @@ public function getOrderData_v2()
 		//->join('sell_tickets', 'sell_tickets.match_id = match_info.m_id', 'left');
 		//$this->db->where('match_info_lang.language', $this->session->userdata('language_code'));
 		$this->db->where('teams_lang.language', $this->session->userdata('language_code'));
+
+		if($category=="teams")
+			$this->db->where_not_in('teams.category', [4]);
+		else if($category=="artists")
+			$this->db->where_in('teams.category', [4]);
+
+
 	//	$this->db->where('teams_lang.store_id', $this->session->userdata('storefront')->admin_id);
 		$this->db->where('game_category_lang.language', $this->session->userdata('language_code'));
 		$this->db->group_by('teams.id');

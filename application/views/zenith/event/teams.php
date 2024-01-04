@@ -29,9 +29,9 @@ img {
       <div class="page-title-box">
          <div class="container-fluid">
             <div class="page-title dflex-between-center">
-               <h3 class="mb-1">Teams</h3>
+               <h3 class="mb-1"><?php echo ucfirst($segment); ?></h3>
                <div class="float-sm-right mt-3 mt-sm-0 add_team_s">
-                  <a href="<?php echo base_url();?>settings/teams/add_team"  class="btn btn-success mb-2">Add Team</a>
+                  <a href="<?php echo base_url()."settings/teams/add_team/".$segment;?>"  class="btn btn-success mb-2">Add <?php echo ucfirst($segment); ?></a>
                 </div>
             </div>
          </div>
@@ -75,7 +75,7 @@ img {
                                           <div class="dropdown">
                                              <button class="btn btn-light dropdown-toggle teams_search_filter" type="button" id="dropdownMenuButton"
                                              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                             Teams Name <i class="mdi mdi-chevron-down"></i>
+                                             <?php echo ucfirst($segment); ?> Name <i class="mdi mdi-chevron-down"></i>
                                              </button>
                                              <div class="dropdown-menu dropdown-menu-custom" aria-labelledby="dropdownMenuButton">
                                                 <div id="view_project_list_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
@@ -155,8 +155,8 @@ img {
                      <table style='width:100% !important' id="teams-list" class="table table-hover table-nowrap mb-0 tournament">
                         <thead class="thead-light">
                            <tr>
-                              <th>Team Name</th>
-                              <th>Team Image</th>
+                              <th><?php echo ucfirst($segment); ?> Name</th>
+                              <th><?php echo ucfirst($segment); ?> Image</th>
                               <th>Category</th>
                               <th>Ticket Listed</th>
                               <th>Status</th>
@@ -181,6 +181,7 @@ img {
 <script>
 	 $(document).ready(function () {
     var overlay = $('#overlay');
+    var seg='<?php echo $segment;?>';
    var Dtable = $('#teams-list').DataTable({
          'info': false,
          'serverSide': true,
@@ -189,7 +190,7 @@ img {
          "targets": 'no-sort',
          "bSort": false,
          "ajax": {
-            url: base_url + 'settings/get_teams',
+            url: base_url + 'settings/get_teams/'+seg,
             data: function (d) {
 
 				var teams_ids= '';
