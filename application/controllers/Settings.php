@@ -2098,7 +2098,8 @@ public function get_country_name(){
 			$rowno = 0;			
 		}
 
-		$seg = $this->uri->segment(3);//echo $seg;exit;
+		$category = $this->uri->segment(3);//echo $seg;exit;
+		
 		if($this->uri->segment(3) == ''){
 		$seg = 'untrashed';
 		}
@@ -2132,13 +2133,13 @@ public function get_country_name(){
 				$search['status']=$newString;
 			}
 		
-			$allcount = $this->General_Model->get_teams_by_limit('', '', '', '', '', $search,$seg)->num_rows();
-			$records = $this->General_Model->get_teams_by_limit($rowno, $row_per_page, $order_column, $order_by, '', $search,$seg)->result();
+			$allcount = $this->General_Model->get_teams_by_limit('', '', '', '', '', $search,$seg,$category)->num_rows();
+			$records = $this->General_Model->get_teams_by_limit($rowno, $row_per_page, $order_column, $order_by, '', $search,$seg,$category)->result();
 		}
 		else
 		{
-		$allcount = $this->General_Model->get_teams_by_limit('', '', '', '', '', $search,$seg)->num_rows();
-		$records = $this->General_Model->get_teams_by_limit($rowno, $row_per_page, $order_column, $order_by, '', $search,$seg)->result();
+		$allcount = $this->General_Model->get_teams_by_limit('', '', '', '', '', $search,$seg,$category)->num_rows();
+		$records = $this->General_Model->get_teams_by_limit($rowno, $row_per_page, $order_column, $order_by, '', $search,$seg,$category)->result();
 
 		}
 	
@@ -2223,20 +2224,20 @@ public function get_country_name(){
 					
 							if ($this->session->userdata('role') != 9) {
 
-								$edit_url = base_url().'settings/teams/add_team/'.$record->id;
+								$edit_url = base_url().'settings/teams/add_team/'.$record->id.'/'.$category;
 								$edit_content .= '
 											<a href="'.$edit_url.'" class="dropdown-item is-media">
 												
 													<i class="fas fa-pencil-alt mr-1"></i>
-													&nbsp;Edit Team Details
+													&nbsp;Edit '.ucfirst($category).' Details
 											</a>';
 							}
-							$edit_content .= '
+							/* $edit_content .= '
 											<a href="'.base_url().'settings/teams/add_team/'.$record->id.'/tab-2" class="dropdown-item is-media">
 												
 													<i class="fas fa-pencil-alt mr-1"></i>
 													&nbsp;Edit Content Details
-											</a>';
+											</a>';*/
 							if ($this->session->userdata('role') != 9) {
 								if ($record->s_no == '') {
 									$edit_content .= '
@@ -2614,6 +2615,8 @@ public function get_country_name(){
 	{
 		$url_segment  = $segment = $this->uri->segment(3);
 		$team_id       = $this->uri->segment(4);
+		$seg       = $this->uri->segment(5);
+
 		if ($url_segment == "status") {
 			$id =  trim($this->input->post('id')); 
 			$status =  trim($this->input->post('status')); 
@@ -2629,6 +2632,11 @@ public function get_country_name(){
 				$this->data['gcategory'] = $this->General_Model->get_game_category()->result();
 				$this->data['stadiums'] = $this->General_Model->get_stadium()->result();
 				$this->data['countries'] = $this->General_Model->getAllItemTable('countries')->result();
+if($seg=="")
+$this->data['segment']=$team_id;
+else
+$this->data['segment']=$seg;
+
 				if ($team_id != '') {
 					$this->data['teams']      = $this->General_Model->get_team_data($team_id)->row();
 					$this->data['teams_lang']      = $this->General_Model->get_team_data_lang($team_id)->row();
@@ -2653,7 +2661,7 @@ public function get_country_name(){
 		}
 		
 		else if ($url_segment == "save_team_content") { 
-
+			$seg       = $this->uri->segment(4);
 				$teamId = $this->input->post('teamId');
 				
 				if ($teamId != '') {
@@ -2698,7 +2706,7 @@ public function get_country_name(){
 								$this->General_Model->update('teams_lang', array('team_id' => $teamId, 'language' => $this->session->userdata('language_code'),"store_id"=>$this->session->userdata('storefront')->admin_id), $updateData_lang);
 							}
 
-							$response = array('status' => 1, 'msg' => 'SEO data updated Successfully.' . $msg, 'redirect_url' => base_url() . 'settings/teams/add_team/'.$teamId);
+							$response = array('status' => 1, 'msg' => 'SEO data updated Successfully.' . $msg, 'redirect_url' => base_url() . 'settings/teams/add_team/'.$teamId."/".$seg);
 						echo json_encode($response);
 						exit;
 					
@@ -2719,7 +2727,8 @@ public function get_country_name(){
 						exit;
 				}
 		}
-		else if ($url_segment == "save_team_onpage_content") { 
+		else if ($url_segment == "save_team_onpage_content") {
+			$seg       = $this->uri->segment(4);
 				$teamId = $this->input->post('teamId');
 				//echo "<pre>";print_r($_POST);exit;
 				if ($teamId != '') {
@@ -2765,7 +2774,7 @@ public function get_country_name(){
 
 						
 						//echo "<pre>";print_r($updateData_lang);exit;
-						$response = array('status' => 1, 'msg' => 'Team On Page Content updated Successfully.' . $msg, 'redirect_url' => base_url() . 'settings/teams/add_team/'.$teamId);
+						$response = array('status' => 1, 'msg' => 'Team On Page Content updated Successfully.' . $msg, 'redirect_url' => base_url() . 'settings/teams/add_team/'.$teamId."/".$seg);
 						echo json_encode($response);
 						exit;
 					
@@ -2788,12 +2797,13 @@ public function get_country_name(){
 		}
 		else if ($url_segment == "save_team") {
 			$teamId = $this->input->post('teamId');
+			$seg       = $this->uri->segment(4);
 			//Insert into table
 			if ($teamId == '') {
 				if ($this->input->post()) {
 					$msg = '';
 					$this->form_validation->set_rules('teamname', 'Team Name', 'required');
-					$this->form_validation->set_rules('gamecategory', 'Game Category', 'required');
+					// $this->form_validation->set_rules('gamecategory', 'Game Category', 'required');
 					/*$this->form_validation->set_rules('country', 'Country', 'required');
 					$this->form_validation->set_rules('city', 'City', 'required');
 					$this->form_validation->set_rules('stadium', 'stadium', 'required');*/
@@ -2883,7 +2893,7 @@ public function get_country_name(){
 							$this->General_Model->insert_data('teams_lang', $insertData_lang);
 						}
 
-						$response = array('status' => 1, 'msg' => 'Team Created Successfully. ' . $msg, 'redirect_url' => base_url() . 'settings/teams/add_team/'.$team_id);
+						$response = array('status' => 1, 'msg' => ucfirst($seg).' Created Successfully. ' . $msg, 'redirect_url' => base_url() . 'settings/teams/add_team/'.$team_id."/".$seg);
 						echo json_encode($response);
 						exit;
 					} else {
@@ -2999,7 +3009,7 @@ public function get_country_name(){
 											
 						//$this->General_Model->update('teams_lang', array('team_id' => $teamId, 'language' => $this->session->userdata('language_code')), $updateData_lang);
 
-						$response = array('status' => 1, 'msg' => 'Team data updated Successfully.' . $msg, 'redirect_url' => base_url() . 'settings/teams/add_team/'.$teamId);
+						$response = array('status' => 1, 'msg' => ucfirst($seg).' data updated Successfully.' . $msg, 'redirect_url' => base_url() . 'settings/teams/add_team/'.$teamId."/".$seg);
 						echo json_encode($response);
 						exit;
 					}
@@ -3062,6 +3072,10 @@ public function get_country_name(){
 			//$row_count = $this->uri->segment(3);
 			$row_count = $this->uri->segment(4);
 			$seg = $this->uri->segment(3);
+			$this->data['segment']=$seg;
+			if($seg=="untrashed")
+				$this->data['segment']="teams";
+		
 			if ($this->input->post('submit') != NULL) {
 				$search_text = $this->input->post('search');
 				$this->session->set_userdata(array("searchteam" => $search_text));
