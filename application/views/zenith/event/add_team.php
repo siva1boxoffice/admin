@@ -112,15 +112,16 @@
                                           </div> 
                                        </div> 
                                        <?php } else { ?>
-                                        <div class="col-lg-4">
+                                        <input type="hidden" value="4" name ="gamecategory">
+                                        <!-- <div class="col-lg-4">
                                           <div class="form-group">
                                               <label for="example-select">Event Category <span class="text-danger"></span></label>
                                                  <select class="custom-select" id="" name="" required disabled>
                                                       <option value="4" selected="selected" >Other Events</option>
                                                  </select>
-                                                 <input type="hidden" value="4" name ="gamecategory">
+                                                
                                           </div> 
-                                       </div> 
+                                       </div>  -->
                                        <?php }  ?>
 
                                        <div class="col-lg-4">
