@@ -29,7 +29,7 @@ img {
       <div class="page-title-box">
          <div class="container-fluid">
             <div class="page-title dflex-between-center">
-               <h3 class="mb-1"><?php echo ucfirst($segment); ?></h3>
+               <h3 class="mb-1"><?php echo ucfirst($segment).'s'; ?></h3>
                <div class="float-sm-right mt-3 mt-sm-0 add_team_s">
                   <a href="<?php echo base_url()."settings/teams/add_team/".$segment;?>"  class="btn btn-success mb-2">Add <?php echo ucfirst($segment); ?></a>
                 </div>

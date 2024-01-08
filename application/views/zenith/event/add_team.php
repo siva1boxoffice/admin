@@ -135,7 +135,7 @@
                                                                     $stadium_name = $stadium->stadium_name.'-'.$stadium->stadium_variant;
                                                                 }
                                                               ?>
-                                                            <option <?php if($teams->stadium == $stadium->s_id){?> selected <?php } ?> value="<?php echo $stadium->s_id;?>"><?php echo $stadium_name;?></option>
+                                                            <option <?php if($teams->stadium == $stadium->s_id){?> selected <?php } ?> value="<?php echo $stadium->s_id;?>"><?php echo $stadium_name.' - '.$stadium->s_id;?></option>
                                                             <?php } ?>
                                               </select>
                                           </div> 
@@ -176,7 +176,7 @@
                                        </div>
                                        <div class="col-lg-4">
                                           <div class="form-group">
-                                           <label for="simpleinput">Team Color <span class="text-danger">*</span></label>
+                                           <label for="simpleinput"><?php echo ucfirst($segment); ?> Color <span class="text-danger">*</span></label>
                                            <input type="color" name="teamcolor" id="teamcolor" class="form-control" placeholder="Select Team Color" value="<?php if (isset($teams->team_color)) {
                                                       echo $teams->team_color;
                                                       } ?>" required>
@@ -185,12 +185,12 @@
 
                                         <div class="col-lg-6">
                                             <div class="form-group">
-                                                <label for="example-select">Team Image(40*40)</label>
+                                                <label for="example-select"><?php echo ucfirst($segment); ?> Image(40*40)</label>
                                                 <div class="prev_back_img">
                                                   <label class="custom-upload mb-0"><input type="hidden" name="exs_file" value="<?php if (isset($teams->teamImg)) {
                                                 echo $teams->teamImg;
                                                 } ?>"><input type="file"  class="form-control-file input"  name="team_image" id="team_image" value="" <?php if ($teams->id == "") { ?> required <?php } ?> onchange="loadFiles(event,'team_img_file')"> Upload JPEG File</label>
-                                                  <p>Previous Team Image</p>
+                                                  <p>Previous <?php echo ucfirst($segment); ?> Image</p>
                                                   <a id="team_img_file_link" target="_blank" href="javascript:void(0);" onclick="return popitup('<?php if (isset($teams->teamImg)) {
                                                 echo UPLOAD_PATH.'uploads/teams/'.$teams->teamImg;
                                                 } ?>')" class="view_bg">
@@ -260,7 +260,7 @@
                                                    </td>
                                                 </tr>
                                                 <tr>
-                                                   <td> <label for="sellers" class="mb-0">Top Team</label></td>
+                                                   <td> <label for="sellers" class="mb-0">Top <?php echo ucfirst($segment); ?></label></td>
                                                    <td>
                                                       <div class="form-group mb-1 cust-switch">
                                                          No / Yes
@@ -274,7 +274,7 @@
                                                    </td>
                                                 </tr>
                                                 <tr>
-                                                   <td> <label for="header_footer" class="mb-0">Header / Footer <br/>Top Team</label></td>
+                                                   <td> <label for="header_footer" class="mb-0">Header / Footer <br/>Top <?php echo ucfirst($segment); ?></label></td>
                                                    <td>
                                                       <div class="form-group mb-1 cust-switch">
                                                          No / Yes
@@ -288,7 +288,7 @@
                                                    </td>
                                                 </tr>
                                                 <tr>
-                                                   <td> <label for="header_footer" class="mb-0">Show Team</label></td>
+                                                   <td> <label for="header_footer" class="mb-0">Show <?php echo ucfirst($segment); ?></label></td>
                                                    <td>
                                                       <div class="form-group mb-1 cust-switch">
                                                          No / Yes
@@ -325,8 +325,8 @@
                                         <?php 
                                           if($segment=="teams")
                                               $seg="untrashed";
-                                          else if($segment=="artists")
-                                              $seg="artists";
+                                          else if($segment=="artist")
+                                              $seg="artist";
                                         ?>
                                           <a href="<?php echo base_url() . 'settings/teams/'.$seg;?>" class="btn btn-primary mb-2 mt-3">Back</a>
                                              <button type="submit" class="btn btn-success mb-2 ml-2 mt-3">Save</button>
