@@ -4241,7 +4241,7 @@ public function getOrderData_v2()
 	function getOrdersSearch($match_id = "",$event='',$ticket_category='',$stadium ='',$event_start_date='',$event_end_date='',$ignore_end_date='',$status='',$seller='',$order_id='',$customer_id='',$page,$seller_name="",$order_status="",$shipping_status="",$row_no='', $row_per_page='',$partner_affiliateid= array())
 	{
 		$this->db->select('booking_global.*,booking_tickets.*,booking_billing_address.*,booking_payments.*,stadium_details.*,stadium.*,countries.name as country_name,states.name as city_name,register.first_name as customer_first_name,register.last_name as customer_last_name,admin_details.admin_id,admin_details.admin_name as seller_first_name,admin_details.admin_last_name as seller_last_name,sell_tickets.s_no,countries.name as customer_country_name,partner.admin_name as partner_first_name,partner.admin_last_name as partner_last_name,
-		affiliate.admin_name as affiliate_first_name,affiliate.admin_last_name as affiliate_last_name,booking_tickets.match_id as match_id,booking_tixstock.tixstock_order_id, (CASE 
+		affiliate.admin_name as affiliate_first_name,affiliate.admin_last_name as affiliate_last_name,booking_tickets.match_id as match_id,booking_api_response.order_id as tixstock_order_id, (CASE 
 			WHEN booking_tickets.match_date >= curdate() THEN 1
 			WHEN booking_tickets.match_date <= curdate() THEN 2
 		 END) as match_date_new');
@@ -4259,7 +4259,7 @@ public function getOrderData_v2()
 		
 		$this->db->join('admin_details as partner', 'partner.admin_id=booking_global.partner_id', 'LEFT');
 		$this->db->join('admin_details as affiliate', 'affiliate.admin_id=booking_global.affiliate_id', 'LEFT');
-		$this->db->join('booking_tixstock', 'booking_tixstock.booking_id=booking_global.bg_id', 'LEFT');
+		$this->db->join('booking_api_response', 'booking_api_response.booking_id=booking_global.bg_id', 'LEFT');
 
 		//$this->db->where('md5(booking_global.booking_no)', $booking_no);
 		if ($this->session->userdata('role') == 1) {
@@ -4316,7 +4316,7 @@ public function getOrderData_v2()
 		}
 		if ($order_id != "") {
 			$this->db->where('booking_global.booking_no', $order_id);
-			$this->db->or_where('booking_tixstock.tixstock_order_id', $order_id);
+			$this->db->or_where('booking_api_response.order_id', $order_id);
 		}
 		if ($customer_id != "") {
 			$this->db->where('booking_global.user_id', $customer_id);
@@ -5004,7 +5004,7 @@ public function getOrderData_v2()
 
 		$this->db->select('booking_global.*,booking_tickets.*,booking_billing_address.*,booking_payments.*,stadium_details.*,stadium.*,countries.name as country_name,states.name as city_name,register.first_name as customer_first_name,register.last_name as customer_last_name,admin_details.admin_id,admin_details.admin_name as seller_first_name,admin_details.admin_last_name as seller_last_name,sell_tickets.s_no,countries.name as customer_country_name,partner.admin_name as partner_first_name,partner.admin_last_name as partner_last_name,
 			affiliate.admin_name as affiliate_first_name,affiliate.admin_last_name as affiliate_last_name,booking_tickets.match_id as match_id,booking_billing_address.first_name as billing_first_name, booking_billing_address.last_name as billing_last_name, booking_billing_address.postal_code as billing_postal_code,
-			booking_billing_address.address as billing_address,booking_billing_address.country_id as billing_country_name,booking_billing_address.state_id as billing_cit_name,booking_tickets.ticket_type as ticket_type_new,booking_tixstock.tixstock_order_id, (CASE 
+			booking_billing_address.address as billing_address,booking_billing_address.country_id as billing_country_name,booking_billing_address.state_id as billing_cit_name,booking_tickets.ticket_type as ticket_type_new,booking_api_response.order_id as tixstock_order_id, (CASE 
 			WHEN booking_tickets.match_date >= curdate() THEN 1
 			WHEN booking_tickets.match_date <= curdate() THEN 2
 		 END) as match_date_new');
@@ -5019,7 +5019,7 @@ public function getOrderData_v2()
 		$this->db->join('countries', 'countries.id=booking_billing_address.country_id', 'LEFT');
 		$this->db->join('states', 'states.id=booking_billing_address.state_id', 'LEFT');
 		$this->db->join('sell_tickets', 'sell_tickets.s_no = booking_tickets.ticket_id', 'LEFT');
-		$this->db->join('booking_tixstock', 'booking_tixstock.booking_id=booking_global.bg_id', 'LEFT');
+		$this->db->join('booking_api_response', 'booking_api_response.booking_id=booking_global.bg_id', 'LEFT');
 		
 		$this->db->join('admin_details as partner', 'partner.admin_id=booking_global.partner_id', 'LEFT');
 		$this->db->join('admin_details as affiliate', 'affiliate.admin_id=booking_global.affiliate_id', 'LEFT');
@@ -5780,7 +5780,7 @@ public function getOrderData_v2()
 
 	public function getOrderData($booking_no)
 	{
-		$this->db->select('booking_global.*,ticket_types_lang.name as ticket_type_name,booking_tickets.*,booking_tickets.country_name as stadium_country_name,booking_tickets.city_name as stadium_city_name,booking_billing_address.*,booking_payments.*,stadium.*,countries.name as country_name,states.name as city_name,register.first_name as customer_first_name,register.last_name as customer_last_name,admin_details.admin_id,admin_details.admin_name as seller_first_name,admin_details.admin_last_name as seller_last_name,sell_tickets.*,booking_tickets.quantity as quantity,booking_tickets.price,booking_tickets.listing_note as listing_note,partner.admin_name as partner_first_name,partner.admin_last_name as partner_last_name,partner.company_name  as partner_company_name,partner.admin_email  as partner_email,partner.admin_cell_phone  as partner_mobile,booking_global.user_id as customer_id,booking_tickets.ticket_block as ticket_block,site_settings.site_value as store_name,booking_etickets.ticket_status,booking_etickets.ticket_email_status,booking_etickets.ticket_upload_date,booking_etickets.ticket_approve_date,booking_tickets.ticket_type as ticket_type,booking_tixstock.tixstock_order_id,register.email as customer_email');
+		$this->db->select('booking_global.*,ticket_types_lang.name as ticket_type_name,booking_tickets.*,booking_tickets.country_name as stadium_country_name,booking_tickets.city_name as stadium_city_name,booking_billing_address.*,booking_payments.*,stadium.*,countries.name as country_name,states.name as city_name,register.first_name as customer_first_name,register.last_name as customer_last_name,admin_details.admin_id,admin_details.admin_name as seller_first_name,admin_details.admin_last_name as seller_last_name,sell_tickets.*,booking_tickets.quantity as quantity,booking_tickets.price,booking_tickets.listing_note as listing_note,partner.admin_name as partner_first_name,partner.admin_last_name as partner_last_name,partner.company_name  as partner_company_name,partner.admin_email  as partner_email,partner.admin_cell_phone  as partner_mobile,booking_global.user_id as customer_id,booking_tickets.ticket_block as ticket_block,site_settings.site_value as store_name,booking_etickets.ticket_status,booking_etickets.ticket_email_status,booking_etickets.ticket_upload_date,booking_etickets.ticket_approve_date,booking_tickets.ticket_type as ticket_type,booking_api_response.order_id as tixstock_order_id,register.email as customer_email');
 		$this->db->from('booking_global');
 		$this->db->join('booking_tickets', 'booking_tickets.booking_id = booking_global.bg_id');
 		$this->db->join('booking_billing_address', 'booking_billing_address.booking_id = booking_global.bg_id');
@@ -5799,7 +5799,7 @@ public function getOrderData_v2()
 		$this->db->join('countries', 'countries.id=booking_billing_address.country_id', 'LEFT');
 		$this->db->join('states', 'states.id=booking_billing_address.state_id', 'LEFT');
 		$this->db->join('sell_tickets', 'sell_tickets.s_no = booking_tickets.ticket_id', 'LEFT');
-		$this->db->join('booking_tixstock', 'booking_tixstock.booking_id=booking_global.bg_id', 'LEFT');
+		$this->db->join('booking_api_response', 'booking_api_response.booking_id=booking_global.bg_id', 'LEFT');
 		$this->db->where('md5(booking_global.booking_no)', $booking_no);
 		$this->db->where('ticket_types_lang.language', 'en');
 
