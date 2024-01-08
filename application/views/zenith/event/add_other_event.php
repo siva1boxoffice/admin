@@ -102,11 +102,23 @@ z-index: 9999;
                                     <div class="form-group">
                                        <label for="example-select">Event Category <span class="text-danger">*</span> </label>
                                        <select class="custom-select" id="category" name="category"   required  >
+
+                                          <?php      
+                                           foreach ($categories as $key => $value) {
+                                                      if($value->parent_id == 0){
+                                                         $categories_data[$value->category_name][]  = $value;
+                                                      }
+                                                      else{
+                                                         $categories_data[$value->PARENT][]  = $value;
+                                                      }
+                                                   } pr($categories_data); ?>
                                     
                                           <option value="">Select Category</option>
-                                             <?php foreach ($categories as $category) { ?>
-                                             <option value="<?php echo $category->id; ?>" <?php if ($category->id == $event->other_event_category) { ?> selected <?php } ?> > <?php if ($category->parent_id != 0) { ?>-<?php  } ?> <?php echo $category->category_name; ?></option>
-                                             <?php } ?>
+                                             <?php foreach ($categories_data as $category_main) {
+                                                foreach ($category_main as $key => $category ) { ?>
+                                             
+                                            <option value="<?php echo $category->id; ?>" <?php if ($category->id == $event->other_event_category) { ?> selected <?php } ?> > <?php if ($category->parent_id != 0) { ?>-<?php  } ?> <?php echo $category->category_name; ?></option>
+                                             <?php }  } ?>
                                        </select>
                                     </div>
                                  </div>
