@@ -111,7 +111,9 @@ z-index: 9999;
                                                       else{
                                                          $categories_data[$value->PARENT][]  = $value;
                                                       }
-                                                   } pr($categories_data); ?>
+                                                   } 
+                                                   //pr($categories_data);
+                                                    ?>
                                     
                                           <option value="">Select Category</option>
                                              <?php foreach ($categories_data as $category_main) {
@@ -1172,13 +1174,34 @@ $.ajax({
 })
 
 $('#category').on('change', function(event) {
-   if ($(this).val() == 2 || $(this).val() == 3) {
+   category_id=$(this).val();
+   /*if ($(this).val() == 2 || $(this).val() == 3) {
       $('.other_events').css('display', 'block');
    } else {
       $('.other_events').css('display', 'none');
       $('#artist_name').val(''); 
 
-   }
+   }*/
+
+   $.ajax({
+            type: 'POST',
+            url: '<?php echo base_url(); ?>event/check_artist',
+            data: {
+               'category_id': category_id
+            },
+            dataType: "json",
+            success: function(data) {
+
+                if(data.status == 1){
+                  $('.other_events').css('display', 'block');
+                }
+                else{
+                  $('.other_events').css('display', 'none');
+                  $('#artist_name').val('');
+                }
+
+            }
+         });
 });
 
 

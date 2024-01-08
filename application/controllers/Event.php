@@ -1743,6 +1743,7 @@ class Event extends CI_Controller
 					$insertData['parent_id'] = trim($this->input->post('parent'));
 					$insertData['category_name'] = trim($this->input->post('categoryname'));
 					$insertData['status'] = $this->input->post('is_active') ? 1 : 0;
+					$insertData['artist'] = $this->input->post('artist') ? 1 : 0;
 					$insertData['sort'] = $this->input->post('sortno');
 					$insertData['category_desc'] = $this->input->post('category_description');
 					$insertData['create_date'] = strtotime(date('Y-m-d h:i:s'));
@@ -1773,6 +1774,7 @@ class Event extends CI_Controller
 					$updateData['parent_id'] = trim($this->input->post('parent'));
 					$updateData['category_name'] = trim($this->input->post('categoryname'));
 					$updateData['status'] = $this->input->post('is_active') ? 1 : 0;
+					$updateData['artist'] = $this->input->post('artist') ? 1 : 0;
 					$updateData['sort'] = $this->input->post('sortno');
 					$updateData['category_desc'] = $this->input->post('category_description');
 					$updateData['create_date'] = strtotime(date('Y-m-d h:i:s'));
@@ -1922,7 +1924,7 @@ class Event extends CI_Controller
 		} else if ($event_segment == "add_event") {
 			//$this->data['categories'] = $this->General_Model->get_other_events_main_categories()->result();
 			$this->data['categories'] = $this->General_Model->get_other_events_categories('', '', '', '')->result();
-
+			
 			$this->data['other_events'] = $this->General_Model->get_other_events_concerts()->result();
 			
 
@@ -3097,5 +3099,21 @@ class Event extends CI_Controller
 			echo "No Records Found.";
 		}
 	}
+
+	public function check_artist()
+	{
+		$status = 0;
+
+		if (!empty($_POST['category_id'])) {
+			$category = $this->General_Model->getAllItemTable_array('otherevent_category', array('id' => $_POST['category_id']))->row();
+
+			$status = ($category->artist == 1) ? 1 : 0;
+		}
+
+		$response = array('status' => $status);
+		echo json_encode($response);
+		exit;
+	}
+
 
 }
