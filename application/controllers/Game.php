@@ -620,7 +620,7 @@ public function update_tracking_data(){
 				$shipping_status 				= $_POST['shipping_status'];
 			//	$order_status 					= $_POST['order_status'];				
 				$customer_id 					= $_POST['customer_id'];
-				$page 							= $_POST['partner_affiliateid'];
+				$page 							= $_POST['page'];
 				$partner_affiliateid 			= $_POST['partner_affiliateid'];
 
 				// if(@$customer_id){
@@ -6373,7 +6373,7 @@ public function get_order_status(){
 		// $ignore_end_date 		 		= $_GET['ignore_end_date'];
 		// $seller 						= $_GET['seller'];	
 		 $seller_name					= $_GET['sellerIds'];// isset($_GET['sellerIds']) ?  implode(",", $_GET['sellerIds']) : '';
-
+		 $partnerIds					= $_GET['partnerIds'];
 		$order_id 						= $_GET['booking_no'];
 	// 	$order_status 					= $_GET['order_status'];
 		$shipping_status 				= $_GET['shippingIds'];
@@ -6381,7 +6381,7 @@ public function get_order_status(){
 	// 	$customer_id 					= $_GET['customer_id'];
 	// 	$protect 						= $_GET['protect'];
 
-		$all_records = $this->General_Model->getOrdersSearch("",$event,$ticket_category,$stadium,$event_start_date,$event_end_date,$ignore_end_date,'',$seller,$order_id,$customer_id,$protect,$seller_name,$order_status,$shipping_status,$rowno, $row_per_page)->result();
+		$all_records = $this->General_Model->getOrdersSearch("",$event,$ticket_category,$stadium,$event_start_date,$event_end_date,$ignore_end_date,'',$seller,$order_id,$customer_id,$protect,$seller_name,$order_status,$shipping_status,$rowno, $row_per_page,$partnerIds)->result();
 
 
 		$fields = array('OrderID','PaymentStatus','EventName','Buyer','TicketType','Qty','Category','SellersNotes','Total','PurchaseDate','Seller','DeliveryDate','ShippingStatus','AdminStatus'); 
