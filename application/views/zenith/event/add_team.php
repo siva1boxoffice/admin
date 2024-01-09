@@ -29,7 +29,7 @@
           <div class="container-fluid">
             <div class="row">
                <div class="col-sm-8">
-                  <h5 class="card-title">Add or Edit Team</h5>
+                  <h5 class="card-title">Add or Edit <?php echo ucfirst($segment); ?></h5>
                </div>
              <!--   <div class="col-sm-4">
                   <div class="float-sm-right mt-2 mt-sm-0 ml-sm-1 mx-sm-2">
@@ -50,7 +50,7 @@
                         <ul class="nav nav-tabs nav-bordered">
                             <li class="nav-item">
                               <a href="#home-b1" data-id="home" data-toggle="tab" aria-expanded="false" class="nav-link <?php echo $tab=="home" ? "active" : ""  ;?>">
-                                Add or Edit Team
+                                Add or Edit <?php echo ucfirst($segment); ?>
                               </a>
                             </li>
                             <?php if (isset($teams->id)) { ?>
@@ -76,13 +76,13 @@
                         </ul>
                         <div class="tab-content">
                            <div class="tab-pane show <?php echo $tab=="home" ? "active" : ""  ;?>" id="home-b1">
-                            <form id="add-team-form" enctype='multipart/form-data' method="post" class="<?php echo (isset($teams->id)) ? 'validate_form_edit' : 'validate_form_v1' ;?> login-wrapper" action="<?php echo base_url(); ?>settings/teams/save_team">
+                            <form id="add-team-form" enctype='multipart/form-data' method="post" class="<?php echo (isset($teams->id)) ? 'validate_form_edit' : 'validate_form_v1' ;?> login-wrapper" action="<?php echo base_url().'settings/teams/save_team/'.$segment; ?>">
                              <input type="hidden" name="teamId" value="<?php if (isset($teams->id)) {
                                              echo $teams->id;
                                              } ?>">
                               <div class="team_info_details mt-3">
-                                <h5 class="card-title">Team Info</h5>
-                                <p>Fill the following Team information</p>
+                                <h5 class="card-title"><?php echo ucfirst($segment); ?> Info</h5>
+                                <p>Fill the following <?php echo ucfirst($segment); ?> information</p>
                               </div>
                               <div class="row">
                                 <div class="col-8">
@@ -90,10 +90,11 @@
                                       <div class="row column_modified">
                                        <div class="col-lg-4">
                                           <div class="form-group">
-                                               <label for="teamname">Team Name <span class="text-danger">*</span></label>
+                                               <label for="teamname"><?php echo ucfirst($segment); ?> Name <span class="text-danger">*</span></label>
                                            <input required type="text" name="teamname" id="teamname" class="form-control" placeholder="Enter Team Name" value="<?php  if (isset($teams->team)) { echo $teams->team; } ?>">
                                           </div> 
                                        </div>
+                                       <?php if($segment=="teams") { ?>
                                        <div class="col-lg-4">
                                           <div class="form-group">
                                               <label for="example-select">Event Category <span class="text-danger">*</span></label>
@@ -110,6 +111,19 @@
                                                  </select>
                                           </div> 
                                        </div> 
+                                       <?php } else { ?>
+                                        <input type="hidden" value="4" name ="gamecategory">
+                                        <!-- <div class="col-lg-4">
+                                          <div class="form-group">
+                                              <label for="example-select">Event Category <span class="text-danger"></span></label>
+                                                 <select class="custom-select" id="" name="" required disabled>
+                                                      <option value="4" selected="selected" >Other Events</option>
+                                                 </select>
+                                                
+                                          </div> 
+                                       </div>  -->
+                                       <?php }  ?>
+
                                        <div class="col-lg-4">
                                           <div class="form-group">
                                               <label for="stadium">Default Stadium</label>
@@ -121,7 +135,7 @@
                                                                     $stadium_name = $stadium->stadium_name.'-'.$stadium->stadium_variant;
                                                                 }
                                                               ?>
-                                                            <option <?php if($teams->stadium == $stadium->s_id){?> selected <?php } ?> value="<?php echo $stadium->s_id;?>"><?php echo $stadium_name;?></option>
+                                                            <option <?php if($teams->stadium == $stadium->s_id){?> selected <?php } ?> value="<?php echo $stadium->s_id;?>"><?php echo $stadium_name.' - '.$stadium->s_id;?></option>
                                                             <?php } ?>
                                               </select>
                                           </div> 
@@ -162,7 +176,7 @@
                                        </div>
                                        <div class="col-lg-4">
                                           <div class="form-group">
-                                           <label for="simpleinput">Team Color <span class="text-danger">*</span></label>
+                                           <label for="simpleinput"><?php echo ucfirst($segment); ?> Color <span class="text-danger">*</span></label>
                                            <input type="color" name="teamcolor" id="teamcolor" class="form-control" placeholder="Select Team Color" value="<?php if (isset($teams->team_color)) {
                                                       echo $teams->team_color;
                                                       } ?>" required>
@@ -171,12 +185,12 @@
 
                                         <div class="col-lg-6">
                                             <div class="form-group">
-                                                <label for="example-select">Team Image(40*40)</label>
+                                                <label for="example-select"><?php echo ucfirst($segment); ?> Image(40*40)</label>
                                                 <div class="prev_back_img">
                                                   <label class="custom-upload mb-0"><input type="hidden" name="exs_file" value="<?php if (isset($teams->teamImg)) {
                                                 echo $teams->teamImg;
-                                                } ?>"><input type="file"  class="form-control-file input"  name="team_image" id="team_image" value="" onchange="loadFiles(event,'team_img_file')"> Upload JPEG File</label>
-                                                  <p>Previous Team Image</p>
+                                                } ?>"><input type="file"  class="form-control-file input"  name="team_image" id="team_image" value=""  onchange="loadFiles(event,'team_img_file')"> Upload JPEG File</label>
+                                                  <p>Previous <?php echo ucfirst($segment); ?> Image</p>
                                                   <a id="team_img_file_link" target="_blank" href="javascript:void(0);" onclick="return popitup('<?php if (isset($teams->teamImg)) {
                                                 echo UPLOAD_PATH.'uploads/teams/'.$teams->teamImg;
                                                 } ?>')" class="view_bg">
@@ -207,7 +221,17 @@
                                             </div> 
                                          </div>
 
-                                      
+                                    
+                                      <div class="col-lg-12">
+                                          <div class="form-group">
+                                           <label for="simpleinput">Url <span class="text-danger">*</span></label>
+                                           <input type="text" name="url_key" id="team_url_key" class="form-control" placeholder="Url Key" value="<?php if (isset($teams->url_key)) {
+                                                      echo $teams->url_key;
+                                                      } ?>" required>
+                                          </div>
+                                       </div>
+
+
                                        
                                        
                                         
@@ -226,9 +250,9 @@
                                                       <div class="form-group mb-1 cust-switch">
                                                          Inactive / Active
                                                          <div class="custom-control custom-switch">
-                                                            <input type="checkbox" id="status" class="custom-control-input is-switch" name="is_active" value="1" <?php if (isset($teams->status)) {
-                                                            if ($teams->status == '1') { ?> checked <?php }
-                                                            } ?>>
+                                                            <input type="checkbox" id="status" class="custom-control-input is-switch" name="is_active" value="1" <?php 
+                                                            if ($teams->status == '1' || $teams->status == "" ) { ?> checked <?php }
+                                                            ?>>
                                                             <label class="custom-control-label" for="status"></label>
                                                          
                                                          </div>
@@ -236,7 +260,7 @@
                                                    </td>
                                                 </tr>
                                                 <tr>
-                                                   <td> <label for="sellers" class="mb-0">Top Team</label></td>
+                                                   <td> <label for="sellers" class="mb-0">Top <?php echo ucfirst($segment); ?></label></td>
                                                    <td>
                                                       <div class="form-group mb-1 cust-switch">
                                                          No / Yes
@@ -250,7 +274,7 @@
                                                    </td>
                                                 </tr>
                                                 <tr>
-                                                   <td> <label for="header_footer" class="mb-0">Header / Footer <br/>Top Team</label></td>
+                                                   <td> <label for="header_footer" class="mb-0">Header / Footer <br/>Top <?php echo ucfirst($segment); ?></label></td>
                                                    <td>
                                                       <div class="form-group mb-1 cust-switch">
                                                          No / Yes
@@ -259,6 +283,20 @@
                                                             if ($teams->header_top_teams == '1') { ?> checked <?php }
                                                             } ?> >
                                                             <label class="custom-control-label" for="header_footer"></label>
+                                                         </div>
+                                                      </div>
+                                                   </td>
+                                                </tr>
+                                                <tr>
+                                                   <td> <label for="header_footer" class="mb-0">Show <?php echo ucfirst($segment); ?></label></td>
+                                                   <td>
+                                                      <div class="form-group mb-1 cust-switch">
+                                                         No / Yes
+                                                         <div class="custom-control custom-switch">
+                                                            <input type="checkbox" id="show_status" class="is-switch custom-control-input" name="show_status" value="1" <?php
+                                                            if ($teams->show_status == '1' || $teams->show_status == '' ) { ?> checked <?php }
+                                                            ?> >
+                                                            <label class="custom-control-label" for="show_status"></label>
                                                          </div>
                                                       </div>
                                                    </td>
@@ -284,7 +322,13 @@
                                     </div>
                                     <div class="col-sm-4">
                                        <div class="float-sm-right mt-2 mt-sm-0 ml-sm-1 mx-sm-2">
-                                          <a href="<?php echo base_url() . 'settings/teams';?>" class="btn btn-primary mb-2 mt-3">Back</a>
+                                        <?php 
+                                          if($segment=="teams")
+                                              $seg="untrashed";
+                                          else if($segment=="artist")
+                                              $seg="artist";
+                                        ?>
+                                          <a href="<?php echo base_url() . 'settings/teams/'.$seg;?>" class="btn btn-primary mb-2 mt-3">Back</a>
                                              <button type="submit" class="btn btn-success mb-2 ml-2 mt-3">Save</button>
                                        </div>
                                     </div>
@@ -293,7 +337,7 @@
                           </form>
                            </div>
                            <div class="tab-pane <?php echo $tab=="seo-content" ? "active" : ""  ;?>" id="profile-b1">
-                            <form id="add-team-form-content-1" enctype='multipart/form-data' method="post" class="<?php echo (isset($teams->id)) ? 'validate_edit_v2' : 'validate_form_v2' ;?>   login-wrapper" action="<?php echo base_url(); ?>settings/teams/save_team_content">
+                            <form id="add-team-form-content-1" enctype='multipart/form-data' method="post" class="<?php echo (isset($teams->id)) ? 'validate_edit_v2' : 'validate_form_v2' ;?>   login-wrapper" action="<?php echo base_url().'settings/teams/save_team_content/'.$segment; ?>">
                              <input type="hidden" name="teamId" value="<?php if (isset($teams->id)) {
                                              echo $teams->id;
                                              } ?>">
@@ -360,7 +404,7 @@
                                     </div>
                                     <div class="col-sm-4">
                                        <div class="float-sm-right mt-2 mt-sm-0 ml-sm-1 mx-sm-2">
-                                          <a href="<?php echo base_url() . 'settings/teams';?>" class="btn btn-primary mb-2 mt-3">Back</a>
+                                          <a href="<?php echo base_url() . 'settings/teams/'.$seg;?>" class="btn btn-primary mb-2 mt-3">Back</a>
                                              <button type="submit" class="btn btn-success mb-2 ml-2 mt-3">Save</button>
                                        </div>
                                     </div>
@@ -376,7 +420,8 @@
                           </form>
                            </div>
                            <div class="tab-pane <?php echo $tab=="content" ? "active" : ""  ;?>" id="page-b1">
-                            <form id="onpage-content" enctype='multipart/form-data' method="post" class=" login-wrapper" action="<?php echo base_url(); ?>settings/teams/save_team_onpage_content">
+                            <form id="onpage-content" enctype='multipart/form-data' method="post" class=" login-wrapper" action="<?php echo base_url().'settings/teams/save_team_onpage_content/'.$segment; ?>">
+                           
                              <input type="hidden" name="teamId" value="<?php if (isset($teams->id)) {
                                              echo $teams->id;
                                              } ?>">
@@ -427,7 +472,7 @@
                                                 </div>
                                                 <div class="col-sm-4">
                                                    <div class="float-sm-right mt-2 mt-sm-0 ml-sm-1 mx-sm-2">
-                                                      <a href="<?php echo base_url() . 'settings/teams';?>" class="btn btn-primary mb-2 mt-3">Back</a>
+                                                      <a href="<?php echo base_url() . 'settings/teams/'.$seg;?>" class="btn btn-primary mb-2 mt-3">Back</a>
                                                          <button type="submit" class="btn btn-success mb-2 ml-2 mt-3">Save</button>
                                                    </div>
                                                 </div>
@@ -887,4 +932,35 @@ $.ajax({
          window.history.replaceState({}, '', `${path}?${params.toString()}${hash}`);
       <?php } ?>
    });
+
+
+    function slugfly(str) {
+        str = str.replace(/^\s+|\s+$/g, ''); // trim
+        str = str.toLowerCase();
+
+        // remove accents, swap ñ for n, etc
+        var from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;";
+        var to   = "aaaaaeeeeeiiiiooooouuuunc------";
+        for (var i = 0, l = from.length; i < l; i++) {
+          str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+        }
+
+        str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+                 .replace(/\s+/g, '-') // collapse whitespace and replace by -
+                 .replace(/-+/g, '-'); // collapse dashes
+
+        return str;
+   }
+
+
+ <?php if(empty($teams->id)) { ?>
+    $("#teamname").on('keyup', function(){
+        var val = $("#teamname").val();
+        slug = slugfly(val + "-tickets");
+        $("#team_url_key").val(slug);
+    });
+   <?php  } ?>
+
+   
+
 </script>
