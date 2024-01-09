@@ -371,23 +371,34 @@ border: none;
 <script type="text/javascript">
    $(document).ready(function () {
 
-
       $('.report_sts').click(function(event) {
     event.preventDefault();
        var sellerIds = [];
        var shippingIds = [];
        var orderIds = [];
+       var partnerIds = [];
 
     var baseUrl = '<?php echo base_url(); ?>';
     var eventStartDate = encodeURIComponent($('input[name="MyTextbox3"]').val());
     var eventEndDate = encodeURIComponent($('input[name="MyTextbox2"]').val());
     var event_name = encodeURIComponent($('input[name="event_name"]').val() || '');
     var booking_no = encodeURIComponent($('input[name="booking_no"]').val() || '');
-
+    if(eventStartDate == ""){
+      eventStartDate = '2022-01-01';
+    }
+    if(eventEndDate == ""){
+      eventEndDate = "<?php echo date('Y-m-d');?>";
+    } 
    $('.check_box input:checked').each(function() {
          var ID = $(this).attr('id');
          var newID = ID.replace("customCheck", "");     
          sellerIds.push(encodeURIComponent(newID));
+    });
+
+   $('.partner_affiliate_check_box input:checked').each(function() {
+         var ID = $(this).attr('id');
+         var newID = ID.replace("partner_affiliate", "");     
+         partnerIds.push(encodeURIComponent(newID));
     });
 
     $('.seat_category_check_box input:checked').each(function() {
@@ -403,7 +414,7 @@ border: none;
     
     //console.log(stadiumIds);
 
-    var url = baseUrl + 'game/order_reports?' + 'event_start_date=' + eventStartDate + '&event_end_date=' + eventEndDate + '&event_name=' + event_name + '&booking_no=' + booking_no + '&sellerIds=' + sellerIds.join(',') + '&shippingIds=' + shippingIds.join(',') + '&orderIds=' + orderIds.join(',') ;
+    var url = baseUrl + 'game/order_reports?' + 'event_start_date=' + eventStartDate + '&event_end_date=' + eventEndDate + '&event_name=' + event_name + '&booking_no=' + booking_no + '&sellerIds=' + sellerIds.join(',') + '&partnerIds=' + partnerIds.join(',') + '&shippingIds=' + shippingIds.join(',') + '&orderIds=' + orderIds.join(',') ;console.log(url);
     window.location.href = url;
   });
 
