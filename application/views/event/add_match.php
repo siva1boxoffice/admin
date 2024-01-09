@@ -185,7 +185,7 @@
                                             
                                             <div class="column is-6">
                                                 <div class="field">
-                                                    <label>Upcoming Events *</label>
+                                                    <label>Popular Events *</label>
                                                      <div class="control has-icon">
                                                                 <div class="switch-block no-padding-all">
                                                                     <label class="form-switch is-primary">
