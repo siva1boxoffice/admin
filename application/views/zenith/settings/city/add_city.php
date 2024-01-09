@@ -43,7 +43,7 @@
 						 <div class="col-lg-3">
 								<div class="form-group">
 								<label for="simpleinput">Country Name </label>
-								<select class="custom-select " id="cname" name="cname" required>
+								<select class="form-control " id="cname" name="cname" required>
 									<option value="">-Select Country-</option>
 									<?php foreach ($countries as $country) { ?>
 										<option value="<?php echo $country->id; ?>" <?php if (isset($selected_country)) {
@@ -59,7 +59,7 @@
 							<div class="col-lg-3">
 								<div class="form-group">
 								<label for="simpleinput">State Name </label>
-								<select class="custom-select" id="sname" name="sname" required>
+								<select class="form-control" id="sname" name="sname" required>
 								<option value="">-Select State-</option>
 								<?php
 								if (isset($states)) {

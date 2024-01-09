@@ -1359,18 +1359,6 @@ class General_Model extends CI_Model
     }
 
 
-    public function check_match_exists_tixstock($tixstock_id) {
-			$this->db->select("match_info.*");
-			$this->db->from('match_info');
-			$this->db->where('match_info.match_date >=', date("Y-m-d H:i:s"));
-			//$this->db->where('match_info.status', '1');
-			$this->db->where('match_info.tixstock_id', $tixstock_id );
-			$this->db->order_by('match_info.m_id', 'DESC');
-			$result = $this->db->get();
-			return $result;
-    }
-
-
 	public function get_match_tournments() {
         
 
@@ -2099,19 +2087,12 @@ class General_Model extends CI_Model
 					$city_array[] = $city_data;
 				}
 			}
-
-			usort($city_array, function($a, $b) {
-				//return strcmp($a['name'], $b['name']);
-				 	return strcmp($a->name, $b->name);
-			});
 			return $city_array;
 		} else {
 			return false;
 		}
 		return $query;
 	}
-
-
 	/**
 	 * @desc Return record count from a table
 	 */
@@ -4226,7 +4207,7 @@ public function getOrderData_v2()
         return $result->num_rows();
     }
 
-	function getOrdersSearch($match_id = "",$event='',$ticket_category='',$stadium ='',$event_start_date='',$event_end_date='',$ignore_end_date='',$status='',$seller='',$order_id='',$customer_id='',$page,$seller_name="",$order_status="",$shipping_status="",$row_no='', $row_per_page='',$partner_affiliateid= array())
+	function getOrdersSearch($match_id = "",$event='',$ticket_category='',$stadium ='',$event_start_date='',$event_end_date='',$ignore_end_date='',$status='',$seller='',$order_id='',$customer_id='',$page,$seller_name="",$order_status="",$shipping_status="",$row_no='', $row_per_page='')
 	{
 		$this->db->select('booking_global.*,booking_tickets.*,booking_billing_address.*,booking_payments.*,stadium_details.*,stadium.*,countries.name as country_name,states.name as city_name,register.first_name as customer_first_name,register.last_name as customer_last_name,admin_details.admin_id,admin_details.admin_name as seller_first_name,admin_details.admin_last_name as seller_last_name,sell_tickets.s_no,countries.name as customer_country_name,partner.admin_name as partner_first_name,partner.admin_last_name as partner_last_name,
 		affiliate.admin_name as affiliate_first_name,affiliate.admin_last_name as affiliate_last_name,booking_tickets.match_id as match_id,booking_tixstock.tixstock_order_id, (CASE 
@@ -4280,8 +4261,6 @@ public function getOrderData_v2()
 			$this->db->where('booking_global.affiliate_id !=', 0);
 			$this->db->group_end();
 		}
-		
-
 		// if ($seller_name != "") {
 		// 	$this->db->or_like('admin_details.admin_last_name', $seller_name);
 		// }
@@ -4354,12 +4333,6 @@ public function getOrderData_v2()
 		else
 			$this->db->where_in('booking_global.delivery_status ', [0,1,2,3,4,5,6]);
 
-		if($partner_affiliateid){
-			$this->db->group_start();
-			$this->db->where_in('booking_global.partner_id ', $partner_affiliateid);
-			$this->db->or_where_in('booking_global.affiliate_id ', $partner_affiliateid);
-			$this->db->group_end();
-		}
 		// if($this->store_id){
 		// 	$this->db->where('booking_global.store_id', $this->store_id);
 		// }
@@ -5034,11 +5007,6 @@ public function getOrderData_v2()
 			$this->db->where('booking_global.affiliate_id is NOT NULL', NULL, FALSE);
 			$this->db->where('booking_global.affiliate_id !=', 0);
 			$this->db->group_end();
-		}
-
-		if($flag == 'partner_affiliate'){ 
-			$this->db->where(' ( booking_global.affiliate_id is NOT NULL AND `booking_global`.`affiliate_id` != 0 )OR ( booking_global.partner_id is NOT NULL AND `booking_global`.`partner_id` != 0 )', NULL, FALSE);
-
 		}
 
 		//$this->db->where('md5(booking_global.booking_no)', $booking_no);
@@ -5768,7 +5736,7 @@ public function getOrderData_v2()
 
 	public function getOrderData($booking_no)
 	{
-		$this->db->select('booking_global.*,ticket_types_lang.name as ticket_type_name,booking_tickets.*,booking_tickets.country_name as stadium_country_name,booking_tickets.city_name as stadium_city_name,booking_billing_address.*,booking_payments.*,stadium.*,countries.name as country_name,states.name as city_name,register.first_name as customer_first_name,register.last_name as customer_last_name,admin_details.admin_id,admin_details.admin_name as seller_first_name,admin_details.admin_last_name as seller_last_name,sell_tickets.*,booking_tickets.quantity as quantity,booking_tickets.price,booking_tickets.listing_note as listing_note,partner.admin_name as partner_first_name,partner.admin_last_name as partner_last_name,partner.company_name  as partner_company_name,partner.admin_email  as partner_email,partner.admin_cell_phone  as partner_mobile,booking_global.user_id as customer_id,booking_tickets.ticket_block as ticket_block,site_settings.site_value as store_name,booking_etickets.ticket_status,booking_etickets.ticket_email_status,booking_etickets.ticket_upload_date,booking_etickets.ticket_approve_date,booking_tickets.ticket_type as ticket_type,booking_tixstock.tixstock_order_id,register.email as customer_email');
+		$this->db->select('booking_global.*,ticket_types_lang.name as ticket_type_name,booking_tickets.*,booking_tickets.country_name as stadium_country_name,booking_tickets.city_name as stadium_city_name,booking_billing_address.*,booking_payments.*,stadium.*,countries.name as country_name,states.name as city_name,register.first_name as customer_first_name,register.last_name as customer_last_name,admin_details.admin_id,admin_details.admin_name as seller_first_name,admin_details.admin_last_name as seller_last_name,sell_tickets.*,booking_tickets.quantity as quantity,booking_tickets.price,booking_tickets.listing_note as listing_note,partner.admin_name as partner_first_name,partner.admin_last_name as partner_last_name,partner.company_name  as partner_company_name,partner.admin_email  as partner_email,partner.admin_cell_phone  as partner_mobile,booking_global.user_id as customer_id,booking_tickets.ticket_block as ticket_block,site_settings.site_value as store_name,booking_etickets.ticket_status,booking_etickets.ticket_email_status,booking_etickets.ticket_upload_date,booking_etickets.ticket_approve_date,booking_tickets.ticket_type as ticket_type,booking_tixstock.tixstock_order_id');
 		$this->db->from('booking_global');
 		$this->db->join('booking_tickets', 'booking_tickets.booking_id = booking_global.bg_id');
 		$this->db->join('booking_billing_address', 'booking_billing_address.booking_id = booking_global.bg_id');
@@ -7116,7 +7084,6 @@ public function get_seat_category_main()
 		$this->db->where('category='.$catgory);
 		$this->db->where('teams_lang.language', $this->session->userdata('language_code'));	
 		$this->db->order_by('teams_lang.team_name', 'ASC');
-		$this->db->group_by('teams.id');
 		$query = $this->db->get();
 		return $query;
 	}
@@ -7126,7 +7093,6 @@ public function get_seat_category_main()
 		$this->db->select('stadium_name,s_id,source_type');
 		$this->db->from('stadium');
 		$this->db->where('category='.$catgory);
-		$this->db->where('status','1');
 		$this->db->order_by('stadium.stadium_name', 'ASC');
 		$query = $this->db->get();
 		return $query;
@@ -7138,8 +7104,7 @@ public function get_seat_category_main()
 		$this->db->select('tournament.t_id,tournament_lang.tournament_name,url_key')->from('tournament')->join('tournament_lang', 'tournament_lang.tournament_id = tournament.t_id', 'left');
 		$this->db->where('tournament.status',1);
 		$this->db->where('category='.$catgory);
-		$this->db->where('tournament_lang.language', $this->session->userdata('language_code'));
-		$this->db->group_by('tournament.t_id');	
+		$this->db->where('tournament_lang.language', $this->session->userdata('language_code'));	
 		$this->db->order_by('tournament_lang.tournament_name', 'ASC');
 		$query = $this->db->get();
 		return $query;
@@ -7418,6 +7383,9 @@ public function get_seat_category_main()
 
 	function bank_accounts($admin_id,$currency)
 	{ 
+
+		
+
 		$this->db->select('admin_bank_details.*,countries.name as country_name');
 		$this->db->from('admin_bank_details');
 		$this->db->join('countries', 'countries.id = admin_bank_details.country','LEFT');
@@ -7427,20 +7395,6 @@ public function get_seat_category_main()
 		return $query;
 
 	}
-	
 
-	function update_match_info()
-	{
-		$this->db->select('*');
-		$this->db->from('match_info');
-		$this->db->where('event_type ', 'match');
-		// $this->db->or_where('store_id IS NULL', NULL, FALSE); 
-		// $this->db->or_where('store_id', 1);
-		// $this->db->or_where('store_id', 0);
-		$query = $this->db->get();
-		
-		return $query;
-
-	}
 
 }

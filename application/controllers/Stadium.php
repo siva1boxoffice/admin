@@ -185,8 +185,9 @@ class Stadium extends CI_Controller
 			}
 	} 
 
-	public function delete_stadium($id) {
-			$delete_id = $id;
+	public function delete_stadium() {
+			$segment4 = $this->uri->segment(4);
+			$delete_id = $segment4;
 			$delete = $this->General_Model->delete_data('stadium', 's_id', $delete_id);
 			if ($delete == 1) {
 				$response = array('status' => 1, 'msg' => 'Stadium deleted Successfully.');

@@ -176,9 +176,7 @@ class Login extends CI_Controller
                 $this->session->set_userdata($sessionUserInfo);
                 $logged_in = $this->session->userdata('admin_logged_in');
 
-                $updateData['admin_updation_date_time'] = date("Y-m-d h:i:s");
-                $done = $this->General_Model->update_table('admin_details', 'admin_id', $res['result']->admin_id, $updateData);
-               // print_r($this->db->last_query());exit;
+
                 //pr($this->session->all_userdata());die;
                 //}
 

@@ -200,7 +200,7 @@
 						</div>
 
 						<div class="table-responsive">
-						   <table style='width:100% !important' id="abondanned-datatable" class="table table-hover table-nowrap mb-0">
+						   <table style='width:100% !important' id="abondanned-datatable" class="table table-responsive table-hover table-nowrap mb-0">
 							  <thead class="thead-light">
 							  <tr>
 								<th>Order</th>

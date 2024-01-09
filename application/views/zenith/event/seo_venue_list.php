@@ -162,7 +162,7 @@ img {
                      </div>
                   </div>
 
-                  <div class="">
+                  <div class="table-responsive">
                      <table style='width:100% !important' id="tournament-list" class="table table-hover table-nowrap mb-0 tournament">
                         <thead class="thead-light">
                            <tr>

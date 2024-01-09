@@ -1,8 +1,8 @@
 <?php
 if (!defined('BASEPATH')) exit('No direct script access allowed');
-// require 'vendor/autoload.php';
-// use PhpOffice\PhpSpreadsheet\Spreadsheet;
-// use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+require 'vendor/autoload.php';
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 error_reporting(0);
 class Accounts extends CI_Controller {
     public function __construct() {
@@ -1473,9 +1473,6 @@ return true;
             }
             else if($payable_orders[0]->currency_type == 'EUR'){
                 $currency = '€';
-            }
-             else if($payable_orders[0]->currency_type == 'AED'){
-                $currency = 'AED';
             }
              $this->mydatas['payable_orders'] = $payable_orders;
             $list_orders = $this->load->view(THEME.'accounts/make_payouts_ajax_v1', $this->mydatas, TRUE);

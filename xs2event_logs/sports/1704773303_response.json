@@ -1,0 +1,1 @@
+{"sports": [{"sport_id": "soccer"}, {"sport_id": "motorsport"}, {"sport_id": "tennis"}, {"sport_id": "rugby"}, {"sport_id": "horseracing"}, {"sport_id": "boxing"}, {"sport_id": "motogp"}, {"sport_id": "formula1"}], "pagination": {"total_size": 8, "page_size": 8, "next_page": "", "previous_page": ""}}
