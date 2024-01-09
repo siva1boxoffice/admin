@@ -396,7 +396,7 @@ z-index: 9999;
                                              </td>
                                           </tr>
                                            <tr>
-                                             <td><label for="customSwitch21" class="mb-0">Upcoming Events</label></td>
+                                             <td><label for="customSwitch21" class="mb-0">Popular Events</label></td>
                                              <td>
                                                 <div class="form-group mb-1 cust-switch">
                                                    No / Yes
