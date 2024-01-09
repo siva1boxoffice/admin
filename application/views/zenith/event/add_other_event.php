@@ -102,22 +102,45 @@ z-index: 9999;
                                     <div class="form-group">
                                        <label for="example-select">Event Category <span class="text-danger">*</span> </label>
                                        <select class="custom-select" id="category" name="category"   required  >
+
+                                          <?php      
+                                           foreach ($categories as $key => $value) {
+                                                      if($value->parent_id == 0){
+                                                         $categories_data[$value->category_name][]  = $value;
+                                                      }
+                                                      else{
+                                                         $categories_data[$value->PARENT][]  = $value;
+                                                      }
+                                                   } 
+                                                   //pr($categories_data);
+                                                    ?>
                                     
                                           <option value="">Select Category</option>
-                                             <?php foreach ($categories as $category) { ?>
-                                             <option value="<?php echo $category->id; ?>" <?php if ($category->id == $event->other_event_category) { ?> selected <?php } ?> > <?php if ($category->parent_id != 0) { ?>-<?php  } ?> <?php echo $category->category_name; ?></option>
-                                             <?php } ?>
+                                             <?php foreach ($categories_data as $category_main) {
+                                                foreach ($category_main as $key => $category ) { ?>
+                                             
+                                            <option value="<?php echo $category->id; ?>" <?php if ($category->id == $event->other_event_category) { ?> selected <?php } ?> > <?php if ($category->parent_id != 0) { ?>-<?php  } ?> <?php echo $category->category_name; ?></option>
+                                             <?php }  } ?>
                                        </select>
                                     </div>
                                  </div>
-                                <!--  <div class="col-lg-4" style="display:none">
+                                 <?php 
+                                 if($event->team_1 >0 )
+                                    $display="block";
+                                 else
+                                    $display="none";
+                                    ?>
+                                 <div class="col-lg-4 other_events"  style="display:<?php echo $display; ?>">
                                     <div class="form-group">
-                                       <label for="example-select">Sub Category <span class="text-danger">*</span> </label>
-                                       <select class="custom-select" id="category" name="category" required>
-                                          <option value="">-Select  Sub Category -</option>
+                                       <label for="example-select">Artist Name <span class="text-danger">*</span> </label>
+                                       <select class="custom-select" id="artist_name" name="artist_name" required>
+                                          <option value="">-Select  Artist Name -</option>
+                                          <?php foreach($other_events as $other_event){ ?>
+                                          <option value="<?php echo $other_event->id;?>" <?php if($event->team_1 == $other_event->id){?> selected <?php } ?>><?php echo $other_event->team_name;?></option>
+                                          <?php } ?>
                                        </select>
                                     </div>
-                                 </div> -->
+                                 </div>
                                  <div class="col-lg-4" style="display:none">
                                     <div class="form-group">
                                        <label for="example-select">Tournament</label>
@@ -434,6 +457,19 @@ z-index: 9999;
                                                 </div>
                                              </td>
                                           </tr>
+
+                                          <tr>
+                                                <td> <label for="customSwitch019" class="mb-0">Is this final match</label></td>
+                                                <td>
+                                                <div class="form-group mb-1 cust-switch">
+                                                Disable / Enable
+                                                <div class="custom-control custom-switch">
+                                                <input type="checkbox" id="customSwitch019" class="is-switch custom-control-input" name="final_match" value="1" <?php if ($event->final_match == '1') { ?> checked <?php } ?>>
+                                                            <label class="custom-control-label" for="customSwitch019"></label>
+                                                         </div>
+                                                      </div>
+                                                   </td>
+                                                </tr>
                                          
                                        </table>
                                     </div>
@@ -1136,6 +1172,38 @@ $.ajax({
 
 
 })
+
+$('#category').on('change', function(event) {
+   category_id=$(this).val();
+   /*if ($(this).val() == 2 || $(this).val() == 3) {
+      $('.other_events').css('display', 'block');
+   } else {
+      $('.other_events').css('display', 'none');
+      $('#artist_name').val(''); 
+
+   }*/
+
+   $.ajax({
+            type: 'POST',
+            url: '<?php echo base_url(); ?>event/check_artist',
+            data: {
+               'category_id': category_id
+            },
+            dataType: "json",
+            success: function(data) {
+
+                if(data.status == 1){
+                  $('.other_events').css('display', 'block');
+                }
+                else{
+                  $('.other_events').css('display', 'none');
+                  $('#artist_name').val('');
+                }
+
+            }
+         });
+});
+
 
 $('#team1').on('change', function(event) {
 

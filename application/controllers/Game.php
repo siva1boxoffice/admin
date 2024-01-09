@@ -3041,6 +3041,23 @@ public function get_order_status(){
 				$status = $_POST['status'];
 				$cancel_reason = @$_POST['reason'];
 				if($order->source_type == "tixstock"){
+
+
+					if($order->source_type == "tixstock" && ($order->bg_id == "28067")){
+					$url = base_url().'tixstock/orderConfirm';
+					$post_data = array("bg_id" => $order->bg_id,"tixstock_status" => 'Commissionable');
+					$handle = curl_init();
+					curl_setopt($handle, CURLOPT_URL, $url);
+					curl_setopt($handle, CURLOPT_POST, 1);
+					curl_setopt($handle, CURLOPT_POSTFIELDS,$post_data);
+					curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+					$output = curl_exec($handle);
+					curl_close($handle);
+					$tixresponse = json_decode($output,1);
+					echo "<pre>";print_r($tixresponse);exit;
+					}
+
+
 				if ($status == 3) {
 
 

@@ -351,6 +351,20 @@
                                                 </div>
                                                 </td>
                                                 </tr>
+
+                                                <tr>
+                                                <td> <label for="customSwitch019" class="mb-0">Is this final match</label></td>
+                                                <td>
+                                                <div class="form-group mb-1 cust-switch">
+                                                Disable / Enable
+                                                <div class="custom-control custom-switch">
+                                                <input type="checkbox" id="customSwitch019" class="is-switch custom-control-input" name="final_match" value="1" <?php if ($matches->final_match == '1') { ?> checked <?php } ?>>
+                                                            <label class="custom-control-label" for="customSwitch019"></label>
+                                                         </div>
+                                                      </div>
+                                                   </td>
+                                                </tr>
+
                                              </table>
                                           </div>
                                        </div>

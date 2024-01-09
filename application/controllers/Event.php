@@ -761,8 +761,8 @@ class Event extends CI_Controller
 			$states = $this->General_Model->get_state_cities($country_id);
 			$statesCount = COUNT($states);
 			$keys = array_column($states, 'name');
-			array_multisort($keys, SORT_ASC, $states);
-			//echo "<pre>";print_r($states);exit;
+			array_multisort($keys, SORT_ASC|SORT_NATURAL|SORT_FLAG_CASE, $states);
+			// echo "<pre>";print_r($states);exit;
 			$city = '';
 			if ($statesCount > 0) {
 				$city .= '<option value="">-Select City-</option>';
@@ -859,6 +859,7 @@ class Event extends CI_Controller
 						$updateData_lang['meta_description'] = $this->input->post('metadescription');
 						$updateData_lang['description'] = trim($this->input->post('description'));
 						$updateData_lang['long_description'] = trim($this->input->post('long_description'));
+						$updateData_lang['seo_keywords'] = trim($this->input->post('seo_keywords'));
 						//$updateData_lang['short_description'] = trim($this->input->post('short_description'));
 						//echo "<pre>";print_r($updateData_lang);exit;	
 
@@ -870,8 +871,9 @@ class Event extends CI_Controller
 							$this->db->where('match_id', $matchId);
 							$this->db->where('store_id', $this->session->userdata('storefront')->admin_id);
 							$this->db->where('language', $this->session->userdata('language_code'));
+							
 							$query = $this->db->get();
-							// echo $this->db->last_query();exit;
+						// echo $this->db->last_query();exit;
 							if ($query->num_rows() == 0) {							
 								$updateData_lang['match_id'] = $matchId;
 								$updateData_lang['language'] = $this->session->userdata('language_code');						
@@ -880,7 +882,7 @@ class Event extends CI_Controller
 								$this->db->insert('match_info_lang', $updateData_lang);
 							
 							} else {
-								$this->General_Model->update('match_info_lang', array('match_id' => $matchId, 'language' => $this->session->userdata('language_code')), $updateData_lang);
+								$this->General_Model->update('match_info_lang', array('match_id' => $matchId, 'language' => $this->session->userdata('language_code'),'store_id'=>$this->session->userdata('storefront')->admin_id), $updateData_lang);
 
 							}
 
@@ -948,6 +950,7 @@ class Event extends CI_Controller
 					$insertData['country'] = $this->input->post('country');
 					$insertData['create_date'] = strtotime(date('Y-m-d h:i:s'));
 					$insertData['ignoreautoswitch'] = $this->input->post('ignoreautoswitch') ? 1 : 0;
+					$insertData['final_match'] = $this->input->post('final_match') ? 1 : 0;
 					$insertData['top_games'] = $this->input->post('top_games') ? 1 : 0;
 					$insertData['high_demand'] = $this->input->post('high_demand') ? '1' : '0';
 					$insertData['almost_sold'] = $this->input->post('almost_sold') ? '1' : '0';
@@ -1011,7 +1014,6 @@ class Event extends CI_Controller
 							}
 
 						}
-
 					$match_id = $this->General_Model->insert_data('match_info', $insertData);
 
 					// 
@@ -1030,6 +1032,7 @@ class Event extends CI_Controller
 						$this->db->insert('banned_countries_match', $this->data);
 					}
 					// 
+					$insertData['store_id'] =$this->session->userdata('storefront')->admin_id;
 
 					$lang = $this->General_Model->getAllItemTable('language', 'store_id', $this->session->userdata('storefront')->admin_id)->result();
 
@@ -1063,6 +1066,8 @@ class Event extends CI_Controller
 
 						$insertData_lang['description'] = $description;
 						$insertData_lang['meta_description'] = $description;
+						$insertData_lang['store_id'] =$this->session->userdata('storefront')->admin_id;
+						$insertData_lang['seo_keywords'] = trim($this->input->post('seo_keywords'));
 
 						$this->General_Model->insert_data('match_info_lang', $insertData_lang);
 					}
@@ -1177,6 +1182,7 @@ class Event extends CI_Controller
 					$updateData['matchticket'] = $this->input->post('matchticket');
 					$updateData['daysremaining'] = 1; //$this->input->post('daysremaining');
 					$updateData['ignoreautoswitch'] = $this->input->post('ignoreautoswitch') ? 1 : 0;
+					$updateData['final_match'] = $this->input->post('final_match') ? 1 : 0;
 					$updateData['top_games'] = $this->input->post('top_games') ? 1 : 0;
 					$updateData['high_demand'] = $this->input->post('high_demand') ? '1' : '0';
 					$updateData['almost_sold'] = $this->input->post('almost_sold') ? '1' : '0';
@@ -1187,6 +1193,7 @@ class Event extends CI_Controller
 					$updateData['feature_games'] = $this->input->post('feature_games') ? 1 : 0;
 					$updateData['tbc_status'] = $this->input->post('tbc_status') ? 1 : 0;
 					$updateData['tixstock_status'] = $this->input->post('tixstock_status') ? "1" : "0";
+					$updateData['store_id'] =$this->session->userdata('storefront')->admin_id;
 					//echo "<pre>";print_r($updateData);exit;
 
 
@@ -1242,7 +1249,9 @@ class Event extends CI_Controller
 					$updateData_lang = array();
 					$updateData_lang['match_name'] = trim($this->input->post('matchname'));
 					$updateData_lang['match_label'] = trim($this->input->post('match_label'));
-					$this->General_Model->update('match_info_lang', array('match_id' => $matchId, 'language' => $this->session->userdata('language_code')), $updateData_lang);
+					$updateData_lang['store_id'] =$this->session->userdata('storefront')->admin_id;
+					$updateData_lang['seo_keywords'] = trim($this->input->post('seo_keywords'));
+					$this->General_Model->update('match_info_lang', array('match_id' => $matchId, 'language' => $this->session->userdata('language_code'),'store_id'=>$this->session->userdata('storefront')->admin_id), $updateData_lang);
 
 					$this->db->delete('banned_countries_match', array('match_id' => $matchId));
 
@@ -1718,7 +1727,7 @@ class Event extends CI_Controller
 		$category_id = $this->uri->segment(4);
 
 		if ($event_segment == "add_category") {
-			$this->data['categories'] = $this->General_Model->get_other_events_categories()->result();
+			$this->data['categories'] = $this->General_Model->get_other_events_categories()->result();			
 			if ($category_id != '') {
 				$this->data['category'] = $this->General_Model->get_other_events_categories($row_no = '', $row_per_page = '', $orderColumn = '', $orderby = '', array('A.id' => $category_id))->row();
 			}
@@ -1734,6 +1743,7 @@ class Event extends CI_Controller
 					$insertData['parent_id'] = trim($this->input->post('parent'));
 					$insertData['category_name'] = trim($this->input->post('categoryname'));
 					$insertData['status'] = $this->input->post('is_active') ? 1 : 0;
+					$insertData['artist'] = $this->input->post('artist') ? 1 : 0;
 					$insertData['sort'] = $this->input->post('sortno');
 					$insertData['category_desc'] = $this->input->post('category_description');
 					$insertData['create_date'] = strtotime(date('Y-m-d h:i:s'));
@@ -1764,6 +1774,7 @@ class Event extends CI_Controller
 					$updateData['parent_id'] = trim($this->input->post('parent'));
 					$updateData['category_name'] = trim($this->input->post('categoryname'));
 					$updateData['status'] = $this->input->post('is_active') ? 1 : 0;
+					$updateData['artist'] = $this->input->post('artist') ? 1 : 0;
 					$updateData['sort'] = $this->input->post('sortno');
 					$updateData['category_desc'] = $this->input->post('category_description');
 					$updateData['create_date'] = strtotime(date('Y-m-d h:i:s'));
@@ -1913,6 +1924,10 @@ class Event extends CI_Controller
 		} else if ($event_segment == "add_event") {
 			//$this->data['categories'] = $this->General_Model->get_other_events_main_categories()->result();
 			$this->data['categories'] = $this->General_Model->get_other_events_categories('', '', '', '')->result();
+			
+			$this->data['other_events'] = $this->General_Model->get_other_events_concerts()->result();
+			
+
 			$this->data['stadiums'] = $this->General_Model->get_stadium()->result();
 
 			$this->data['tournments'] = $this->General_Model->get_tournments()->result();
@@ -2048,6 +2063,7 @@ class Event extends CI_Controller
 						$insertData['oneboxoffice_status'] = 1;
 						$insertData['category'] = 1;
 						$insertData['other_event_category'] = $this->input->post('category');
+						$insertData['team_1'] = $this->input->post('artist_name');
 						$insertData['match_name'] = trim($this->input->post('eventname'));
 						$insertData['extra_title'] = trim($this->input->post('extra_title'));
 						$insertData['status'] = $this->input->post('is_active') ? 1 : 0;
@@ -2078,11 +2094,13 @@ class Event extends CI_Controller
 						$insertData['tbc_status'] = $this->input->post('tbc_status') ? 1 : 0;
 						//$insertData['oneboxoffice_status'] = $this->input->post('oneboxoffice_status') ? 1 : 0;
 						$insertData['ignoreautoswitch'] = $this->input->post('ignoreautoswitch') ? 1 : 0;
+						$insertData['final_match'] = $this->input->post('final_match') ? 1 : 0;
 						$insertData['high_demand'] = $this->input->post('high_demand') ? '1' : '0';
 						$insertData['almost_sold'] = $this->input->post('almost_sold') ? '1' : '0';
 						$insertData['affiliate_status'] = $this->input->post('affiliate_status') ? 1 : 0;
 						$insertData['confirm_status'] = $this->input->post('confirm_status') ? 1 : 0;
 						$insertData['epl_status'] = $this->input->post('epl_status') ? 1 : 0;
+						$insertData['store_id'] = $this->session->userdata('storefront')->admin_id;
 
 						if ($this->input->post('event_url')) {
 							$title = strip_tags($this->input->post('event_url'));
@@ -2103,7 +2121,6 @@ class Event extends CI_Controller
 						foreach ($_POST['partner_api'] as $api) {
 							$insertData[$api == 1 ? 'tixstock_status' : 'oneclicket_status'] = 1;
 							}
-
 						$match_id = $this->General_Model->insert_data('match_info', $insertData);
 
 
@@ -2128,6 +2145,7 @@ class Event extends CI_Controller
 							$insertData_lang['meta_title'] = $this->input->post('metatitle');
 							$insertData_lang['meta_description'] = $this->input->post('metadescription');
 							$insertData_lang['event_image'] = $insertData['event_image'];
+							$insertData_lang['store_id'] = $this->session->userdata('storefront')->admin_id;
 							$this->General_Model->insert_data('match_info_lang', $insertData_lang);
 						}
 						$encode_id = base64_encode(json_encode("$match_id"));
@@ -2252,6 +2270,7 @@ class Event extends CI_Controller
 							}
 
 							$updateData['other_event_category'] = $this->input->post('category');
+							$updateData['team_1'] = $this->input->post('artist_name');
 							$updateData['match_name'] = trim($this->input->post('eventname'));
 							$updateData['extra_title'] = trim($this->input->post('extra_title'));
 							$updateData['status'] = $this->input->post('is_active') ? 1 : 0;
@@ -2278,6 +2297,7 @@ class Event extends CI_Controller
 							$updateData['upcoming_events'] = $this->input->post('upcomingevents') ? 1 : 0;
 							$updateData['tbc_status'] = $this->input->post('tbc_status') ? 1 : 0;
 							$updateData['ignoreautoswitch'] = $this->input->post('ignoreautoswitch') ? 1 : 0;
+							$updateData['final_match'] = $this->input->post('final_match') ? 1 : 0;
 							$updateData['high_demand'] = $this->input->post('high_demand') ? '1' : '0';
 							$updateData['almost_sold'] = $this->input->post('almost_sold') ? '1' : '0';
 							$updateData['affiliate_status'] = $this->input->post('affiliate_status') ? 1 : 0;
@@ -2306,6 +2326,7 @@ class Event extends CI_Controller
 								else if($api == 2)							
 									$updateData['oneclicket_status'] = 1;								
 								}
+
 							$this->General_Model->update('match_info', array('m_id' => $matchId), $updateData);
 
 
@@ -2924,7 +2945,7 @@ class Event extends CI_Controller
 			if($stadium->s_id == $selected_stadium){ 
 				$selected='selected ';
 			} 
-			$stadiums .= '<option value="'.$stadium->s_id.'" '.$selected.'>'.$stadium->stadium_name.' - '.$stadium->s_id." ( ".$record->source_type." )".'</option>';
+			$stadiums .= '<option value="'.$stadium->s_id.'" '.$selected.'>'.$stadium->stadium_name.' - '.$stadium->s_id." ( ".$stadium->source_type." )".'</option>';
 		}
 
 		$tournaments .= '<option value="">Select Tournament</option>';
@@ -2963,5 +2984,136 @@ class Event extends CI_Controller
 			echo $this->db->last_query();
 		}
 	}
+
+
+	public function update_match_info()
+	{
+
+		$result_set=$this->General_Model->update_match_info()->result();
+		$data = "";
+		if(count($result_set)>0)
+		{
+			$lang = $this->General_Model->getAllItemTable('language', 'store_id', $this->session->userdata('storefront')->admin_id)->result();
+			foreach ($result_set as $key => $value) {
+				foreach ($lang as $key => $l_code) {
+					$match_info_lang = $this->General_Model->getAllItemTable_array('match_info_lang', array('match_id' => $value->m_id, 'language' => $l_code->language_code, 'store_id' => 13))->result_array();
+					if (empty($match_info_lang)) {
+
+						$team1 = $this->General_Model->getid('teams', array('teams.id' => $value->team_1, 'teams_lang.language' => $l_code->language_code))->row();
+
+						$team2 = $this->General_Model->getid('teams', array('teams.id' => $value->team_2, 'teams_lang.language' => $l_code->language_code))->row();
+
+
+						$tournament = $this->General_Model->getid('tournament', array('tournament.t_id' => $value->tournament, 'tournament_lang.language' => $l_code->language_code))->row();
+
+						$stadium = $this->General_Model->getid('stadium', array('stadium.s_id' => $value->venue))->row();
+
+						$updateData_lang = array();
+
+						if ($l_code->language_code == "en") {
+							$meta_title = $team1->team_name . " vs " . $team2->team_name . " Tickets | " . date('d-m-Y', strtotime($value->match_date)) . " | 1BoxOffice.com";
+
+							$description = 'Buy ' . $team1->team_name . ' vs ' . $team2->team_name . ' tickets for the ' . $tournament->tournament_name . ' game being played on ' . date('d M Y', strtotime($value->match_date)) . ' at ' . $stadium->stadium_name . '. 1BoxOffice offers a wide range of ' . $team1->team_name . ' vs ' . $team2->team_name . ' tickets that suits most football fans budget. Contact 1BoxOffice today for more information on how to buy ' . $team1->team_name . ' tickets!';
+						} else {
+
+							$meta_title = "تذاكر   " . $team1->team_name . " - " . $team2->team_name . " | " . date('d-m-Y', strtotime($value->match_date)) . " | ";
+
+
+							$description = ' اشتر تذاكر مباراة   ' . $team1->team_name . ' - ' . $team2->team_name . '  لمباراة   ' . $tournament->tournament_name . '  التي ستُلعب في   ' . date('d-m-Y', strtotime($value->match_date)) . ' على    ' . $stadium->stadium_name_ar . '. نقدم مجموعة واسعة من تذاكر   ' . $team1->team_name . ' - ' . $team2->team_name . ' بأسعار مدروسة مناسبة  لعشاق كرة القدم. قم بزيارة موقعنا  www.1boxoffice.com لمزيد من المعلومات حول كيفية شراء تذاكر   ' . $team1->team_name . '!';
+						}
+
+
+						$insertData_lang['match_name'] = $team1->team_name . " vs " . $team2->team_name;
+						$insertData_lang['match_id'] = $value->m_id;
+						$insertData_lang['language'] = $l_code->language_code;
+						$insertData_lang['store_id'] = $this->session->userdata('storefront')->admin_id;
+						$insertData_lang['meta_title'] = trim($meta_title);
+						$insertData_lang['meta_description'] = trim($description);
+						$insertData_lang['description'] = trim($description);
+						$this->db->insert('match_info_lang', $insertData_lang);
+
+						$data .= $value->m_id . " \t\t" . $meta_title . "\t\t " . $description;
+						$data .= "\n";
+					}
+				}
+			}
+			if($data!=""){
+			header('Content-Type: application/csv');
+			$filename = 'match_info_' . date('Y_m_d') . '.csv';
+			header('Content-Disposition: attachment; filename="' . $filename . '"');
+			echo $data; exit();
+			}
+			else{
+				echo "No Records Found.";
+			}
+		}
+		else
+		{
+			echo "No Records Found.";
+		}
+	}
+
+
+	public function meta_match_info_update()
+	{
+		$result_set=$this->General_Model->update_match_info()->result();
+		$data = "";
+		if(count($result_set)>0)
+		{
+			$store_id = 13;
+			$lang = $this->General_Model->getAllItemTable('language', 'store_id', $store_id)->result();
+			foreach ($result_set as $key => $value) {
+				foreach ($lang as $key => $l_code) {
+					$match_info_lang = $this->db->select('COUNT(match_info_lang.id) as total_count,match_id')
+										->where('match_id' , $value->m_id)
+										->where('store_id' , $store_id)
+										//->where('store_id IS NOT NULL')
+										->from('match_info_lang')
+										->get();
+					$res =  $match_info_lang->row();
+					if ($res->total_count == 0 ) {
+					 	$updated_data = array('store_id' => $store_id);
+					 	// pr($updated_data);
+					 	// pr($value->m_id);
+					 	$this->General_Model->update('match_info_lang', array('match_id' => $value->m_id), $updated_data);
+						 $data .= $value->m_id;
+						$data .= "\n";
+					 }
+				}
+
+			
+			}
+		ob_clean();
+			if($data!=""){
+			header('Content-Type: application/csv');
+			$filename = 'match_info_' . date('Y_m_d') . '.csv';
+			header('Content-Disposition: attachment; filename="' . $filename . '"');
+			echo $data; exit();
+			}
+			else{
+				echo "No Records Found.";
+			}
+		}
+		else
+		{
+			echo "No Records Found.";
+		}
+	}
+
+	public function check_artist()
+	{
+		$status = 0;
+
+		if (!empty($_POST['category_id'])) {
+			$category = $this->General_Model->getAllItemTable_array('otherevent_category', array('id' => $_POST['category_id']))->row();
+
+			$status = ($category->artist == 1) ? 1 : 0;
+		}
+
+		$response = array('status' => $status);
+		echo json_encode($response);
+		exit;
+	}
+
 
 }
