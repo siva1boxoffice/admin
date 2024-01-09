@@ -264,10 +264,7 @@ color: #00a3ed !important;
 												</div>
 											</td>
 
-										<?php } else { ?>
-											<td></td>
-											<?php }  ?>
-
+										<?php } ?>
 									</tr>
 								 </tbody>
 							  </table>
@@ -1052,20 +1049,9 @@ color: #00a3ed !important;
 														<i class="far fa-copy" onclick="copy_data('copy_billing_name',this)"></i>									
 													</td>
 												<td>
-														<span id="copy_billing_email" style="display:none;"><?php echo $orderData->customer_email; ?></span>	
-														<div class="input-group widh">
-											
-											<input type="email" name="bill_email_address" class="form-control" id="bill_email_address" value="<?php echo $orderData->customer_email; ?>">
-												<div class="input-group-append">
-											<span class="input-group-text save_bill_email" >
-											<i class="fa fa-edit" aria-hidden="true"></i>
-											</span>
-											<i class="far fa-copy" style="padding-top:10px;"onclick="copy_data('copy_billing_email',this)"></i>
-												</div>
-										</div>
-
-
-
+														<?php echo $orderData->email; ?>
+														<span id="copy_billing_email" style="display:none;"><?php echo $orderData->email; ?></span>												
+														<i class="far fa-copy" onclick="copy_data('copy_billing_email',this)"></i>
 												</td>
 												<td>
 														<?php echo $orderData->dialing_code; ?> 	<?php echo $orderData->mobile_no; ?>
@@ -1342,7 +1328,7 @@ color: #00a3ed !important;
 									
 											<div class="input-group">
 											
-											<input type="email" name="email_address" class="form-control" id="email_address" value="<?php echo $orderData->customer_email; ?>">
+											<input type="email" name="email_address" class="form-control" id="email_address" value="<?php echo $orderData->email; ?>">
 												<div class="input-group-append">
 												<!-- id="emailIcon" 
 											data-toggle="modal"                      data-target="#centermodal"
@@ -1814,43 +1800,6 @@ $(document).ready(function() {
 
 			});
 });*/
-
-$("body").on('click','.save_bill_email',function(e){
-
-var bill_email = $('#bill_email_address').val(); // Get the value of the textbox
-if(bill_email=="")
-{	
-	swal('Error!', "Email Cannot be empty.", 'error');
-	return false;
-}
-var ticket_id='<?php echo md5($orderData->bg_id); ?>';
-var data_close_modal = $(this).attr('data-close-modal');
-
-$.ajax({
-		url: '<?php echo base_url();?>game/save_bill_email ',
-		type: 'POST',
-		dataType: "json",
-		data: {  bill_email: bill_email ,ticket_id:ticket_id  },
-		success: function (response) { 
-				if(response.status==0)
-				{
-					swal('Updation Failed !', response.msg, 'error');
-				}
-				else
-				{
-					swal('Updated !', response.msg, 'success');
-					$('#copy_billing_email').text(bill_email);
-					$('#email_address').val(bill_email);
-				}
-				$('#'+data_close_modal).modal("hide");  
-				//setTimeout(window.location.reload(),300);
-		},
-		error: function () {
-		console.log('Failed');
-		}
-	});
-});
-
 		$("body").on('click','#mobile-icon',function(e){
 
 				var contact_number = $('#contact_number').val(); // Get the value of the textbox

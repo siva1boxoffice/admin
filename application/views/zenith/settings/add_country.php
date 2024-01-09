@@ -47,7 +47,7 @@
 																							echo $country_details->id;
 																						} ?>">
                                     <div class="">
-                                      <div class="row column_modified">   
+                                      <div class="row ">   
                                       <div class="col-lg-3">
                                           <div class="form-group">
                                            <label for="simpleinput">Country Name </label>
@@ -70,10 +70,11 @@
                                        </div>
 
 									   <div class="col-lg-12">
-                                          <div class="float-sm-right mt-2 mt-sm-0 ml-sm-1 mx-sm-2 tick_details ">
-                                                <a href="<?php echo base_url();?>settings/countries" class="btn btn-primary mb-2">Back</a> 
+                                          <div class="float-sm-right mt-2 mt-sm-0 ml-sm-1 mx-sm-2">
+                                                <a href="<?php echo base_url();?>settings/countries" class="btn btn-primary mb-2">
+                                                <i class="bx bx-list-ol bx-flashing mr-1"></i> Go Back</a> 
 
-                                                <button type="submit" id="branch-form-btn" class="btn btn-success mb-2 submit_match button h-button is-primary is-raised">Save
+                                                <button type="submit" id="branch-form-btn" class="btn btn-success mb-2 submit_match button h-button is-primary is-raised"><i class=" bx bx-list-ol bx-flashing mr-1 save_match"></i>Save
                                                 </button>
                                           </div>
                                        </div>

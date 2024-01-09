@@ -288,7 +288,7 @@ $this->load->view(THEME . 'common/header'); ?>
                                                 <div class="col-lg-6">
                                                    <div class="form-group">
                                                       <label for="simpleinput">City Name *</label>
-                                                      <input  type="text" id="city_name" name="city_name" class="form-control"
+                                                      <input disabled type="text" id="" name="" class="form-control"
                                                          placeholder="Enter City  Name"
                                                          value="<?php
                                                          echo isset($tournaments->city_name) ? $tournaments->city_name : ''; ?>">

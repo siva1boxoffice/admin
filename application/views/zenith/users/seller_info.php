@@ -3,7 +3,6 @@
     max-height: 250px;
     overflow-y: auto;
 }
-
 label.error {
     font-size: 12px !important;
     color: RED;
@@ -285,8 +284,8 @@ if(!empty($seller_sales_data_count))
 
                                           <div id="collapseTwo" class="collapse show mt-3" aria-labelledby="headingOne"
                                             data-parent="#general">
-                                             <div class="table-responsive">
-                                                <table style='width:100% !important' id="basic-datatable" class="table sales_table table-hover table-nowrap mb-0 ">
+                                             <div class="">
+                                                <table style='width:100% !important' id="basic-datatable" class="table sales_table table-hover table-nowrap mb-0 table-responsive">
                                                
                                                    <thead class="thead-light">
                                                       <tr>
@@ -408,7 +407,7 @@ if(!empty($seller_sales_data_count))
                                                          <td><?php echo $data->total_payable; ?></td>
                                                          <td><?php echo $data->currency; ?></td>
                                                          <td><?php  echo date("d F Y", strtotime(time_zone_calc(@$_COOKIE["client_time_zone"], $data->paid_date_time))) . ' ' . @$_COOKIE["time_zone"]; ?></td>                                 
-                                                         <td>Bank Transfer</td>
+                                                         <td>CASH</td>
                                                          <td><a class="payment_vw" href=" <?php echo base_url()."/accounts/payout_details/".$data->payout_id;?>">View payment</td>
                                                         
                                                       </tr>
@@ -670,7 +669,7 @@ if(!empty($seller_sales_data_count))
                                        </tr>
                                        <tr>
                                           <th>Last Visit :</th>
-                                          <td><?php  echo date("d F Y h:i A", strtotime($seller_profile_info[0]->admin_updation_date_time));?></td>
+                                          <td>10 January 2023 1:25 PM</td>
                                        </tr>
                                        <tr>
                                           <th>Language :</th>
@@ -1796,14 +1795,12 @@ else
    'processing': true,
    'serverSide': true,
    'serverMethod': 'post',
-   // "scrollX": true,
-   // "scrollCollapse": true,
+   "scrollX": true,
+   "scrollCollapse": true,
   "fixedColumns": {
     "leftColumns": 3,  // Adjust the number of fixed columns if needed
-    "rightColumns": 2,
-    autoWidth: false,
+    "rightColumns": 2
   },
-  autoWidth: false,
    "ajax": {
       url: base_url + 'home/search_payouts',
       data: function (d) {

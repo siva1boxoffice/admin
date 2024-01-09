@@ -180,6 +180,5 @@ return array(
 	'odt'	=>	'application/vnd.oasis.opendocument.text',
 	'odm'	=>	'application/vnd.oasis.opendocument.text-master',
 	'ott'	=>	'application/vnd.oasis.opendocument.text-template',
-	'oth'	=>	'application/vnd.oasis.opendocument.text-web',
-	'pkpass'	=>	array('application/octet-stream','application/vnd.apple.pkpass','application/vnd-com.apple.pkpass','application/vnd.apple.pkpasses','application/zip')
+	'oth'	=>	'application/vnd.oasis.opendocument.text-web'
 );

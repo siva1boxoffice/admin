@@ -66,7 +66,7 @@
                                  <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="customer_selection_id">Select Customer</label>
-                                        <select class="custom-select" id="customer_selection_id" name="customer_selection_id" required="false">
+                                        <select class="custom-select" id="customer_selection_id" name="customer_selection_id">
                                            <option value="">-- Select Customer --</option>
                                         <?php foreach ($customers_list as $customer)
                                           { ?>
@@ -80,7 +80,7 @@
                                  <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="event_selection_id">Select Event</label>
-                                        <select class="custom-select" id="event_selection_id" required="false">
+                                        <select class="custom-select" id="event_selection_id">
                                            <option value="">-- Select Event --</option>
                                           <?php foreach ($events_list as $event)
                                  { ?>
