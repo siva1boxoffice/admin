@@ -101,7 +101,7 @@ public function update_tracking_data(){
 				if($_FILES["pod_file"]["name"] != ""){
 					
 				$config["upload_path"] = UPLOAD_PATH_PREFIX.'uploads/pod/';
-				$config["allowed_types"] = 'pdf|jpg|jpeg|png';
+				$config["allowed_types"] = 'pdf|gif|jpg|png|jpeg|pkpass';
 				$this->load->library('upload', $config);
 				$this->upload->initialize($config);
 				$ticketId = time();
@@ -902,7 +902,7 @@ if($record->delivery_status != 0)
 				 </a>
 				 <div class="dropdown-menu dropdown-menu-right">
 					<a href="'.base_url().'game/orders/details/'.md5($record->booking_no).'" class="dropdown-item">View</a>
-					<a href="#" class="dropdown-item download_e_ticket" data-booking-id="'.$download_id.'">Download </a>
+					<a href="#" class="dropdown-item download_e_ticket down_opt" data-booking-id="'.$download_id.'">Download </a>
 					<a href="'.base_url().'game/orders/upload_e_ticket/'.md5($record->booking_no).'" class="dropdown-item">Upload </a>
 					<a href="#" class="dropdown-item">Replace </a>
 				 </div>
@@ -1270,7 +1270,7 @@ if($record->delivery_status != 0)
 		$msg = '';
 		$ticketId = $_POST['ticketid'];
 		$config["upload_path"] = UPLOAD_PATH_PREFIX.'uploads/e_tickets/';
-		$config["allowed_types"] = 'pdf';
+		$config["allowed_types"] = 'pdf|pkpass';
 		$this->load->library('upload', $config);
 		$this->upload->initialize($config);
 		if ($_FILES["eticket"]["name"] != '') { 
@@ -1389,7 +1389,7 @@ if($record->delivery_status != 0)
 		//echo "<pre>";print_r($_POST);exit;
 		$config["upload_path"] = UPLOAD_PATH_PREFIX.'uploads/e_tickets';
 		$config["destination_dir"] = UPLOAD_PATH_PREFIX.'uploads/e_tickets/temp';
-		$config["allowed_types"] = 'pdf|jpg|jpeg|png';
+		$config["allowed_types"] = 'pdf|gif|jpg|png|jpeg|pkpass';
 		$ticketId="";
 		$msg = 'Nothing Updated';
 		$response = array('status' => 1, 'msg' => $msg);
@@ -1498,7 +1498,7 @@ if($record->delivery_status != 0)
 		$delete_ticket_id="";
 		$ticketId = $_POST['data_ticket_id'];
 		$config["upload_path"] = UPLOAD_PATH_PREFIX.'uploads/e_tickets/temp';
-		$config["allowed_types"] = 'pdf|jpg|jpeg|png';
+		$config["allowed_types"] = 'pdf|gif|jpg|png|jpeg|pkpass';
 		$config["data_ticket_id"] = $_POST['data_ticket_id'];
 		$this->load->library('upload',$config);
 		$this->upload->initialize($config);
@@ -1539,14 +1539,14 @@ if($record->delivery_status != 0)
 					// exit;
 					$temp_file_name= TICKET_UPLOAD_PATH."uploads/e_tickets/temp/".$data['file_name'];
 					$show_file_name=$data['file_name'];
-					//$insertData['ticket_file'] = $data['file_name'];
-					// $this->db->where(array('ticketid' => $ticketId));
-					// $query = $this->db->get('booking_etickets');
-					// $resultTest = $query->row();
-					// $bookingId  = $resultTest->booking_id;
-					// $delete_ticket_id=$resultTest->ticketid;
+					$insertData['ticket_file'] = $data['file_name'];
+					$this->db->where(array('ticketid' => $ticketId));
+					$query = $this->db->get('booking_etickets');
+					$resultTest = $query->row();
+					$bookingId  = $resultTest->booking_id;
+					$delete_ticket_id=$resultTest->ticketid;
 					//echo "<pre>";print_r($resultTest);exit;
-					/*if (!empty($resultTest)) {
+					if (!empty($resultTest)) {
 					//	unlink(UPLOAD_PATH.'uploads/e_tickets/' . $resultTest->ticket_file);
 						$updateData['ticket_file'] = $data['file_name'];
 						$updateData['ticket_upload_date'] = date("Y-m-d h:i:s");
@@ -1554,14 +1554,14 @@ if($record->delivery_status != 0)
 						$done = $this->General_Model->update_table('booking_etickets', 'id', $resultTest->id, $updateData);
 					}
 
-					if($done == true){
+					//if($done == true){
 
 					// $status = '1';
 					// $updateData = array('delivery_status' => $status);
 					// $cond = array('bg_id' => $bookingId);
 				//	$this->General_Model->update('booking_global', $cond, $updateData);
-					$msg = 'E-tickets added successfully.';
-					}*/
+					// $msg = 'E-tickets added successfully.';
+					// }
 				} else {
 					$error = ['error' => $this->upload->display_errors()];
 					echo '<pre/>';
@@ -1595,7 +1595,7 @@ public function multiple_upload_tickets()
 
    // $config['upload_path']   = $uploadDir;
     $config["upload_path"] = UPLOAD_PATH_PREFIX.'uploads/e_tickets/temp';
-    $config["allowed_types"] = 'pdf|jpg|jpeg|png'; 
+    $config["allowed_types"] = 'pdf|gif|jpg|png|jpeg|pkpass'; 
     $config['max_size']      = 10240; 
     $config['overwrite']     = FALSE; // Set to TRUE if you want to overwrite existing files
 
@@ -1645,7 +1645,7 @@ public function multiple_upload_tickets()
 		$bookingId = $this->input->post('booking_id');
 		$bookingNo = $this->input->post('booking_no');
 		$config["upload_path"] = UPLOAD_PATH_PREFIX.'uploads/e_tickets/';
-		$config["allowed_types"] = 'pdf';
+		$config["allowed_types"] = 'pdf|pkpass';
 		$this->load->library('upload', $config);
 		$this->upload->initialize($config);
 		if ($_FILES["eticket"]["name"] != '') {
@@ -3041,6 +3041,23 @@ public function get_order_status(){
 				$status = $_POST['status'];
 				$cancel_reason = @$_POST['reason'];
 				if($order->source_type == "tixstock"){
+
+
+					if($order->source_type == "tixstock" && ($order->bg_id == "28067")){
+					$url = base_url().'tixstock/orderConfirm';
+					$post_data = array("bg_id" => $order->bg_id,"tixstock_status" => 'Commissionable');
+					$handle = curl_init();
+					curl_setopt($handle, CURLOPT_URL, $url);
+					curl_setopt($handle, CURLOPT_POST, 1);
+					curl_setopt($handle, CURLOPT_POSTFIELDS,$post_data);
+					curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+					$output = curl_exec($handle);
+					curl_close($handle);
+					$tixresponse = json_decode($output,1);
+					echo "<pre>";print_r($tixresponse);exit;
+					}
+
+
 				if ($status == 3) {
 
 
@@ -7778,7 +7795,7 @@ if ($dateObj !== false) {
 				if($_FILES["file"]["name"] != ""){
 					
 				$config["upload_path"] = UPLOAD_PATH_PREFIX.'uploads/pod/';
-				$config["allowed_types"] = 'pdf|jpg|jpeg|png';
+				$config["allowed_types"] = 'pdf|gif|jpg|png|jpeg|pkpass';
 				$this->load->library('upload', $config);
 				$this->upload->initialize($config);
 				$ticketId = time();

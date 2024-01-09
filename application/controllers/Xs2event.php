@@ -257,7 +257,7 @@ class Xs2event extends CI_Controller {
 
                         $insertsvData['stadium_id'] = $stadium_id;
                         $insertsvData['category']   = $category_name;
-                        $insertsvData['category_id']   = $category_id;
+                        //$insertsvData['category_id']   = $category_id;
                         $this->Tixstock_Model->insert_data('xs2event_stadium_category',$insertsvData);
 
                     }
@@ -328,7 +328,7 @@ class Xs2event extends CI_Controller {
 
                         $insertsvData['stadium_id'] = $tmp_stadium_id;
                         $insertsvData['category']   = $category_name;
-                        $insertsvData['category_id']   = $category_id;
+                       // $insertsvData['category_id']   = $category_id;
                         $this->Tixstock_Model->insert_data('xs2event_stadium_category',$insertsvData);
 
                     }
@@ -906,7 +906,8 @@ class Xs2event extends CI_Controller {
     $api_stadiums_category = $this->General_Model->getAllItemTable_Array('xs2event_stadium_category', array('stadium_id' => $stadium_id,'category' => $category))->row();
     
     if($api_stadiums_category->id == ""){
-        $category_data = array('stadium_id' => $stadium_id,'category' => $category,'category_id' => $category_id,'merge_status' => 0);
+      //  $category_data = array('stadium_id' => $stadium_id,'category' => $category,'category_id' => $category_id,'merge_status' => 0);
+    	  $category_data = array('stadium_id' => $stadium_id,'category' => $category,'merge_status' => 0);
         $api_stadiums_category_id = $this->Tixstock_Model->insert_data('xs2event_stadium_category',$category_data);
     }
     else{
@@ -974,7 +975,7 @@ class Xs2event extends CI_Controller {
                                     $category_id            = $listing['category_id'];
                                     $quantity               = $listing['stock'];
                                     $price_type             = $listing['currency_code'];
-                                    $price                  = $listing['face_value'];
+                                    $price                  = ($listing['face_value']/100);
                                     $description_supplier   = $listing['description_supplier'];
                                     $listing_notes = array();
                                     if($description_supplier != ""){
@@ -1012,7 +1013,7 @@ class Xs2event extends CI_Controller {
                                     $seller_tickets['ticket_type']     = $ticket_type[$ticket_type_xs2event];
                                     $seller_tickets['ticketid']        = $ticketid;
                                     $seller_tickets['ticket_group_id'] = $ticket_group_id;
-                                    $seller_tickets['user_id']           = 255;
+                                    $seller_tickets['user_id']           = 260;
                                     $seller_tickets['match_id']          = $match_info->m_id;
                                     $seller_tickets['event_flag']        = 'E';
                                     $seller_tickets['ticket_category']   = $ticket_category_id;
@@ -1026,7 +1027,7 @@ class Xs2event extends CI_Controller {
                                     $seller_tickets['split']             = $split_type[$split_type_data];
                                     $seller_tickets['sell_date']         = date("Y-m-d h:i:s");
                                    // $seller_tickets['status']             = 1;
-                                    $seller_tickets['add_by']             = 255;
+                                    $seller_tickets['add_by']             = 260;
                                     $seller_tickets['store_id']           = 1;
                                     $seller_tickets['source_type']        = 'xs2event';
                                     $seller_tickets['customer_details_required']        = $listing['options']['customer_details_required'];

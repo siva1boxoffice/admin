@@ -351,6 +351,20 @@
                                                 </div>
                                                 </td>
                                                 </tr>
+
+                                                <tr>
+                                                <td> <label for="customSwitch019" class="mb-0">Is this final match</label></td>
+                                                <td>
+                                                <div class="form-group mb-1 cust-switch">
+                                                Disable / Enable
+                                                <div class="custom-control custom-switch">
+                                                <input type="checkbox" id="customSwitch019" class="is-switch custom-control-input" name="final_match" value="1" <?php if ($matches->final_match == '1') { ?> checked <?php } ?>>
+                                                            <label class="custom-control-label" for="customSwitch019"></label>
+                                                         </div>
+                                                      </div>
+                                                   </td>
+                                                </tr>
+
                                              </table>
                                           </div>
                                        </div>
@@ -745,7 +759,7 @@
                                           <div class="col-lg-12">
                                              <div class="form-group">
                                                  <label for="simpleinput">Seo Keywords</label>
-                                                 <input type="text" id="choices-text-remove-button" class="form-control" placeholder="Enter Seo Keywords" value="<?php echo isset($matches_lang->seo_keywords) ? $matches_lang->seo_keywords : ''; ?>" name="seo_keywords">
+                                                 <input type="text" id="choices-text-remove-button" class="form-control" placeholder="Enter Seo Keywords" value="<?php echo isset($matches->match_seo_keywords) ? $matches->match_seo_keywords : ''; ?>" name="seo_keywords">
                                                </div>
                                           </div> 
                                           <div class="col-lg-12">
@@ -1281,12 +1295,6 @@ $('#venue').on('change', function(event) {
 
    function create_slug(){
       var val = $("#matchname").val();
-      // Remove "( 1boxoffice )" substring
-      val = val.replace(/\( 1boxoffice \)/g, "");
-
-console.log(val);
-
-
       var tournament;
       if($("#tournament").val()){
           tournament = $("#tournament option:selected").attr('data-slug');

@@ -950,6 +950,7 @@ class Event extends CI_Controller
 					$insertData['country'] = $this->input->post('country');
 					$insertData['create_date'] = strtotime(date('Y-m-d h:i:s'));
 					$insertData['ignoreautoswitch'] = $this->input->post('ignoreautoswitch') ? 1 : 0;
+					$insertData['final_match'] = $this->input->post('final_match') ? 1 : 0;
 					$insertData['top_games'] = $this->input->post('top_games') ? 1 : 0;
 					$insertData['high_demand'] = $this->input->post('high_demand') ? '1' : '0';
 					$insertData['almost_sold'] = $this->input->post('almost_sold') ? '1' : '0';
@@ -1181,6 +1182,7 @@ class Event extends CI_Controller
 					$updateData['matchticket'] = $this->input->post('matchticket');
 					$updateData['daysremaining'] = 1; //$this->input->post('daysremaining');
 					$updateData['ignoreautoswitch'] = $this->input->post('ignoreautoswitch') ? 1 : 0;
+					$updateData['final_match'] = $this->input->post('final_match') ? 1 : 0;
 					$updateData['top_games'] = $this->input->post('top_games') ? 1 : 0;
 					$updateData['high_demand'] = $this->input->post('high_demand') ? '1' : '0';
 					$updateData['almost_sold'] = $this->input->post('almost_sold') ? '1' : '0';
@@ -1725,7 +1727,7 @@ class Event extends CI_Controller
 		$category_id = $this->uri->segment(4);
 
 		if ($event_segment == "add_category") {
-			$this->data['categories'] = $this->General_Model->get_other_events_categories()->result();
+			$this->data['categories'] = $this->General_Model->get_other_events_categories()->result();			
 			if ($category_id != '') {
 				$this->data['category'] = $this->General_Model->get_other_events_categories($row_no = '', $row_per_page = '', $orderColumn = '', $orderby = '', array('A.id' => $category_id))->row();
 			}
@@ -1741,6 +1743,7 @@ class Event extends CI_Controller
 					$insertData['parent_id'] = trim($this->input->post('parent'));
 					$insertData['category_name'] = trim($this->input->post('categoryname'));
 					$insertData['status'] = $this->input->post('is_active') ? 1 : 0;
+					$insertData['artist'] = $this->input->post('artist') ? 1 : 0;
 					$insertData['sort'] = $this->input->post('sortno');
 					$insertData['category_desc'] = $this->input->post('category_description');
 					$insertData['create_date'] = strtotime(date('Y-m-d h:i:s'));
@@ -1771,6 +1774,7 @@ class Event extends CI_Controller
 					$updateData['parent_id'] = trim($this->input->post('parent'));
 					$updateData['category_name'] = trim($this->input->post('categoryname'));
 					$updateData['status'] = $this->input->post('is_active') ? 1 : 0;
+					$updateData['artist'] = $this->input->post('artist') ? 1 : 0;
 					$updateData['sort'] = $this->input->post('sortno');
 					$updateData['category_desc'] = $this->input->post('category_description');
 					$updateData['create_date'] = strtotime(date('Y-m-d h:i:s'));
@@ -1920,6 +1924,10 @@ class Event extends CI_Controller
 		} else if ($event_segment == "add_event") {
 			//$this->data['categories'] = $this->General_Model->get_other_events_main_categories()->result();
 			$this->data['categories'] = $this->General_Model->get_other_events_categories('', '', '', '')->result();
+			
+			$this->data['other_events'] = $this->General_Model->get_other_events_concerts()->result();
+			
+
 			$this->data['stadiums'] = $this->General_Model->get_stadium()->result();
 
 			$this->data['tournments'] = $this->General_Model->get_tournments()->result();
@@ -2055,6 +2063,7 @@ class Event extends CI_Controller
 						$insertData['oneboxoffice_status'] = 1;
 						$insertData['category'] = 1;
 						$insertData['other_event_category'] = $this->input->post('category');
+						$insertData['team_1'] = $this->input->post('artist_name');
 						$insertData['match_name'] = trim($this->input->post('eventname'));
 						$insertData['extra_title'] = trim($this->input->post('extra_title'));
 						$insertData['status'] = $this->input->post('is_active') ? 1 : 0;
@@ -2085,6 +2094,7 @@ class Event extends CI_Controller
 						$insertData['tbc_status'] = $this->input->post('tbc_status') ? 1 : 0;
 						//$insertData['oneboxoffice_status'] = $this->input->post('oneboxoffice_status') ? 1 : 0;
 						$insertData['ignoreautoswitch'] = $this->input->post('ignoreautoswitch') ? 1 : 0;
+						$insertData['final_match'] = $this->input->post('final_match') ? 1 : 0;
 						$insertData['high_demand'] = $this->input->post('high_demand') ? '1' : '0';
 						$insertData['almost_sold'] = $this->input->post('almost_sold') ? '1' : '0';
 						$insertData['affiliate_status'] = $this->input->post('affiliate_status') ? 1 : 0;
@@ -2260,6 +2270,7 @@ class Event extends CI_Controller
 							}
 
 							$updateData['other_event_category'] = $this->input->post('category');
+							$updateData['team_1'] = $this->input->post('artist_name');
 							$updateData['match_name'] = trim($this->input->post('eventname'));
 							$updateData['extra_title'] = trim($this->input->post('extra_title'));
 							$updateData['status'] = $this->input->post('is_active') ? 1 : 0;
@@ -2286,6 +2297,7 @@ class Event extends CI_Controller
 							$updateData['upcoming_events'] = $this->input->post('upcomingevents') ? 1 : 0;
 							$updateData['tbc_status'] = $this->input->post('tbc_status') ? 1 : 0;
 							$updateData['ignoreautoswitch'] = $this->input->post('ignoreautoswitch') ? 1 : 0;
+							$updateData['final_match'] = $this->input->post('final_match') ? 1 : 0;
 							$updateData['high_demand'] = $this->input->post('high_demand') ? '1' : '0';
 							$updateData['almost_sold'] = $this->input->post('almost_sold') ? '1' : '0';
 							$updateData['affiliate_status'] = $this->input->post('affiliate_status') ? 1 : 0;
@@ -2314,6 +2326,7 @@ class Event extends CI_Controller
 								else if($api == 2)							
 									$updateData['oneclicket_status'] = 1;								
 								}
+
 							$this->General_Model->update('match_info', array('m_id' => $matchId), $updateData);
 
 
@@ -3086,5 +3099,21 @@ class Event extends CI_Controller
 			echo "No Records Found.";
 		}
 	}
+
+	public function check_artist()
+	{
+		$status = 0;
+
+		if (!empty($_POST['category_id'])) {
+			$category = $this->General_Model->getAllItemTable_array('otherevent_category', array('id' => $_POST['category_id']))->row();
+
+			$status = ($category->artist == 1) ? 1 : 0;
+		}
+
+		$response = array('status' => $status);
+		echo json_encode($response);
+		exit;
+	}
+
 
 }

@@ -217,8 +217,8 @@
    </div>
 </div>
 <div id="modal_content_ajax">
-            <!-- modal content here -->
-            </div>
+				<!-- modal content here -->
+				</div>
 <?php $this
    ->load
    ->view(THEME.'common/footer'); ?>
@@ -230,25 +230,20 @@
    $(this).attr("disabled",true);
    $(this).text("Please wait...");
 
-      var bg_id = $(this).attr('data-bg-id');
-      var status = $(this).attr('data-ticket-status');
-      var data_close_modal = $(this).attr('data-close-modal');
-      //var ticket_type =$(this).attr('data-ticket-type');
-      var reason = "";
-
-      var reject_org_order_id = [];
-      reject_org_order_id.push(bg_id);
-
-
+var bg_id = $(this).attr('data-bg-id');
+var status = $(this).attr('data-ticket-status');
+var data_close_modal = $(this).attr('data-close-modal');
+//var ticket_type =$(this).attr('data-ticket-type');
+var reason = "";
          if (status == 3) {
             reason = prompt("Please Enter the reason for Rejection ", "Invalid File Format.");
          }
          $.ajax({
             url: base_url + 'game/orders/ajax_update_pending_orders',
-            method: "POST",
-        //   data : {"ticket_id" : bg_id,"status" : status,"ticket_type" : ticket_type,"reason" : reason}, 
+	         method: "POST",
+	     //   data : {"ticket_id" : bg_id,"status" : status,"ticket_type" : ticket_type,"reason" : reason}, 
            data: {
-                    "org_order_id": reject_org_order_id,
+                    "org_order_id": bg_id,
                     "status": status,
                     "reason": reason
                 },         
@@ -262,14 +257,13 @@
                  } else {
                      swal('Updation Failed !', result.msg, 'error');
 
-                 }               
+                 }					
             $('#'+data_close_modal).modal("hide");  
 
              setTimeout(function () {
                $("#approve_reject").text("Yes, Change it!");
                $("#approve_reject").attr("disabled",false);
-                window.location.reload();
-              }, 2000);
+             window.location.reload(); }, 2000);
 
              },
               error: function(xhr) {
@@ -414,26 +408,26 @@ if(org_order_id.length >0)
          {
 
          var data_title = "Are you sure want to Approve All Orders ?";
-      var data_sub_title = "Approve Orders !";
-      var data_yes = "Yes, Change it!";
-      var data_no = "No, cancel!";
-      var data_btn = "approve_all_orders";
-      var data_target = "approve_orders_target";
-      var data_bg_id = "";
-      var data_status = "";
-      var data_ticket_type = "";
-   $.ajax({
-         url: '<?php echo base_url();?>game/call_modal',
-         type: "POST",
-         data: {  "data_title": data_title ,"data_sub_title":data_sub_title, "data_yes":data_yes,"data_no":data_no,"data_btn":data_btn,"data_target":data_target ,"data_bg_id":data_bg_id,"data_status":data_status,"data_ticket_type":data_ticket_type},
-         success: function (response) {  
-            $("#modal_content_ajax").html(response); 
-             $('#'+data_target).modal("show");  
-            //$("#").modal('show');
-         },
-         error: function () {
-         }
-      });
+		var data_sub_title = "Approve Orders !";
+		var data_yes = "Yes, Change it!";
+		var data_no = "No, cancel!";
+		var data_btn = "approve_all_orders";
+		var data_target = "approve_orders_target";
+		var data_bg_id = "";
+		var data_status = "";
+		var data_ticket_type = "";
+	$.ajax({
+			url: '<?php echo base_url();?>game/call_modal',
+			type: "POST",
+			data: {  "data_title": data_title ,"data_sub_title":data_sub_title, "data_yes":data_yes,"data_no":data_no,"data_btn":data_btn,"data_target":data_target ,"data_bg_id":data_bg_id,"data_status":data_status,"data_ticket_type":data_ticket_type},
+			success: function (response) {  
+				$("#modal_content_ajax").html(response); 
+				 $('#'+data_target).modal("show");  
+				//$("#").modal('show');
+			},
+			error: function () {
+			}
+		});
    }
          else
          {

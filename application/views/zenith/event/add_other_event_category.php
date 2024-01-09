@@ -63,7 +63,17 @@
                                      <label class="custom-control-label" for="customSwitch18">Enable / disable Category Status</label>
                                    </div>
                                 </div>
-                             </div>  
+                             </div> 
+                             
+                             <div class="col-lg-3">
+                                <div class="form-group">
+                                   <label for="artist">Is this Artist</label>
+                                   <div class="custom-control custom-switch">
+                                     <input name="artist" type="checkbox" class="custom-control-input" id="customSwitch19"  value="1" <?php if($category->artist == '1'){?> checked <?php } ?> >
+                                     <label class="custom-control-label" for="customSwitch19">Enable / disable Artist</label>
+                                   </div>
+                                </div>
+                             </div> 
                              
                              <div class="col-lg-3">
                                  <div class="form-group">
