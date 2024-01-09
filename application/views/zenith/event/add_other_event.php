@@ -111,7 +111,7 @@ z-index: 9999;
                                                       else{
                                                          $categories_data[$value->PARENT][]  = $value;
                                                       }
-                                                   } pr($categories_data); ?>
+                                                   } ?>
                                     
                                           <option value="">Select Category</option>
                                              <?php foreach ($categories_data as $category_main) {
