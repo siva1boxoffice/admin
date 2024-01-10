@@ -33,7 +33,7 @@
                         <form id="branch-form" method="post" class="validate_form_v1 login-wrapper" action="<?php echo base_url();?>event/other_events_category/save_category">
                         <input type="hidden" name="categoryId" value="<?php echo $category->id;?>">
                          <div class="row column_modified">
-                            <div class="col-lg-3">
+                            <div class="col-lg-4">
                                   <div class="form-group">
                                    <label for="parent_category">Parent Category</label>     
                                         <div class="control">
@@ -46,7 +46,7 @@
                                         </div>
                                  </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-4">
                                  <div class="form-group">
                                  <label for="category_name" >Category Name</label>
                                     <div class="control">
@@ -55,7 +55,14 @@
                                 </div>
                                </div>
 
-                               <div class="col-lg-3">
+                               <div class="col-lg-4">
+                                           <div class="form-group">
+                                              <label for="simpleinput">Url Key <span class="text-danger">*</span></label>
+                                              <input type="text" id="event_url" name="event_url" value="<?php echo $category->slug;?>" class="form-control" placeholder="Enter Url Key" required>
+                                            </div>
+                                       </div>
+
+                               <div class="col-lg-4">
                                 <div class="form-group">
                                    <label for="sellers">Category Status</label>
                                    <div class="custom-control custom-switch">
@@ -65,7 +72,7 @@
                                 </div>
                              </div> 
                              
-                             <div class="col-lg-3">
+                             <div class="col-lg-4">
                                 <div class="form-group">
                                    <label for="artist">Is this Artist</label>
                                    <div class="custom-control custom-switch">
@@ -75,7 +82,7 @@
                                 </div>
                              </div> 
                              
-                             <div class="col-lg-3">
+                             <div class="col-lg-4">
                                  <div class="form-group">
                                  <label for="category_name" >Sort No.</label>
                                     <div class="control">
@@ -108,5 +115,46 @@
          </div>
      </div>
  </div>
-
 <?php $this->load->view(THEME.'common/footer'); ?>
+
+<script>
+    $(document).ready(function(){ 
+        $("body").on("focusout","#categoryname",function(){
+        var val = $(this).val();
+        slug = slugfly(val );
+        $("#event_url").val(slug );
+console.log('focusout');
+        create_slug();
+    });
+
+    function slugfly(str) {
+        str = str.replace(/^\s+|\s+$/g, ''); // trim
+        str = str.toLowerCase();
+
+        // remove accents, swap ñ for n, etc
+        var from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;";
+        var to   = "aaaaaeeeeeiiiiooooouuuunc------";
+        for (var i = 0, l = from.length; i < l; i++) {
+          str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+        }
+
+        str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+                 .replace(/\s+/g, '-') // collapse whitespace and replace by -
+                 .replace(/-+/g, '-'); // collapse dashes
+
+        return str;
+   }
+
+   function create_slug(){
+      var val = $("#categoryname").val();
+    
+      var slug ="";
+      if(val){
+         slug = slugfly(val + "-tickets");
+         $("#event_url").val(slug );
+      }
+    
+   }
+
+   });
+    </script>

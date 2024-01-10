@@ -259,6 +259,9 @@
                                                       </div>
                                                    </td>
                                                 </tr>
+
+                                        <?php  if($segment=="teams"){ ?>
+
                                                 <tr>
                                                    <td> <label for="sellers" class="mb-0">Top <?php echo ucfirst($segment); ?></label></td>
                                                    <td>
@@ -273,8 +276,9 @@
                                                       </div>
                                                    </td>
                                                 </tr>
+                                                <?php } ?>
                                                 <tr>
-                                                   <td> <label for="header_footer" class="mb-0">Header / Footer <br/>Top <?php echo ucfirst($segment); ?></label></td>
+                                                   <td> <label for="header_footer" class="mb-0">Show In Header / Footer </label></td>
                                                    <td>
                                                       <div class="form-group mb-1 cust-switch">
                                                          No / Yes
@@ -287,6 +291,7 @@
                                                       </div>
                                                    </td>
                                                 </tr>
+                                                <?php  if($segment=="teams"){ ?>
                                                 <tr>
                                                    <td> <label for="header_footer" class="mb-0">Show <?php echo ucfirst($segment); ?></label></td>
                                                    <td>
@@ -301,6 +306,8 @@
                                                       </div>
                                                    </td>
                                                 </tr>
+                                          <?php } ?>
+
                                              </table>
                                           </div>
                                        </div>
