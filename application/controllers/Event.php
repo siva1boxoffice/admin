@@ -1749,6 +1749,12 @@ class Event extends CI_Controller
 					$insertData['create_date'] = strtotime(date('Y-m-d h:i:s'));
 					$insertData['add_by'] = $this->session->userdata('admin_id');
 
+					if ($this->input->post('event_url')) {
+						$title = strip_tags($this->input->post('event_url'));
+					}
+					$titleURL = strtolower(url_title($title));
+					$insertData['slug'] = $titleURL;
+
 					$category_id = $this->General_Model->insert_data('otherevent_category', $insertData);
 
 					$lang = $this->General_Model->getAllItemTable('language', 'store_id', $this->session->userdata('storefront')->admin_id)->result();
@@ -1779,6 +1785,13 @@ class Event extends CI_Controller
 					$updateData['category_desc'] = $this->input->post('category_description');
 					$updateData['create_date'] = strtotime(date('Y-m-d h:i:s'));
 					$updateData['add_by'] = $this->session->userdata('admin_id');
+
+					if ($this->input->post('event_url')) {
+						$title = strip_tags($this->input->post('event_url'));
+						$titleURL = strtolower(url_title($title));
+						$updateData['slug'] = $titleURL;
+					}
+					
 
 					$this->General_Model->update('otherevent_category', array('id' => $categoryId), $updateData);
 

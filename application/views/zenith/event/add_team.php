@@ -189,7 +189,7 @@
                                                 <div class="prev_back_img">
                                                   <label class="custom-upload mb-0"><input type="hidden" name="exs_file" value="<?php if (isset($teams->teamImg)) {
                                                 echo $teams->teamImg;
-                                                } ?>"><input type="file"  class="form-control-file input"  name="team_image" id="team_image" value="" <?php if ($teams->id == "") { ?> required <?php } ?> onchange="loadFiles(event,'team_img_file')"> Upload JPEG File</label>
+                                                } ?>"><input type="file"  class="form-control-file input"  name="team_image" id="team_image" value=""  onchange="loadFiles(event,'team_img_file')"> Upload JPEG File</label>
                                                   <p>Previous <?php echo ucfirst($segment); ?> Image</p>
                                                   <a id="team_img_file_link" target="_blank" href="javascript:void(0);" onclick="return popitup('<?php if (isset($teams->teamImg)) {
                                                 echo UPLOAD_PATH.'uploads/teams/'.$teams->teamImg;
@@ -208,7 +208,7 @@
                                                 <div class="prev_back_img">
                                                   <label class="custom-upload mb-0"> <input type="hidden" name="exs_filebg" value="<?php if (isset($teams->teambgImg)) {
                                                 echo $teams->teambgImg;
-                                                } ?>"><input type="file"  class="form-control-file input"  name="team_bg" id="team_bg" value="" <?php if ($teams->id == "") { ?> required <?php } ?> onchange="loadFiles(event,'team_bg_file')">Upload JPEG File</label>
+                                                } ?>"><input type="file"  class="form-control-file input"  name="team_bg" id="team_bg" value=""  onchange="loadFiles(event,'team_bg_file')">Upload JPEG File</label>
                                                   <p>Previous Background Image</p>
                                                    <a id="team_bg_file_link" target="_blank" href="javascript:void(0);" onclick="return popitup('<?php if (isset($teams->teamImg)) {
                                                 echo UPLOAD_PATH.'uploads/background/'.$teams->teambgImg;
@@ -259,6 +259,9 @@
                                                       </div>
                                                    </td>
                                                 </tr>
+
+                                        <?php  if($segment=="teams"){ ?>
+
                                                 <tr>
                                                    <td> <label for="sellers" class="mb-0">Top <?php echo ucfirst($segment); ?></label></td>
                                                    <td>
@@ -273,8 +276,9 @@
                                                       </div>
                                                    </td>
                                                 </tr>
+                                                <?php } ?>
                                                 <tr>
-                                                   <td> <label for="header_footer" class="mb-0">Header / Footer <br/>Top <?php echo ucfirst($segment); ?></label></td>
+                                                   <td> <label for="header_footer" class="mb-0">Show In Header / Footer </label></td>
                                                    <td>
                                                       <div class="form-group mb-1 cust-switch">
                                                          No / Yes
@@ -287,6 +291,7 @@
                                                       </div>
                                                    </td>
                                                 </tr>
+                                                <?php  if($segment=="teams"){ ?>
                                                 <tr>
                                                    <td> <label for="header_footer" class="mb-0">Show <?php echo ucfirst($segment); ?></label></td>
                                                    <td>
@@ -301,6 +306,8 @@
                                                       </div>
                                                    </td>
                                                 </tr>
+                                          <?php } ?>
+
                                              </table>
                                           </div>
                                        </div>
