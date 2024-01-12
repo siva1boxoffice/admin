@@ -1939,6 +1939,7 @@ class Event extends CI_Controller
 			$this->data['categories'] = $this->General_Model->get_other_events_categories('', '', '', '')->result();
 			
 			$this->data['other_events'] = $this->General_Model->get_other_events_concerts()->result();
+			$this->data['other_events_tournaments'] = $this->General_Model->get_selected_tournament(5)->result();
 			
 
 			$this->data['stadiums'] = $this->General_Model->get_stadium()->result();
@@ -1959,6 +1960,7 @@ class Event extends CI_Controller
 
 				// echo "MATCHID:".$match_id;exit;
 				$this->data['event'] = $this->General_Model->getOtherEvents('', '', $row_no = '', $row_per_page = '', $orderColumn = '', $orderby = '', array('match_info.m_id' => $match_id))->row();
+
 
 				$this->data['matches'] = $this->General_Model->get_matches($match_id)->row();
 				$this->data['matches_lang'] = $this->General_Model->get_matches_stores($match_id);
@@ -2094,6 +2096,12 @@ class Event extends CI_Controller
 						$insertData['venue'] = $this->input->post('venue');
 						$insertData['price_type'] = $this->input->post('price_type');
 						$insertData['tournament'] = $this->input->post('tournament');
+
+						if($this->input->post('tournament_list')!="")
+						{
+							$insertData['tournament'] = $this->input->post('tournament_list');
+						}
+
 						$insertData['tournament_group'] = $this->input->post('tournament_group');
 						$insertData['search_keywords'] = $this->input->post('search_keywords');
 						$insertData['slug'] = trim($this->input->post('categoryname'));
@@ -2293,6 +2301,10 @@ class Event extends CI_Controller
 							//$updateData['oneboxoffice_status'] = $this->input->post('oneboxoffice_status') ? '1' : '0';
 
 							$updateData['tournament'] = $this->input->post('tournament');
+							if($this->input->post('tournament_list')!="")
+							{
+								$updateData['tournament'] = $this->input->post('tournament_list');
+							}
 							$updateData['search_keywords'] = $this->input->post('search_keywords');
 							$updateData['tournament_group'] = $this->input->post('tournament_group');
 							$updateData['match_date'] = date('Y-m-d H:i:s', strtotime($this->input->post('matchdate') . ' ' . $this->input->post('matchtime')));
@@ -2339,7 +2351,6 @@ class Event extends CI_Controller
 								else if($api == 2)							
 									$updateData['oneclicket_status'] = 1;								
 								}
-
 							$this->General_Model->update('match_info', array('m_id' => $matchId), $updateData);
 
 
@@ -2888,6 +2899,24 @@ class Event extends CI_Controller
 
 	}
 
+	public function getOtherEventTournament()
+	{
+		//$category=$_POST['gamecategory'];
+		$category=5;
+		$tournament_records = $this->General_Model->get_selected_tournament($category)->result();
+		
+		$tournaments .= '<option value="">Select Tournament</option>';
+		foreach($tournament_records as $tournament ){
+			$slug = $tournament->url_key;
+		  	$tournaments .= '<option value="'.$tournament->t_id.'" data-slug="'.$slug.'"  >'.$tournament->tournament_name.'</option>';
+		}
+
+		$result['tournament']=$tournaments;	
+
+		$response = array('status' => 1, 'result' => $result);
+			echo json_encode($response);
+			exit;
+	}
 	public function get_selected_teams()
 	{
 		$category=$_POST['gamecategory'];

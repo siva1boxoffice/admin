@@ -141,7 +141,29 @@ z-index: 9999;
                                        </select>
                                     </div>
                                  </div>
-                                 <div class="col-lg-4" style="display:none">
+
+                                 <?php 
+                                 if($event->tournament >0 )
+                                    $display_tournament="block";
+                                 else
+                                 $display_tournament="none";
+                                    ?>
+                                 <div class="col-lg-4 other_events_tournament" style="display:<?php echo $display_tournament; ?>">
+                                          <div class="form-group">
+                                              <label for="example-select">Tournament <span class="text-danger">*</span></label>
+                                             
+                                                <select class="custom-select" id="tournament_list" name="tournament_list" >
+                                                <option value="">-Select  Tournament -</option>
+                                          <?php foreach($other_events_tournaments as $other_events_tournament){ ?>
+                                          <option value="<?php echo $other_events_tournament->t_id;?>" <?php if($event->tournament == $other_events_tournament->t_id){?> selected <?php } ?>><?php echo $other_events_tournament->tournament_name;?></option>
+                                          <?php } ?>
+                                                           
+                                                        </select> 
+                                          </div> 
+                                       </div>
+
+
+                                       <div class="col-lg-4" style="display:none">
                                     <div class="form-group">
                                        <label for="example-select">Tournament</label>
                                        <select class="custom-select" id="tournament" name="tournament"   onchange="get_sub_tournament(this.value);" >
@@ -152,6 +174,7 @@ z-index: 9999;
                                        </select>
                                     </div>
                                  </div>
+
                                  <div class="col-lg-4"  style="display:none">
                                     <div class="form-group">
                                        <label for="example-select">Tournament Group</label>
@@ -1182,7 +1205,8 @@ $('#category').on('change', function(event) {
       $('#artist_name').val(''); 
 
    }*/
-
+   if(category_id!=14)
+{
    $.ajax({
             type: 'POST',
             url: '<?php echo base_url(); ?>event/check_artist',
@@ -1202,6 +1226,37 @@ $('#category').on('change', function(event) {
 
             }
          });
+      }
+
+else{
+   $('.other_events').css('display', 'none');
+                  $('#artist_name').val('');
+}
+////////////////////////////
+if(category_id==14)
+{
+
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo base_url(); ?>event/getOtherEventTournament',
+            data: {
+               'gamecategory': 5,
+            },
+            dataType: "json",
+            success: function(data) {   
+              
+               $('.other_events_tournament').css('display', 'block');
+               $('#tournament_list').html(data.result.tournament); 
+            }
+         });
+      }
+      else{
+         $('.other_events_tournament').css('display', 'none');
+         $('#tournament_list').val('');
+      }
+///////////////////////////
+
+
 });
 
 
