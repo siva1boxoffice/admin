@@ -1533,8 +1533,10 @@ error_reporting(E_ALL);*/
                         if($other_event_category != "" && $boxoffice_team_a != "" && $boxoffice_stadium_id != ""){
 
                         $eventtype = ($main_category == 1) ? "match" : "other";
+
                         $match_data = array();
-                        $match_data['category']                 = $main_category;
+                        $match_data['category']                 = 1;
+                        //$match_data['category']                 = $main_category;
                         //$match_data['match_name']               = $match_name_full;
                         $match_data['match_name']               = $api_events_tickets->event_name;
                         $match_data['team_1']                   = $boxoffice_team_a;
