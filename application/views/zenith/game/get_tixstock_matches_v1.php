@@ -23,7 +23,12 @@ if(!empty($match_data)){ ?>
                                                 <td tabindex="0" class="dt-checkboxes-cell" style=""><div class="form-check custom-checkbox"><input type="checkbox" name="add_event_id[]" <?php if($match->match_found == 0){ ?>checked <?php }else{?> disabled <?php } ?>class="form-check-input dt-checkboxes" value="<?php echo $match->api_data_id;?>"><label class="form-check-label">&nbsp;</label></div></td>
                                                 <td><?php echo $match->event_name;?>
                                                 </td>
+                                                <?php if(@$match->tournament_name != "" && $match->category_name == ""){?>
                                                 <td><?php echo $match->tournament_name;?></td>
+                                                <?php } ?>
+                                                 <?php if(@$match->tournament_name == "" && $match->category_name != ""){?>
+                                                <td><?php echo $match->category_name;?></td>
+                                                <?php } ?>
                                                 <td><?php echo $match->stadium_name;?></td>
                                                 <td><?php echo $match->match_date_time;?></td>
                                                 <td><?php echo $match->tickets;?></td>

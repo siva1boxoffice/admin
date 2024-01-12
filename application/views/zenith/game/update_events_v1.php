@@ -202,7 +202,7 @@ function getChildren_xs2event($array, $category = NULL){
                   <div class="form-group">
                   <label for="example-select">Event Category <span class="text-danger">*</span></label>
                   <?php echo
-                  '<select name="category_name" class="actionpayout roleuser custom-select" >
+                  '<select name="category_name" id="main_category" class="actionpayout roleuser custom-select" >
                   <option value="">-- please select --</option>';
 
                   for($i = 0; $i < count($dropdownlist); $i++){
@@ -1123,10 +1123,13 @@ $('#search-form').validate({
   submitHandler: function(form) {
     
     var myform = $('#'+$(form).attr('id'))[0];
+
+    var parent_label=$('#main_category :selected').parent().attr('label');
     //is-loading no-click
    // branch-form-btn
     var formData = new FormData(myform);
-     formData.append('parent_category', $("#parent_category").val()); 
+    formData.append('sport_type', parent_label); 
+    formData.append('parent_category', $("#parent_category").val()); 
     formData.append('category', $("#category").val()); 
     formData.append('tournament', $("#tournament").val()); 
     formData.append('tournaments', $("#tournaments").val()); 

@@ -99,6 +99,22 @@ public function get_event_pulling_api($match_id = "") {
         return $result->row();
     }
 
+public function get_oe_event_pulling_api($match_id = "") {
+        
+
+        $this->db->select("api_events.*,otherevent_category.*,api_stadium.*,api_events.merge_status as event_merge_status,api_events.api_unique_id as api_unique_id,api_events.id as api_data_id");
+        $this->db->join('otherevent_category', 'otherevent_category.id = api_events.other_event_category', 'left');
+        $this->db->join('otherevent_category_lang', 'otherevent_category_lang.other_event_cat_id = api_events.other_event_category', 'left');
+        $this->db->where('otherevent_category_lang.language', 'en');
+        $this->db->join('api_stadium', 'api_stadium.stadium_id = api_events.stadium', 'left');
+         if($match_id != ""){
+         $this->db->where('api_events.id', $match_id);
+         }
+        $result = $this->db->get('api_events');
+
+        return $result->row();
+    }
+    
 public function get_match_tournments($match_id = "") {
         
 
@@ -189,11 +205,12 @@ public function get_country($country_code)
 		return $query;
 	}
 
-public function get_venues($stadium_name)
+public function get_venues($stadium_name,$stadium_type=1)
 	{
 
 		$this->db->select('stadium.*')->from('stadium');
 		$this->db->where('stadium_name', $stadium_name);
+		$this->db->where('category', $stadium_type);
 		$query = $this->db->get();
 		return $query;
 	}
