@@ -667,7 +667,7 @@ public function updateFeedsEvents($proceed = false)
                         $category_name  = $data['category']['name'];
 
                         $tournament_id  = $this->updateTournaments($data['category'],$main_category);
-
+                        //echo 'category_name = '.$tournament_id;exit;
                         $boxoffice_tournament_id = "";
                         $boxoffice_team_a        = "";
                         $boxoffice_team_b        = "";
@@ -786,8 +786,19 @@ public function updateFeedsEvents($proceed = false)
                         $match_time           =  date("H:i",strtotime($match_date_string[1]));
                         $match_date_time      = $match_date.'-'.$match_time;
                         $other_event_category = "";
+                        $parent_cat_id = '';
                         if($event_type == "other"){ 
+
                              $other_event_category = $this->otherevent_category($data['category']['name'],$parent_id);
+                             if($other_event_category != ""){ 
+                                 $parent_other = $this->otherevent_category_parent($other_event_category);
+                                 if($parent_other != ""){
+                                    $parent_cat_id = $parent_other;
+                                 }
+                                 else{
+                                     $parent_cat_id = $other_event_category;
+                                 }
+                             }
                              $match_date_new = date("Y-m-d",strtotime($match_date_string[0])).' '.date("H:i:s",strtotime($match_date_string[1]));
                              $api_events_tickets = $this->General_Model->getAllItemTable_Array('match_info', array('other_event_category' => $other_event_category,'match_date' => $match_date_new))->row();
                              if($api_events_tickets){
@@ -796,13 +807,13 @@ public function updateFeedsEvents($proceed = false)
                              }
                             
                         }
-
+                        
                         if($boxoffice_match_id == ""){
 
                             $event_data = array(
                                 'event_name' => $match_name,
                                 'tournament' => $tournament_id,
-                                'other_event_category' => $other_event_category,
+                                'other_event_category' => $parent_cat_id,
                                 'event_type' => $event_type,
                                 'category' => $main_category,
                                 'stadium'    => $stadium_id,
@@ -827,7 +838,7 @@ public function updateFeedsEvents($proceed = false)
                                 'match_id'  => $boxoffice_match_id,
                                 'event_name' => $match_name,
                                 'tournament' => $tournament_id,
-                                'other_event_category' => $tournament_id,
+                                'other_event_category' => $parent_cat_id,
                                 'event_type' => $event_type,
                                 'category' => $main_category,
                                 'stadium' => $stadium_id,
@@ -1529,7 +1540,7 @@ error_reporting(E_ALL);*/
                         $match_data['team_1']                   = $boxoffice_team_a;
                         $match_data['team_2']                   = $boxoffice_team_b;
                         $match_data['hometown']                 = @$boxoffice_team_a;
-                        $match_data['tournament']               = @$other_event_category;
+                        $match_data['tournament']               = '';
                         $match_data['slug']                     = $team_slug;
                         $match_data['status']                   = 1;
                         $match_data['availability']             = 1;
@@ -1902,6 +1913,14 @@ error_reporting(E_ALL);*/
         }
         }
 
+    }
+
+     public function otherevent_category_parent($child_id)
+    {     
+      
+        $parent_category = $this->General_Model->getAllItemTable_Array('otherevent_category', array('id' => $child_id))->row();
+        $category_id = $parent_category->parent_id;
+        return $category_id;
     }
 
 
