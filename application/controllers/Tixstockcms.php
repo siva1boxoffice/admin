@@ -583,6 +583,8 @@ public function updateFeedsEvents($proceed = false)
        else{  
             $page       = ($_POST['page'] != "") ? ($_POST['page']) : 1;
             $tournament = $_POST['category_name'];
+            $parent_id = $this->otherevent_category($sport_type,0);
+
             /*if($_POST['tournament'] != "" && $_POST['tournaments'] == ""){
                  $tournament_data = $this->General_Model->getAllItemTable_Array('tixstock_categories', array('category_id' => $_POST['tournament']))->row();
                  $tournament = $tournament_data->category;
@@ -749,7 +751,7 @@ public function updateFeedsEvents($proceed = false)
                         }*/
 
                         $event_type = "other";
-                        if($main_category == 1 || $main_category == 5){
+                        if($main_category == 1){
                             $event_type = "match";
                         }
                        
@@ -783,12 +785,24 @@ public function updateFeedsEvents($proceed = false)
                         $match_date           =  date("d M Y",strtotime($match_date_string[0]));
                         $match_time           =  date("H:i",strtotime($match_date_string[1]));
                         $match_date_time      = $match_date.'-'.$match_time;
+                        $other_event_category = "";
+                        if($event_type == "other"){ 
+                             $other_event_category = $this->otherevent_category($data['category']['name'],$parent_id);
+                             $match_date_new = date("Y-m-d",strtotime($match_date_string[0])).' '.date("H:i:s",strtotime($match_date_string[1]));
+                             $api_events_tickets = $this->General_Model->getAllItemTable_Array('match_info', array('other_event_category' => $other_event_category,'match_date' => $match_date_new))->row();
+                             if($api_events_tickets){
+                                 $merge_found = 1;
+                                 $boxoffice_match_id = $api_events_tickets->m_id;
+                             }
+                            
+                        }
 
                         if($boxoffice_match_id == ""){
 
                             $event_data = array(
                                 'event_name' => $match_name,
                                 'tournament' => $tournament_id,
+                                'other_event_category' => $other_event_category,
                                 'event_type' => $event_type,
                                 'category' => $main_category,
                                 'stadium'    => $stadium_id,
@@ -813,6 +827,7 @@ public function updateFeedsEvents($proceed = false)
                                 'match_id'  => $boxoffice_match_id,
                                 'event_name' => $match_name,
                                 'tournament' => $tournament_id,
+                                'other_event_category' => $tournament_id,
                                 'event_type' => $event_type,
                                 'category' => $main_category,
                                 'stadium' => $stadium_id,
@@ -1437,7 +1452,7 @@ error_reporting(E_ALL);*/
               $match_date_time   = date("Y-m-d H:i:s",strtotime($match_date_time));
               $match_time        = date("H:i:s",strtotime($match_date_time));
 
-              if($other_event_category != "" && $tournament_id == 0){ 
+              if($other_event_category != "" && $event_type == 'other'){ 
 
                    
                 $event_name = $api_events_tickets->event_name;
@@ -1489,9 +1504,9 @@ error_reporting(E_ALL);*/
 
                          $otherevent_tournament_category = $this->General_Model->getAllItemTable_Array('otherevent_category_lang', array('other_event_cat_id' => $other_event_category,'language' => 'en'))->row();
                         
-                        $boxoffice_tournament_name = str_replace(' ','-', $otherevent_tournament_category->category_name);
-                        $boxoffice_team_a_name = str_replace(' ','-', $boxoffice_team_a_name);
-                        $boxoffice_team_b_name = str_replace(' ','-', $boxoffice_team_b_name);
+                        $boxoffice_tournament_name = str_replace(' ','-', trim($otherevent_tournament_category->category_name));
+                        $boxoffice_team_a_name = str_replace(' ','-', trim($boxoffice_team_a_name));
+                        $boxoffice_team_b_name = str_replace(' ','-', trim($boxoffice_team_b_name));
 
                         if($boxoffice_team_a != "" && $boxoffice_team_b != "" && $other_event_category != ""){
                             $team_slug =  strtolower($boxoffice_tournament_name).'-'.strtolower($boxoffice_team_a_name.'-vs-'.$boxoffice_team_b_name.'-tickets');
@@ -1538,7 +1553,7 @@ error_reporting(E_ALL);*/
                         $match_data['tixstock_update_date']     =  date('Y-m-d', strtotime('-1 day', strtotime(date("Y-m-d H:i:s"))));
                         $match_data['source_type']              = "tixstock";
                         $match_data['oneboxoffice_status']      = 1;
-                        $match_data['add_by']                   = 1;
+                        $match_data['add_by']                   = 1;//echo "<pre>";print_r($match_data);exit;
                         $match_id = $this->General_Model->insert_data('match_info', $match_data);
                          if($match_id != ""){
                          $this->update_match_settings($match_id,$other_event_category);
