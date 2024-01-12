@@ -1,8 +1,8 @@
 <?php
 if (!defined('BASEPATH')) exit('No direct script access allowed');
-// require 'vendor/autoload.php';
-// use PhpOffice\PhpSpreadsheet\Spreadsheet;
-// use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+require 'vendor/autoload.php';
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 error_reporting(0);
 class Accounts extends CI_Controller {
     public function __construct() {
@@ -165,12 +165,12 @@ class Accounts extends CI_Controller {
          
         if (!empty($_POST['booking_no']) || !empty($_POST['event_start_date']) || !empty($_POST['event_end_date']) || !empty($_POST['seller_name']) || !empty($_POST['event']) || !empty($_POST['seat'])) {
 
-            $booking_no 							= $_POST['booking_no'];
-            $fromDate 							    = $_POST['event_start_date'];
-            $toDate 							    = $_POST['event_end_date'];
-            $seller_name 							= $_POST['seller_name'];
-            $event_name 							= $_POST['event'];
-            $seat 							        = $_POST['seat'];
+            $booking_no                             = $_POST['booking_no'];
+            $fromDate                               = $_POST['event_start_date'];
+            $toDate                                 = $_POST['event_end_date'];
+            $seller_name                            = $_POST['seller_name'];
+            $event_name                             = $_POST['event'];
+            $seat                                   = $_POST['seat'];
     
             $records = $this->General_Model->get_confirmed_orders_search($rowno, $row_per_page,'', $booking_no,$fromDate,$toDate,$seller_name,$event_name,$seat)->result();
             $allcount = $this->General_Model->get_confirmed_orders_search('', '','', $booking_no,$fromDate,$toDate,$seller_name,$event_name,$seat)->num_rows();
@@ -191,14 +191,14 @@ class Accounts extends CI_Controller {
         foreach($records as $record ){
 
             $seller_notes="";
-				$listing_note=$this->General_Model->get_seller_notes($record->listing_note);
-				if(!empty($listing_note))
-				{				
-					foreach ($listing_note as $notes)
-					{
-						$seller_notes.=$notes->ticket_name."<br/>";
-					}
-				}
+                $listing_note=$this->General_Model->get_seller_notes($record->listing_note);
+                if(!empty($listing_note))
+                {               
+                    foreach ($listing_note as $notes)
+                    {
+                        $seller_notes.=$notes->ticket_name."<br/>";
+                    }
+                }
 
                // $record->bg_id;
                $search_payout_details=$this->General_Model->search_json_values($record->bg_id);
@@ -248,10 +248,10 @@ class Accounts extends CI_Controller {
           </div>';
 
                  $match_time="<br/><span class='tr_date'>".date('d/m/Y',strtotime($record->match_date))."</span> <span class='tr_date'>".date('H:i A',strtotime($record->match_time))."</span>";
-				
-				// $match_name_inpt=$record->match_name;
-				// $match_name_array = explode(" vs ", strtolower($match_name_inpt));
-				// $match_name=$match_name_array[0]." Vs <br/>".$match_name_array[1];
+                
+                // $match_name_inpt=$record->match_name;
+                // $match_name_array = explode(" vs ", strtolower($match_name_inpt));
+                // $match_name=$match_name_array[0]." Vs <br/>".$match_name_array[1];
 
                 $input = $record->match_name;
                 $vsPosition = stripos($input, "vs"); // Find the position of "vs" case-insensitive
@@ -267,10 +267,10 @@ class Accounts extends CI_Controller {
                 }
 
                 $str = $category;
-				$words = explode(" ", $str); // split the string into an array of words
-				$words[1] .= "<br/>"; // add the <br/> tag after the second word
-				$seat_category = implode(" ", $words); // join the array of words back into a string
-				//echo $newStr;
+                $words = explode(" ", $str); // split the string into an array of words
+                $words[1] .= "<br/>"; // add the <br/> tag after the second word
+                $seat_category = implode(" ", $words); // join the array of words back into a string
+                //echo $newStr;
 
               
                 $where               =      array('bg_id' => $record->bg_id);
@@ -287,7 +287,7 @@ class Accounts extends CI_Controller {
                 }
 
                 
-						$booking_no='<a href="'.base_url()."game/orders/details/". md5($record->booking_no).'">#'.$record->booking_no.'</a>';
+                        $booking_no='<a href="'.base_url()."game/orders/details/". md5($record->booking_no).'">#'.$record->booking_no.'</a>';
 
                         $seller_notes_op= !empty($seller_notes) ? '<a class="tooltip_texts" data-toggle="tooltip" data-placement="right" title="" data-original-title="' . $seller_notes . '" aria-describedby="tooltip173041" data-html="true"><i class="fas fa-comment-dots"></i></a>' : '';                      
                      
@@ -320,17 +320,17 @@ class Accounts extends CI_Controller {
                  
                
             $data[] = array( 
-                "booking_no"			=> $booking_no,   
-                "seller_name"			=> $seller_name,      
-                "evernt_name"			=> '<a href="'.base_url().'event/matches/add_match/'.$encode_id.'" >'.$match_name.$match_time.'</a>',
-                "category"			    => $seat_category, 
-                "seller_notes"		    => $seller_notes_op,
-                "qty"					=> $record->quantity, 
-                "transaction_date"		=> $transaction_date, 
-                "delivery_date"		    => $delivery_date,
-                "payout"		        => $currency." ".number_format($payable_amount,2),
-                "mark_as_completed"		=> $mark_as_completed,
-                "action"		        => $action,
+                "booking_no"            => $booking_no,   
+                "seller_name"           => $seller_name,      
+                "evernt_name"           => '<a href="'.base_url().'event/matches/add_match/'.$encode_id.'" >'.$match_name.$match_time.'</a>',
+                "category"              => $seat_category, 
+                "seller_notes"          => $seller_notes_op,
+                "qty"                   => $record->quantity, 
+                "transaction_date"      => $transaction_date, 
+                "delivery_date"         => $delivery_date,
+                "payout"                => $currency." ".number_format($payable_amount,2),
+                "mark_as_completed"     => $mark_as_completed,
+                "action"                => $action,
                 
                 
                 
@@ -358,12 +358,12 @@ class Accounts extends CI_Controller {
          
         if (!empty($_POST['booking_no']) || !empty($_POST['event_start_date']) || !empty($_POST['event_end_date']) || !empty($_POST['seller_name']) || !empty($_POST['event']) || !empty($_POST['seat'])) {
 
-            $booking_no 							= $_POST['booking_no'];
-            $fromDate 							    = $_POST['event_start_date'];
-            $toDate 							    = $_POST['event_end_date'];
-            $seller_name 							= $_POST['seller_name'];
-            $event_name 							= $_POST['event'];
-            $seat 							        = $_POST['seat'];
+            $booking_no                             = $_POST['booking_no'];
+            $fromDate                               = $_POST['event_start_date'];
+            $toDate                                 = $_POST['event_end_date'];
+            $seller_name                            = $_POST['seller_name'];
+            $event_name                             = $_POST['event'];
+            $seat                                   = $_POST['seat'];
     
             $records = $this->General_Model->get_confirmed_orders_search($rowno, $row_per_page,'', $booking_no,$fromDate,$toDate,$seller_name,$event_name,$seat)->result();
             $allcount = $this->General_Model->get_confirmed_orders_search('', '','', $booking_no,$fromDate,$toDate,$seller_name,$event_name,$seat)->num_rows();
@@ -389,14 +389,14 @@ class Accounts extends CI_Controller {
         foreach($records as $record ){
 
             $seller_notes="";
-				$listing_note=$this->General_Model->get_seller_notes($record->listing_note);
-				if(!empty($listing_note))
-				{				
-					foreach ($listing_note as $notes)
-					{
-						$seller_notes.=$notes->ticket_name."<br/>";
-					}
-				}
+                $listing_note=$this->General_Model->get_seller_notes($record->listing_note);
+                if(!empty($listing_note))
+                {               
+                    foreach ($listing_note as $notes)
+                    {
+                        $seller_notes.=$notes->ticket_name."<br/>";
+                    }
+                }
 
                // $record->bg_id;
                $search_payout_details=$this->General_Model->search_json_values($record->bg_id);
@@ -446,10 +446,10 @@ class Accounts extends CI_Controller {
           </div>';
 
                  $match_time="<br/><span class='tr_date'>".date('d/m/Y',strtotime($record->match_date))."</span> <span class='tr_date'>".date('H:i A',strtotime($record->match_time))."</span>";
-				
-				// $match_name_inpt=$record->match_name;
-				// $match_name_array = explode(" vs ", strtolower($match_name_inpt));
-				// $match_name=$match_name_array[0]." Vs <br/>".$match_name_array[1];
+                
+                // $match_name_inpt=$record->match_name;
+                // $match_name_array = explode(" vs ", strtolower($match_name_inpt));
+                // $match_name=$match_name_array[0]." Vs <br/>".$match_name_array[1];
 
                 $input = $record->match_name;
                 $vsPosition = stripos($input, "vs"); // Find the position of "vs" case-insensitive
@@ -465,10 +465,10 @@ class Accounts extends CI_Controller {
                 }
 
                 $str = $category;
-				$words = explode(" ", $str); // split the string into an array of words
-				$words[1] .= "<br/>"; // add the <br/> tag after the second word
-				$seat_category = implode(" ", $words); // join the array of words back into a string
-				//echo $newStr;
+                $words = explode(" ", $str); // split the string into an array of words
+                $words[1] .= "<br/>"; // add the <br/> tag after the second word
+                $seat_category = implode(" ", $words); // join the array of words back into a string
+                //echo $newStr;
 
               
                 $where               =      array('bg_id' => $record->bg_id);
@@ -485,7 +485,7 @@ class Accounts extends CI_Controller {
                 }
 
                 
-						$booking_no='<a href="'.base_url()."game/orders/details/". md5($record->booking_no).'">#'.$record->booking_no.'</a>';
+                        $booking_no='<a href="'.base_url()."game/orders/details/". md5($record->booking_no).'">#'.$record->booking_no.'</a>';
 
                         $seller_notes_op= !empty($seller_notes) ? '<a class="tooltip_texts" data-toggle="tooltip" data-placement="right" title="" data-original-title="' . $seller_notes . '" aria-describedby="tooltip173041" data-html="true"><i class="fas fa-comment-dots"></i></a>' : '';                      
                      
@@ -516,17 +516,17 @@ class Accounts extends CI_Controller {
                      
                
             $data[] = array( 
-                "booking_no"			=> $booking_no,   
-                "seller_name"			=> $seller_name,      
-                "evernt_name"			=> $match_name." ".$match_time,
-                "category"			    => $seat_category, 
-                "seller_notes"		    => $seller_notes_op,
-                "qty"					=> $record->quantity, 
-                "transaction_date"		=> $transaction_date, 
-                "delivery_date"		    => $delivery_date,
-                "payout"		        => $currency." ".number_format($payable_amount,2),
-                "mark_as_completed"		=> $mark_as_completed,
-                "action"		        => $action,
+                "booking_no"            => $booking_no,   
+                "seller_name"           => $seller_name,      
+                "evernt_name"           => $match_name." ".$match_time,
+                "category"              => $seat_category, 
+                "seller_notes"          => $seller_notes_op,
+                "qty"                   => $record->quantity, 
+                "transaction_date"      => $transaction_date, 
+                "delivery_date"         => $delivery_date,
+                "payout"                => $currency." ".number_format($payable_amount,2),
+                "mark_as_completed"     => $mark_as_completed,
+                "action"                => $action,
                 
                 
                 
@@ -1272,36 +1272,36 @@ return true;
             $payable_amount = array();
 
             
-		$config["upload_path"] = 'uploads/payout_receipt/';
-		$config["allowed_types"] = 'pdf|jpg|jpeg|png';
-		$this->load->library('upload',$config);
-		$this->upload->initialize($config);
+        $config["upload_path"] = 'uploads/payout_receipt/';
+        $config["allowed_types"] = 'pdf|jpg|jpeg|png';
+        $this->load->library('upload',$config);
+        $this->upload->initialize($config);
 
         if ($_FILES["file"]["name"] != '') { 
           //  unlink('uploads/payout_receipt/'.$resultTest->receipt);
-			$file_ext = pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION);
+            $file_ext = pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION);
             $trimmedString = str_replace(' ', '', $_POST['payment_reference']);
-			 $_FILES["file"]["name"] = $trimmedString."_".$_FILES["file"]["name"]; //."_".$_FILES["eticket"]["name"]
-						
-			if (is_file($config["upload_path"].'/'.$_FILES["file"]["name"]) ) {
-				$msg= 'Error: File already exists.';
-				unlink($config["upload_path"].'/'.$_FILES["file"]["name"]);				
-			  } 
+             $_FILES["file"]["name"] = $trimmedString."_".$_FILES["file"]["name"]; //."_".$_FILES["eticket"]["name"]
+                        
+            if (is_file($config["upload_path"].'/'.$_FILES["file"]["name"]) ) {
+                $msg= 'Error: File already exists.';
+                unlink($config["upload_path"].'/'.$_FILES["file"]["name"]);             
+              } 
 
-				if ($this->upload->do_upload('file')) {
-					$data = $this->upload->data();
+                if ($this->upload->do_upload('file')) {
+                    $data = $this->upload->data();
                     $payout_file_name = $data["file_name"];
-					$msg = 'Receipt added successfully.';
-				
-				} else {
-					$error = ['error' => $this->upload->display_errors()];
+                    $msg = 'Receipt added successfully.';
+                
+                } else {
+                    $error = ['error' => $this->upload->display_errors()];
                     $payout_file_name ="";
                     
-					print_r($error);
-					exit;
-					$msg = $error;
-				}
-		}
+                    print_r($error);
+                    exit;
+                    $msg = $error;
+                }
+        }
 
         if (is_string($_POST['payable_orders'])) {
             // The value is a string
@@ -1381,7 +1381,7 @@ return true;
              }
                 //////////////////////////
              
-		
+        
                 /////////////////////////
            // }
         }
@@ -1544,70 +1544,70 @@ return true;
     }
 
     public function delete_uploaded_instructions()
-	{
-		$payout_id=$_POST['payout_id'];
-		$this->db->where(array('payout_id' => $payout_id));
-		$query = $this->db->get('payouts');
-		$resultTest = $query->row();
-		
-		if(!empty($resultTest))
-		{
-			$updateData['receipt'] = "";
-			//$updateData['updated_at'] = date("Y-m-d h:i:s");			
-			unlink('uploads/payout_receipt/'.$resultTest->receipt);
-			$done = $this->General_Model->update_table('payouts', 'payout_id', $resultTest->payout_id, $updateData);
-			$msg = 'Payout or Bank Deposit Receipt deleted successfully.';
-			$response = array('status' => 1, 'msg' => $msg);				
-			echo json_encode($response);
-			exit;
-		}
-	}
+    {
+        $payout_id=$_POST['payout_id'];
+        $this->db->where(array('payout_id' => $payout_id));
+        $query = $this->db->get('payouts');
+        $resultTest = $query->row();
+        
+        if(!empty($resultTest))
+        {
+            $updateData['receipt'] = "";
+            //$updateData['updated_at'] = date("Y-m-d h:i:s");          
+            unlink('uploads/payout_receipt/'.$resultTest->receipt);
+            $done = $this->General_Model->update_table('payouts', 'payout_id', $resultTest->payout_id, $updateData);
+            $msg = 'Payout or Bank Deposit Receipt deleted successfully.';
+            $response = array('status' => 1, 'msg' => $msg);                
+            echo json_encode($response);
+            exit;
+        }
+    }
     
 
     public function payout_file()
     {
         $config["upload_path"] = 'uploads/payout_receipt';
-		$config['allowed_types'] = 'pdf|jpeg|jpg|png';
-		$config['max_size'] = 2048;
-		$msg = 'Nothing Updated';
-		$payout_id=$_POST['payout_id'];
-		$response = array('status' => 1, 'msg' => $msg);
-		$file_ext = pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION);
-		$_FILES["file"]["name"] = "Payout_".$payout_id.'.'.$file_ext ; //."_".$_FILES["eticket"]["name"]
+        $config['allowed_types'] = 'pdf|jpeg|jpg|png';
+        $config['max_size'] = 2048;
+        $msg = 'Nothing Updated';
+        $payout_id=$_POST['payout_id'];
+        $response = array('status' => 1, 'msg' => $msg);
+        $file_ext = pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION);
+        $_FILES["file"]["name"] = "Payout_".$payout_id.'.'.$file_ext ; //."_".$_FILES["eticket"]["name"]
 
-		$this->load->library('upload',$config);
-		$this->upload->initialize($config);
+        $this->load->library('upload',$config);
+        $this->upload->initialize($config);
 
-		if ( is_file($config["upload_path"].'/'.$_FILES["file"]["name"])) 
-				unlink($config["upload_path"].'/'.$_FILES["file"]["name"]);
+        if ( is_file($config["upload_path"].'/'.$_FILES["file"]["name"])) 
+                unlink($config["upload_path"].'/'.$_FILES["file"]["name"]);
 
-		  if (!$this->upload->do_upload('file')) {
-			// handle the upload error
-			$response = array('error' => $this->upload->display_errors());
-			echo json_encode($response);
-		  } else {
-			// handle the upload success
-			//$data = array('upload_data' => $this->upload->data());
-			$data=$this->upload->data();
-			//echo json_encode($data);
-			$payout_file_name = $data["file_name"];
+          if (!$this->upload->do_upload('file')) {
+            // handle the upload error
+            $response = array('error' => $this->upload->display_errors());
+            echo json_encode($response);
+          } else {
+            // handle the upload success
+            //$data = array('upload_data' => $this->upload->data());
+            $data=$this->upload->data();
+            //echo json_encode($data);
+            $payout_file_name = $data["file_name"];
 
-			$this->db->where(array('payout_id' => $payout_id));
-					$query = $this->db->get('payouts');
-					$resultTest = $query->row();
-					//echo $this->db->last_query();
-					//exit;
-					if (!empty($resultTest)) {		
-						$msg = 'Payouts file updated successfully.';									
-						$updateData['receipt'] = $payout_file_name;
-					//	$updateData['admin_updation_date_time'] = date("Y-m-d h:i:s");
-						$done = $this->General_Model->update_table('payouts', 'payout_id', $resultTest->payout_id, $updateData);
-						$response = array('status' => 1, 'msg' => $msg);
-					}
-		  }
+            $this->db->where(array('payout_id' => $payout_id));
+                    $query = $this->db->get('payouts');
+                    $resultTest = $query->row();
+                    //echo $this->db->last_query();
+                    //exit;
+                    if (!empty($resultTest)) {      
+                        $msg = 'Payouts file updated successfully.';                                    
+                        $updateData['receipt'] = $payout_file_name;
+                    //  $updateData['admin_updation_date_time'] = date("Y-m-d h:i:s");
+                        $done = $this->General_Model->update_table('payouts', 'payout_id', $resultTest->payout_id, $updateData);
+                        $response = array('status' => 1, 'msg' => $msg);
+                    }
+          }
 
-		  echo json_encode($response);
-		  exit;
+          echo json_encode($response);
+          exit;
     }
 
      /**
@@ -1806,9 +1806,9 @@ public function affiliate_sales_summary()
          
         if (!empty($_POST['tournament_ids']) || !empty($_POST['event_start_date']) || !empty($_POST['tournament_ids']) ) {
 
-            $where_array['sale_start_date'] 			= $_POST['event_start_date'];
-            $where_array['sale_end_date'] 				= $_POST['event_end_date'];
-            $where_array['tournaments'] 				= $_POST['tournament_ids'];
+            $where_array['sale_start_date']             = $_POST['event_start_date'];
+            $where_array['sale_end_date']               = $_POST['event_end_date'];
+            $where_array['tournaments']                 = $_POST['tournament_ids'];
                
             $records =  $this->General_Model->get_tournaments_orders('', $where_array,$rowno, $row_per_page,)->result();;
             $allcount = $this->General_Model->get_tournaments_orders('', $where_array,"", "")->num_rows();
@@ -1862,12 +1862,12 @@ public function affiliate_sales_summary()
 $encode_id = base64_encode(json_encode($record->match_id));
 
             $data[] = array( 
-                "tournament_name"			            =>     '<a href="'.base_url().'settings/tournaments/edit/'.$record->tournament_id.'" >'.$record->tournament_name.'</a>',
-                "match_name"			                =>      '<a href="'.base_url().'event/matches/add_match/'.$encode_id.'" >'.$match_name.$match_time.'</a>',
-                "tickets_listed"			            =>      $tickets_listed,
-                "total_quantity"			            =>      $record->total_quantity,
-                "ticket_total_quality"			        =>      $ticket_total_quality,
-                "amount"		                       	=>      $currency." ".number_format($record->summary_amount,2)
+                "tournament_name"                       =>     '<a href="'.base_url().'settings/tournaments/edit/'.$record->tournament_id.'" >'.$record->tournament_name.'</a>',
+                "match_name"                            =>      '<a href="'.base_url().'event/matches/add_match/'.$encode_id.'" >'.$match_name.$match_time.'</a>',
+                "tickets_listed"                        =>      $tickets_listed,
+                "total_quantity"                        =>      $record->total_quantity,
+                "ticket_total_quality"                  =>      $ticket_total_quality,
+                "amount"                                =>      $currency." ".number_format($record->summary_amount,2)
             ); 
         }
         $result = array(
@@ -1890,12 +1890,12 @@ $encode_id = base64_encode(json_encode($record->match_id));
          $where_array['partner'] = 1;
         if (!empty($_POST['booking_no']) || !empty($_POST['event_start_date']) || !empty($_POST['event_end_date']) || !empty($_POST['seller_name']) || !empty($_POST['event']) || !empty($_POST['seat'])) {
 
-            $booking_no 							= $_POST['booking_no'];
-            $fromDate 							    = $_POST['event_start_date'];
-            $toDate 							    = $_POST['event_end_date'];
-            $seller_name 							= $_POST['seller_name'];
-            $event_name 							= $_POST['event'];
-            $seat 							        = $_POST['seat'];
+            $booking_no                             = $_POST['booking_no'];
+            $fromDate                               = $_POST['event_start_date'];
+            $toDate                                 = $_POST['event_end_date'];
+            $seller_name                            = $_POST['seller_name'];
+            $event_name                             = $_POST['event'];
+            $seat                                   = $_POST['seat'];
             $page                                   = 'partner';
     
             $records = $this->General_Model->get_confirmed_orders_search($rowno, $row_per_page,'', $booking_no,$fromDate,$toDate,$seller_name,$event_name,$seat,$page)->result();
@@ -1946,10 +1946,10 @@ $encode_id = base64_encode(json_encode($record->match_id));
             $customer_name='<a href="'.base_url()."home/customer_info/". $record->user_id.'">'.$record->customer_first_name." ".$record->customer_last_name.'</a>';
 
             $data[] = array( 
-                "booking_no"			=>  $booking_no,  
-                "evernt_name"			=> '<a href="'.base_url().'event/matches/add_match/'.$encode_id.'" >'.$match_name.$match_time.'</a>',
-                "seller_name"			=> $seller_name,    
-                "customer_name"			=> $customer_name,      
+                "booking_no"            =>  $booking_no,  
+                "evernt_name"           => '<a href="'.base_url().'event/matches/add_match/'.$encode_id.'" >'.$match_name.$match_time.'</a>',
+                "seller_name"           => $seller_name,    
+                "customer_name"         => $customer_name,      
                 "transaction_date"      => $transaction_date,
                 "partner_name"          => $record->partner_first_name." ".$record->partner_last_name,
                 "quantity"              => $record->quantity,
@@ -1977,12 +1977,12 @@ $encode_id = base64_encode(json_encode($record->match_id));
          $where_array['affiliate'] = 1;
         if (!empty($_POST['booking_no']) || !empty($_POST['event_start_date']) || !empty($_POST['event_end_date']) || !empty($_POST['seller_name']) || !empty($_POST['event']) || !empty($_POST['seat'])) {
 
-            $booking_no 							= $_POST['booking_no'];
-            $fromDate 							    = $_POST['event_start_date'];
-            $toDate 							    = $_POST['event_end_date'];
-            $seller_name 							= $_POST['seller_name'];
-            $event_name 							= $_POST['event'];
-            $seat 							        = $_POST['seat'];
+            $booking_no                             = $_POST['booking_no'];
+            $fromDate                               = $_POST['event_start_date'];
+            $toDate                                 = $_POST['event_end_date'];
+            $seller_name                            = $_POST['seller_name'];
+            $event_name                             = $_POST['event'];
+            $seat                                   = $_POST['seat'];
             $page                                   = 'affiliate';
     
             $records = $this->General_Model->get_confirmed_orders_search($rowno, $row_per_page,'', $booking_no,$fromDate,$toDate,$seller_name,$event_name,$seat,$page)->result();
@@ -2033,10 +2033,10 @@ $encode_id = base64_encode(json_encode($record->match_id));
             $customer_name='<a href="'.base_url()."home/customer_info/". $record->user_id.'">'.$record->customer_first_name." ".$record->customer_last_name.'</a>';
 
             $data[] = array( 
-                "booking_no"			=>  $booking_no,  
-                "evernt_name"			=> '<a href="'.base_url().'event/matches/add_match/'.$encode_id.'" >'.$match_name.$match_time.'</a>',
-                "seller_name"			=> $seller_name,    
-                "customer_name"			=> $customer_name,      
+                "booking_no"            =>  $booking_no,  
+                "evernt_name"           => '<a href="'.base_url().'event/matches/add_match/'.$encode_id.'" >'.$match_name.$match_time.'</a>',
+                "seller_name"           => $seller_name,    
+                "customer_name"         => $customer_name,      
                 "transaction_date"      => $transaction_date,
                 "partner_name"          => $record->affiliate_first_name." ".$record->affiliate_last_name,
                 "quantity"              => $record->quantity,
