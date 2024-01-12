@@ -3231,7 +3231,7 @@ private function get_stadium_row($stadium_name,$stadium_type)
     if (!$check_stadium) {
         $insertData['stadium_name'] = $stadium_name;
         $insertData['category'] = $stadium_type;
-        $insertData['stadium_type'] = $stadium_type;
+        $insertData['stadium_type'] = 1;
         $insertData['create_date'] = date('Y-m-d H:i:s');
         $insertData['status'] = 1;     
         $insertData['source_type'] = "tixstock";
