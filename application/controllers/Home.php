@@ -819,6 +819,7 @@ return TRUE;
 		//	$this->data['country_lists'] = $this->General_Model->fetch_country_list();
 			$this->data['country_lists'] = $this->General_Model->getAllItemTable('countries')->result();
 			$this->data['roles'] = $this->General_Model->getAllItemTable('admin_role', 'status', 'ACTIVE', 'admin_role_id', 'DESC')->result();
+			$this->data['currencies'] =  $this->General_Model->getAllItemTable_Array('currency_types', array('status' => 1,'store_id' => $this->session->userdata('storefront')->admin_id))->result();
 			$this->load->view(THEME.'users/add_user', $this->data);
 		}
 		
@@ -870,6 +871,7 @@ return TRUE;
 				$this->form_validation->set_rules('bank_address', 'Bank Address', 'required');
 				$this->form_validation->set_rules('account_number', 'Account Number', 'required');
 				$this->form_validation->set_rules('swift_code', 'Swift Code', 'required');
+				$this->form_validation->set_rules('currency', 'Currency', 'required');
 			}
 			if ($this->form_validation->run() !== false) {
 				if ($_POST['flag'] == 1) {
@@ -971,7 +973,7 @@ return TRUE;
 					}
 				}
 				if ($_POST['flag'] == 4) {
-					$bank_information = array('beneficiary_name' => $_POST['beneficiary_name'], 'bank_name' => $_POST['bank_name'], 'iban_number' => $_POST['iban_number'], 'beneficiary_address' => $_POST['beneficiary_address'], 'bank_address' => $_POST['bank_address'], 'account_number' => $_POST['account_number'], 'swift_code' => $_POST['swift_code'],);
+					$bank_information = array('beneficiary_name' => $_POST['beneficiary_name'], 'bank_name' => $_POST['bank_name'], 'iban_number' => $_POST['iban_number'], 'beneficiary_address' => $_POST['beneficiary_address'], 'bank_address' => $_POST['bank_address'], 'account_number' => $_POST['account_number'], 'swift_code' => $_POST['swift_code'],'currency' => $_POST['currency']);
 					//  echo "<pre>";print_r($_POST);exit;
 
 					$create_user = isset($_POST['create_seller']) && $_POST['create_seller'] == '1' ? 'create_user' : 'add_user';

@@ -3349,6 +3349,21 @@ public function getOrderData_v2()
 		return $query;
 	}
 
+	public function get_payout_partners()
+	{
+
+		$this->db->select('admin_details.*,admin_details.admin_id as user_id,address_details.*, countries.name as country_name,cities.name as city_name,admin_role.admin_role_id,admin_role.admin_role_name,admin_bank_details.*')->from('admin_details')->join('admin_login_details', 'admin_login_details.admin_id = admin_details.admin_id', 'left')->join('address_details', 'address_details.address_details_id = admin_details.address_details_id', 'left')->join('countries', 'countries.id = address_details.country', 'left')->join('cities', 'cities.id = address_details.city', 'left')->join('admin_role_details', 'admin_role_details.admin_id = admin_details.admin_id', 'left')->join('admin_role', 'admin_role.admin_role_id = admin_role_details.admin_roles_id', 'left')->join('admin_bank_details', 'admin_bank_details.admin_id = admin_details.admin_id', 'left')->where_in('admin_role_details.admin_roles_id', [1, 2, 3]);
+		$this->db->where('admin_details.admin_status', 'ACTIVE');
+		$this->db->order_by('admin_details.admin_id', 'DESC');
+		$query = $this->db->get(); //echo $this->db->last_query();exit;
+		// print_r($this->db->last_query());exit;
+		if ($query->num_rows() > 0) {
+		return $query->result();
+		} else {
+		return '';
+		}
+	}
+
 	public function get_admin_details_by_role_v1($role_id, $status = '')
 	{
 

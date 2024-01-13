@@ -22,9 +22,18 @@ a {
 <tbody>
 <?php foreach ($payable_orders as $peky => $payable_order) { ?>
 <tr>
-<?php if($peky == 0){?>
+<?php if($peky == 0){
+  if($role == 1){
+    ?>
 <input type="hidden" name="payable_seller" value="<?php echo $payable_order->seller_id;?>">
-<?php } ?>
+<?php }
+else if($role == 2){ ?>
+<input type="hidden" name="payable_seller" value="<?php echo $payable_order->partner_id;?>">
+<?php }
+else if($role == 3){ ?>
+  <input type="hidden" name="payable_seller" value="<?php echo $payable_order->affiliate_id;?>">
+<?php }
+ } ?>
 <td tabindex="0" class="dt-checkboxes-cell" style=""><div class="form-check custom-checkbox"><input type="checkbox" class="payable_order form-check-input dt-checkboxes" name="payable_order[]" checked="checked" value="<?php echo $payable_order->bg_id;?>"><label class="form-check-label">&nbsp;</label></div></td>
 
 <td data-label="ORDER ID:"><a target="_blank" href="<?php echo base_url();?>game/orders/details/<?php echo md5($payable_order->booking_no);?>">#<?php echo $payable_order->booking_no;?></a></td>
@@ -40,7 +49,14 @@ $
 <?php } else if($payable_order->currency_type == "EUR"){ ?>
 €
 <?php } ?>
-<?php echo number_format($payable_order->ticket_amount,2);?> </td>
+<?php 
+if($role == 1){
+echo number_format($payable_order->ticket_amount,2);
+}
+else{
+echo number_format($payable_order->partner_commission,2);
+}
+?> </td>
 <td data-label="ORDER Status:">
      <div class="bttns">
     <?php if($payable_order->booking_status == '1'){?><span class="badge badge-success">CONFIRMED</span><?php } ?>

@@ -155,7 +155,7 @@ $this->load->view(THEME . 'common/header'); ?>
                                                                               if (in_array($stadium->s_id, $top_venue_ids)) {
                                                                                  echo 'selected';
                                                                               } ?>                                                    
-                                                                              value="<?php echo $stadium->s_id;?>"><?php echo $stadium_name;?>
+                                                                              value="<?php echo $stadium->s_id;?>" data-value="<?php echo $stadium->stadium_name;?>"><?php echo $stadium_name;?>
                                                                            </option>
                                                                               <?php } ?>
                                                                         </select>  
@@ -575,8 +575,9 @@ new Choices(document.getElementById("search_keywords"), { delimiter: ",", editIt
                // Execute this code when the page finishes loading
 
                <?php if (empty($tournaments->v_id)) { ?>
-                     $(".change_stadium").change(function() {
-                        selected_text= $(".change_stadium option:selected").text();
+                     $(".change_stadium").change(function() { 
+                       // selected_text= $(".change_stadium option:selected").text();
+                        selected_text= $(".change_stadium option:selected").attr('data-value');
                         $('#country_name').val(selected_text);
                         var val = selected_text;
                         var slug = "";
