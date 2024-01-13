@@ -981,7 +981,12 @@ $sheet->setCellValue('C'.$x, $order_in->match_name);
 $sheet->setCellValue('D'.$x, $order_in->first_name.' '.$order_in->last_name);
 $sheet->setCellValue('E'.$x, $order_in->ticket_type_name);
 $sheet->setCellValue('F'.$x, $order_in->quantity);
+if($admin_type_id == 1){
 $sheet->setCellValue('G'.$x, $order_in->currency_type.' '.number_format($order_in->ticket_amount,2));
+}
+else{
+$sheet->setCellValue('G'.$x, $order_in->currency_type.' '.number_format($order_in->partner_commission,2));
+}
 $sheet->setCellValue('H'.$x, $booking_status);
 $x++;
 $i++;
@@ -1074,7 +1079,7 @@ return true;
                 //$pay_out_info['payout_no'] = rand(10000,10000000);
                 $pay_out_info['payout_no'] = $_POST['payment_reference'];
                 $pay_out_info['seller_id'] = $_POST['payable_seller'];
-                $pay_out_info['role'] = $_POST['admin_type_id'];
+                $pay_out_info['role']      = $admin_type_id;
                 
                /* $pay_out_info['payout_date_from'] = date('Y-m-d',strtotime($_POST['order_from']));
                 $pay_out_info['payout_date_to'] = date('Y-m-d',strtotime($_POST['order_to']));*/
