@@ -40,7 +40,7 @@ color: #00a3ed !important;
                             <tr class="accordion">
                             <th>Payout Date</th>
                             <?php if ($this->session->userdata('role') == 6) { ?>
-                            <th>Seller</th>
+                            <th>Seller/Partner/Affiliate</th>
                             <?php } ?>
                             <th>Total Orders</th>
                             <th>Amount</th>

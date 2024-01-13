@@ -895,7 +895,7 @@ class Accounts extends CI_Controller {
         // $this->loadRecord($row_count, 'booking_global', 'accounts/sales_summary', '', 'DESC', 'accounts/sales_summary', 'getMySalesData', 'sales_summary', $where_array);
     }
 
-    public function save_payout_proof($payout_id,$order_data){
+    public function save_payout_proof($payout_id,$order_data,$admin_type_id=''){
 
         $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
@@ -948,7 +948,13 @@ $sheet->setCellValue('H1', 'Order Status');
  $fcolumn = count($order_data);
  $total_payable = array();
  foreach($order_data as $order_in){
+if($admin_type_id == 1){
 $total_payable[] = $order_in->ticket_amount;
+}
+else{
+$total_payable[] = $order_in->partner_commission;
+}
+
 $booking_status = "";
 if($order_in->booking_status == "1"){
  $booking_status = "CONFIRMED";
@@ -996,7 +1002,7 @@ return true;
 
      public function save_payout_v1(){
 
-      //  echo "<pre>";print_r($_POST);exit;
+     
         $this->form_validation->set_rules('payable_seller', 'Seller', 'required');
         $this->form_validation->set_rules('payment_reference', 'Payment Reference', 'required');
         $this->form_validation->set_rules('payable_order[]', 'Orders', 'required');
@@ -1006,6 +1012,12 @@ return true;
         }*/
 
         if ($this->form_validation->run() !== false) { 
+
+            $get_admin_role = $this->Accounts_Model->get_admin_role($_POST['payable_seller']);
+            $admin_type_id  = $get_admin_role->admin_type_id;
+            if($admin_type_id != ""){
+                $where['role'] = $admin_type_id;
+                $this->mydatas['role'] = $admin_type_id;
            // echo UPLOAD_PATH_PREFIX.'uploads/payout_receipt';exit;
                 $pay_out_info = array();
                 if (!empty($_FILES['payout_receipt']['name'])) { 
@@ -1036,7 +1048,13 @@ return true;
             if($payable_orders[0]->bg_id != ""){
                 $order_info[] = array('bg_id' => $payable_orders[0]->bg_id);
                 $order_data[] = $payable_orders[0];
-                $total_amount[] = $payable_orders[0]->ticket_amount;
+                if($admin_type_id == 1){
+                     $total_amount[] = $payable_orders[0]->ticket_amount;
+                }
+                else{
+                     $total_amount[] = $payable_orders[0]->partner_commission;
+                }
+               
             }
             
             /* if($payable_orders[0]->currency_type == "GBP"){
@@ -1056,6 +1074,8 @@ return true;
                 //$pay_out_info['payout_no'] = rand(10000,10000000);
                 $pay_out_info['payout_no'] = $_POST['payment_reference'];
                 $pay_out_info['seller_id'] = $_POST['payable_seller'];
+                $pay_out_info['role'] = $_POST['admin_type_id'];
+                
                /* $pay_out_info['payout_date_from'] = date('Y-m-d',strtotime($_POST['order_from']));
                 $pay_out_info['payout_date_to'] = date('Y-m-d',strtotime($_POST['order_to']));*/
                 $pay_out_info['payout_date_from'] = date('Y-m-d');
@@ -1071,9 +1091,14 @@ return true;
                 $Insert = $this->General_Model->insert_data('payouts', $pay_out_info);
             }
             if($Insert != ''){
-                 $saved_proof = $this->save_payout_proof($_POST['payment_reference'],$order_data);
+                 $saved_proof = $this->save_payout_proof($_POST['payment_reference'],$order_data,$admin_type_id);
                  foreach($order_info as $order_in){
+                    if($admin_type_id == 1){
                     $update_data = array('payout_status' => '1','seller_status' => '1','payout_id' => $Insert);
+                    }
+                    else{
+                    $update_data = array('partner_payout_status' => '1');
+                    }
                     $this->General_Model->update('booking_global', array('bg_id' => $order_in['bg_id']), $update_data);
                  }
 
@@ -1087,7 +1112,12 @@ return true;
               echo json_encode($response);
                 exit;
 
-            
+            }
+            else{
+                 $response = array('status' => 0, 'msg' => 'Invalid Admin Role.');
+                echo json_encode($response);
+                exit;
+            }
         }
         else { 
                 $response = array('status' => 0, 'msg' => validation_errors());
@@ -1459,11 +1489,23 @@ return true;
        
         if($_POST['seller'] != ''){
 
-            $where = array('seller_id' => $_POST['seller'],'event_from' => $_POST['event_from'],'event_to' => $_POST['event_to'],'currency' => $_POST['currency']);
+            $where          = array('seller_id' => $_POST['seller'],'event_from' => $_POST['event_from'],'event_to' => $_POST['event_to'],'currency' => $_POST['currency']);
+            $get_admin_role = $this->Accounts_Model->get_admin_role($_POST['seller']);
+            $admin_type_id  = $get_admin_role->admin_type_id;
+            if($admin_type_id != ""){
+            $where['role'] = $admin_type_id;
+            $this->mydatas['role'] = $admin_type_id;
             $payable_orders = $this->Accounts_Model->get_unpaid_orders_v2($where);
+            // echo "string";
+            // echo "<pre>";print_r($payable_orders);exit;
              $payable_amount = array();
             foreach ($payable_orders as $payable_order) {
-               $payable_amount[] = $payable_order->ticket_amount;
+               if($admin_type_id == 1){
+                $payable_amount[] = $payable_order->ticket_amount;
+               }
+               else{
+                $payable_amount[] = $payable_order->partner_commission;
+               }
             }
             if($payable_orders[0]->currency_type == 'GBP'){
                 $currency = '£';
@@ -1484,6 +1526,11 @@ return true;
             $this->mydata['payable_amount'] = number_format(array_sum($payable_amount),2);
             echo json_encode(array('status' => 1, 'response' => $this->mydata));
             exit;
+            }
+            else{
+              echo json_encode(array('status' => 0, 'response' => "Invalid "));
+            exit;  
+            }
         }
         else{
             echo json_encode(array('status' => 0, 'response' => "Please Choose the Mandatory Search Fields."));
@@ -1504,7 +1551,8 @@ return true;
     public function make_payouts_new()
     { 
              
-             $this->data['sellers']       = $this->General_Model->get_admin_details_by_role_v1(1, 'status');
+            // $this->data['sellers']       = $this->General_Model->get_admin_details_by_role_v1(1, 'status');
+            $this->data['sellers']    = $this->General_Model->get_payout_partners();
              $this->load->view(THEME.'accounts/make_payouts_new',$this->data);
       
     }
@@ -2068,7 +2116,7 @@ $encode_id = base64_encode(json_encode($record->match_id));
              echo json_encode($response);exit;
          }
          else{
-            $response = array('status' => 0, 'response' => "Invalid Seller Id.");
+            $response = array('status' => 0, 'response' => "Invalid Seller/Partner/Affiliate Id.");
              echo json_encode($response);exit;
          }
         

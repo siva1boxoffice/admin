@@ -36,8 +36,8 @@
                      <div class="col-lg-12">
                         <div class="team_info_details mt-3">
                                 <h5 class="card-title">Payout Info</h5>
-                                <p>Fill the following Seller and Order information</p>
-                              </div>
+                                <p>Fill the following Seller/Partner/Affiliate and Order information</p>
+                              </div>  <?php //echo "<pre>";print_r($sellers);?>
                               <div class="">
                                   <form id="search-form" method="post" enctype='multipart/form-data' class="" action="<?php echo base_url();?>accounts/get_payout_data">
                                 <div class="col-12">
@@ -46,13 +46,13 @@
                                         
                                         <div class="col-lg-3">
                                             <div class="form-group">
-                                                <label for="example-select">Choose Sellers<span class="text-danger">*</span></label>
+                                                <label for="example-select">Choose Sellers/Partner/Affiliate<span class="text-danger">*</span></label>
                                              
                                                  <select class="actionpayout roleuser custom-select" required name="seller" id="seller">
-                                            <option value="">-Choose Sellers-</option>
+                                            <option value="">-Choose Sellers/Partner/Affiliate-</option>
                                             <?php foreach($sellers as $seller){ ?>
                                             <option <?php if (in_array($seller->admin_id, explode(',',$match_settings->sellers)))
-                                            { ?> selected <?php } ?> value="<?php echo $seller->admin_id;?>"><?php echo $seller->admin_name;?> <?php echo $seller->admin_last_name;?> (<?php echo $seller->company_name;?>)</option>
+                                            { ?> selected <?php } ?> value="<?php echo $seller->admin_id;?>"><?php echo $seller->admin_name;?> <?php echo $seller->admin_last_name;?> (<?php echo $seller->company_name;?> - <?php echo ucfirst(strtolower($seller->admin_role_name));?>)</option>
                                             <?php } ?>
                                             </select>
                                             </div> 
@@ -148,7 +148,7 @@
                                        </div>
                                        <div class="col-lg-3">
                                           <div class="form-group mt-3 mb-0 seller_info">
-                                              <label for="simpleinput">Seller Account</label>
+                                              <label for="simpleinput">Seller/Partner/Affiliate Account</label>
                                        <select class="custom-select" id="seller_account" name="seller_account" required="false">
                                         <option value="">-Choose Account-</option>
                                         </select>

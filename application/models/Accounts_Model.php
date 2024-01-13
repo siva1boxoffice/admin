@@ -72,6 +72,20 @@ function admin_payout_pending()
 		}
 	}
 
+function get_admin_role($admin_id)
+	{ 
+		
+		$this->db->select('*');
+		$this->db->where('admin_login_details.admin_id',$admin_id);
+		$query = $this->db->get('admin_login_details');
+		//echo $this->db->last_query();exit;
+		if ($query->num_rows() > 0) {
+			return $query->row();
+		} else {
+			return '';
+		}
+	}
+
   function get_unpaid_orders($where = array())
 	{ //echo "<pre>";print_r($where);exit;
 		$this->db->select('*');
@@ -103,13 +117,19 @@ function admin_payout_pending()
 
 
 	function get_unpaid_orders_v2($where = array())
-	{ //echo "<pre>";print_r($where);exit;
-		$this->db->select('booking_global.*,booking_tickets.*,booking_billing_address.title,booking_billing_address.first_name,booking_billing_address.last_name,ticket_types_lang.name as ticket_type_name');
+	{ 
+		$this->db->select('booking_global.bg_id,booking_global.partner_id,booking_global.affiliate_id,booking_global.booking_no,booking_global.booking_status,booking_tickets.match_name,booking_tickets.quantity,booking_tickets.currency_type,booking_global.ticket_amount,booking_global.partner_commission,booking_billing_address.title,booking_billing_address.first_name,booking_billing_address.last_name,ticket_types_lang.name as ticket_type_name');
 		$this->db->join('booking_tickets', 'booking_tickets.booking_id = booking_global.bg_id');
 		$this->db->join('booking_billing_address', 'booking_billing_address.booking_id = booking_global.bg_id');
 		$this->db->join('ticket_types_lang', 'ticket_types_lang.ticket_type_id = booking_tickets.ticket_type');
-		if($where['seller_id'] != ''){
+		if($where['seller_id'] != '' && $where['role'] == 1){
 			$this->db->where('booking_global.seller_id',$where['seller_id']);
+		}
+		else if($where['seller_id'] != '' && $where['role'] == 2){
+			$this->db->where('booking_global.partner_id',$where['seller_id']);
+		}
+		else if($where['seller_id'] != '' && $where['role'] == 3){
+			$this->db->where('booking_global.affiliate_id',$where['seller_id']);
 		}
 		if($where['event_from'] != ''){
 			$this->db->where('booking_tickets.match_date >= ', date("Y-m-d H:i",strtotime($where['event_from'])));
@@ -128,17 +148,24 @@ function admin_payout_pending()
 			$this->db->where('booking_global.payout_status','1');
 		} 
 		else{
+			if($where['seller_id'] != '' && $where['role'] == 1){
 			$this->db->where('booking_global.payout_status','0');
 			$this->db->where('booking_global.seller_status',3);
+			}
+			else if($where['seller_id'] != '' && ($where['role'] == 2 || $where['role'] == 3)){
+			$this->db->where('booking_global.partner_payout_status','0');
+			}
 			$this->db->where('booking_global.booking_status != ',2);
 			$this->db->where('booking_global.booking_status != ',3);
+			$this->db->where('booking_global.booking_status != ',0);
+			$this->db->where('booking_global.booking_status != ',7);
 		}
 		
 
 		$this->db->where('ticket_types_lang.language','en');
 		$this->db->order_by('booking_tickets.match_name','ASC');
 		$query = $this->db->get('booking_global');
-		//echo $this->db->last_query();exit;
+		//echo $query->num_rows();exit;
 		if ($query->num_rows() > 0) {
 			return $query->result();
 		} else {

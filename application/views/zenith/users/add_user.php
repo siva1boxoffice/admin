@@ -466,6 +466,12 @@ $user_id= base64_encode(json_encode($user->user_id));
                                                       <span><?php echo $user->swift_code;  ?></span>
                                                    </div>
                                                 </div>
+                                                <div class="col-lg-6">
+                                                   <div class="form-group">
+                                                      <label for="simpleinput" class="mb-0 gr_clr">  Currency</label><br>
+                                                      <span><?php echo $user->currency;  ?></span>
+                                                   </div>
+                                                </div>
                                                
                                                 <div class="col-lg-12">
                                                    <div class="pt-2 float-right">
@@ -522,6 +528,20 @@ $user_id= base64_encode(json_encode($user->user_id));
                                                       <input type="text" name="bank_address" id="simpleinput" class="form-control rounded-0" placeholder="Bank Address"  required  value="<?php echo $user->bank_address;?>">
                                                    </div>
                                                 </div>
+
+                                                <div class="col-lg-6">
+                                                   <div class="form-group mb-3">
+                                                      <label for="simpleinput" class="mb-0 gr_clr">Currency</label>
+                                                      <select class="form-control" id="currency" name="currency" required >
+                                                <option value="">-Select Currency-</option>
+                                                <?php foreach ($currencies as $currency) { ?>
+                                                <option value="<?php echo $currency->currency_code;?>" <?php if($currency->currency_code == $user->currency){ echo "selected";}?> ><?php echo $currency->currency_code;?></option>
+                                                <?php } ?>
+                                             </select>
+                                                   </div>
+                                                </div>
+
+                                                
 
                                                 <div class="col-lg-12">
                                                    <div class="pt-2 float-right">

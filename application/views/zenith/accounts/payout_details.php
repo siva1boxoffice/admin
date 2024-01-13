@@ -42,14 +42,21 @@
                               </thead>
                               <tbody>
                               <?php 
-                            
+                              
                                  $payable_orders = json_decode($payout_histories[0]->payout_orders);
                                  if(!empty($payable_orders)){  ?>
                                  <?php foreach($payable_orders as $peky => $payable_order) {
                                    
                                     $ci=& get_instance();
                                     $ci->load->model('Accounts_Model');
-                                    $payable = $ci->Accounts_Model->get_unpaid_orders_v2(array('bg_id' => $payable_order->bg_id,'payout_status' => 1));
+                                    if($payout_histories[0]->role == 1){
+                                       $payable = $ci->Accounts_Model->get_unpaid_orders_v2(array('bg_id' => $payable_order->bg_id,'payout_status' => 1));
+                                    }
+                                    else{
+                                      $payable = $ci->Accounts_Model->get_unpaid_orders_v2(array('bg_id' => $payable_order->bg_id,'partner_payout_status' => 1));
+                                    
+                                    }
+                                   
                                    
                                      ?>
                                  <tr>
@@ -75,7 +82,14 @@
                                              £
                                              <?php } else if($payable[0]->currency_type == "EUR"){ ?>
                                              €
-                                             <?php } ?> <?php echo number_format($payable[0]->ticket_amount,2);?></td>
+                                             <?php } ?> <?php
+                                              if($payout_histories[0]->role == 1){
+                                                echo number_format($payable[0]->ticket_amount,2);
+                                              }
+                                              else{
+                                                echo number_format($payable[0]->partner_commission,2);
+                                              }
+                                              ?></td>
                                     <td>
                                        <div class="bttns">
                                        <?php if($payable[0]->booking_status == '1'){?><span class="badge badge-success">Confirmed</span><?php } ?>
